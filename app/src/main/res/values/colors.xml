@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="lightPrimaryColor">#B2DFDB</color>
+
+    <color name="colorAccent">#9E9E9E</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="primaryText">#212121</color>
+    <color name="secondaryText">#727272</color>
+    <color name="dividerColor">#B6B6B6</color>
+    <color name="white">#ffffff</color>
+    <color name="shopon_red">#FF1A42</color>
+
+
+    <color name="bazaar_color">#FF1A41</color>
+    <color name ="bazaar_gray">#f6f6f6</color>
+    <color name ="bazaar_darker_gray">#555555</color>
+    <color name ="bazaar_light_gray">#AAAAAA</color>
+    <color name ="bazaar_light_gray_1">#AAAAAA</color>
+    <color name ="carousel_bg">#EFEFF4</color>
+    <color name="paypal_gray">#F0EFF5</color>
+    <color name ="bazaar_red">#FF1A42</color>
+    <color name ="paypal_light_blue">#2897DC</color>
+    <color name = "bazaar_blue_text_buble">#1B8AF8</color>
+    <color name ="bazaar_blue">#3366CC</color>
+    <color name ="dark_blue_bar">#00477c</color>
+    <color name = "bazaar_topbar">#EFEFF4</color>
+    <color name = "bazaar_topbar_text">#336699</color>
+    <color name ="bazaar_light_blue">#6699CC</color>
+    <color name ="bazaar_dark_bg">#0E73F9</color>
+
+    <color name ="bazaar_app_bar">#0B68E4</color>
+
+    <color name ="bazaar_light_bg">#32DFDA</color>
+    <color name ="sera_send_gray">#686868</color>
+    <color name ="share_dialog_text_blue">#007AFF</color>
+    <color name ="share_translucent">#424242</color>
+    <color name="black">#000000</color>
+    <color name="buy_blue">#003366</color>
+    <color name="green_shade">#4EAD7C</color>
+    <color name="red_shade">#FF1A41</color>
+    <color name="red">#FF1A41</color>
+    <color name="blue">#003399</color>
+
+    <color name="launch_shop_text">#FF444444</color>
+    <color name="sera_response_old">#0066FF</color>
+    <color name="sera_response">#267bdb</color>ba
+    <color name="cart_product_title">#006699</color>
+    <color name="cod">#003399</color>
+    <color name="tabbed_selected_color">#555555</color>
+    <color name="bazaar_toolbar_blue">#267CEE</color>
+    <color name="shopin_searchbar_blue">#8832DFDA</color>
+
+
+</resources>

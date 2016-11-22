@@ -1,0 +1,102 @@
+<resources>
+    <string name="app_name">OffersGalore</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_shop_on_splash">ShopOnSplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- msisdn screen -->
+    <string name="privacy_policy">PRIVACY POLICY</string>
+    <string name="terms_and_conditions">TERMS AND CONDITIONS</string>
+    <string name="terms_conditions">By continuing you are indicating that you agree to not post objectionable and/or pirated content and agree to the </string>
+    <string name="privacy_policy_1">Privacy Policy</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="verify_phone_number">Verify Phone Number</string>
+    <string name="phone_continue">Accept &amp; Continue</string>
+    <string name="dlg_wait_please">Please Wait</string>
+    <string name="CC">CC</string>
+    <string name="accept_continue"><![CDATA[Accept & Continue]]></string>
+    <string name="create_profile">Create Profile</string>
+    <string name="user_name">User Name</string>
+    <string name="email_id">Email Id</string>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="my_interests">My Interests</string>
+    <string name="done">Done</string>
+    <string name="title_activity_shop_on_profile_creation">ShopOnProfileCreation</string>
+    <string name="title_activity_sms_otp_verify">Verify OTP</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+
+    <string name="resend_verification">A validation code was resent to <u>%1$s</u>. Please enter the code below.</string>
+    <string name="resend_sms">Resend SMS</string>
+    <string name="verify_code">Verification Code</string>
+    <string name="resend_wait_message">Please wait for 60 seconds to receive a call/SMS</string>
+    <string name="call_me_msg">We will call you shortly at <u>%1$s</u> with the code.</string>
+    <string name="call_me">Call Me</string>
+    <string name="no_offers_create_one">No Offers Added Yet</string>
+    <string name="create_offer">Create Offer</string>
+    <string name="time_invalid_message">Time you have selected has already passed. Please select a future time.</string>
+    <string name="set_time">Set Time</string>
+    <string name="set_date">Set Date</string>
+    <string name="title_activity_customer">CustomerActivity</string>
+    <string name="create_customer">Add Customer</string>
+    <string name="no_customers_create_one">No Customers Added Yet</string>
+    <string name="select_interests">Select Interests</string>
+    <string name="customers">Customers</string>
+    <string name="created_offers">Created Offers</string>
+    <string name="select_customer">Select Customers</string>
+    <string name="validate_num">Validating Number</string>
+    <string name="invalid_otp">Invalid OTP entered. Please enter the 4 igit number received through sms</string>
+    <string name="offer_tag">OFFER - </string>
+    <string name="action_done">Done</string>
+    <string name="select_from_phone_book">Add from Contacts</string>
+    <string name="no_customer">No Customers Added Yet</string>
+    <string name="select_contacts">Select Contacts</string>
+    <string name="sent_offers">Sent Offers</string>
+    <string name="scheduled_offers">Scheduled Offers</string>
+    <string name="all_offers">All Offers</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_offer_detail">OfferDetailActivity</string>
+    <string name="offer_details">Offer Details</string>
+    <string name="edit">EDIT</string>
+    <string name="save">SAVE</string>
+    <string name="title_activity_customer_detail">Customer Detail</string>
+    <string name="dlg_ok">Ok</string>
+    <string name="dlg_cancel">Cancel</string>
+    <string name="sms_sent">Offer has been sent</string>
+    <string name="sms_scheduled">Offer has been scheduled</string>
+    <string name="no_customer_selected">No Customer Selected</string>
+    <string name="no_offer_selected">No Offer Selected</string>
+    <string name="offer_text_err">Offer text cannot be empty</string>
+    <string name="delivery_date_err">Please Enter Date</string>
+    <string name="receipient_err">Enter Atleast One Recipient</string>
+    <string name="name_err">Please Enter Customer Name</string>
+    <string name="number_err">Please enter a 10 digit mobile number</string>
+    <string name="email_err">Enter valid email</string>
+    <string name="interests_err">Please select an interest for the customer</string>
+    <string name="customer_err">Select atleast one recipient</string>
+    <string name="carrier_charge_warning">You will be charged the sms carrier charges by your network provider for an otp verification.</string>
+    <string name="sms_warning">SMS Warning</string>
+    <string name="profile_name_err">Profile Name should atleast be 4 characters long</string>
+    <string name="internet_warning">Internet</string>
+    <string name="connect_to_internet">Please connect to internet to proceed with mobile verificaiton</string>
+</resources>

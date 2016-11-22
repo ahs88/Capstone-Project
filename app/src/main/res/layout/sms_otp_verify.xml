@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:id="@+id/claim_alert"
+            android:layout_width="fill_parent"
+            android:layout_height="300dp"
+            android:gravity="center"
+            android:textColor="@color/bazaar_darker_gray"
+            android:textSize="20sp"
+            android:layout_centerInParent="true"></TextView>
+
+
+        <EditText
+            android:id="@+id/verification_number"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:background="@color/white"
+            android:inputType="number"
+            android:hint="@string/verify_code"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            android:textSize="20sp">
+            <requestFocus />
+        </EditText>
+
+
+
+        <!--Button
+            android:layout_width="fill_parent"
+            android:layout_marginTop="30dp"
+            android:layout_height="60dp"
+            android:text="@string/phone_continue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:onClick="validateLogin"
+            android:background="@drawable/sera_send_gray"/>
+    -->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:weightSum="1.0"
+            android:layout_marginTop="0dp">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bazaar_darker_gray"
+                android:text="@string/resend_wait_message"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:visibility="visible"
+                android:id="@+id/resend_wait_msg" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action_buttons"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:weightSum="1.0"
+            android:layout_marginTop="0dp">
+            <Button
+                android:id="@+id/resend_sms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/resend_sms"
+                android:textColor="@color/white"
+                android:background="@color/black"
+                android:textAllCaps="false"
+                android:textSize="@dimen/resend_sms_text_size"
+                android:gravity="center"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@color/bazaar_darker_gray"
+                android:text="@string/call_me"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/resend_sms_text_size"
+                android:gravity="center" />
+
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <!--ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/bazaar_red_on_white"/-->
+</LinearLayout>

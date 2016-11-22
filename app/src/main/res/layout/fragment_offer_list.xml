@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:name="shopon.com.shopon.view.offer.OfferFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layoutManager="LinearLayoutManager"
+    android:layout_margin="4dp"
+    tools:context="shopon.com.shopon.view.offer.fragment.OfferFragment"
+    tools:listitem="@layout/offer_item_new">
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/offer_list"
+        android:name="shopon.com.shopon.view.offer.fragment.OfferFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="shopon.com.shopon.view.offer.fragment.OfferFragment"
+        tools:listitem="@layout/offer_item_new" />
+
+    <Button
+        android:id="@+id/create_offer_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="24dp"
+
+        android:text="@string/create_offer" />
+
+    <TextView
+        android:id="@+id/no_offers_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/create_offer_btn"
+        android:gravity="center"
+        android:text="@string/no_offers_create_one"
+        android:textSize="18sp" />
+</RelativeLayout>

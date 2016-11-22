@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:weightSum="1.0">
+
+    <TextView
+        android:id="@+id/label_name"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:minWidth="200dp"
+        android:layout_margin="5dp"
+        android:layout_weight="0.4"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:text="Name"
+        android:singleLine="true"
+        android:textSize="15sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:minWidth="300dp"
+        android:layout_margin="5dp"
+        android:layout_weight="0.6">
+    <TextView
+        android:id="@+id/error"
+        android:layout_above="@+id/label_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:text=""
+        android:textSize="12sp"
+        android:layout_marginBottom="5dp"
+        />
+    <EditText
+        android:id="@+id/label_value"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bazaar_edit_name"
+        android:singleLine="true"
+        android:textSize="14sp"
+        android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+</LinearLayout>

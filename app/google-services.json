@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "39677252801",
+    "firebase_url": "https://shopon-a356a.firebaseio.com",
+    "project_id": "shopon-a356a",
+    "storage_bucket": "shopon-a356a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39677252801:android:17faac1d01d7bacd",
+        "android_client_info": {
+          "package_name": "shopon.com.shopon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "39677252801-dcghrfr0blil9dpj8ed9dknv5gh9focg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2hNp0hFWeQkoofQucRMirh2S48jmYjxQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

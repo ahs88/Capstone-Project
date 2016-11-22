@@ -1,0 +1,22 @@
+<FrameLayout android:id="@+id/category_tag_container"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+
+    android:background="@drawable/bazaar_edit_name"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:id="@+id/category_content_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/editText"
+        android:visibility="visible">
+
+        <shopon.com.shopon.view.tagview.Tag.TagView
+            android:id="@+id/tags"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="5dp" />
+
+    </ScrollView>
+</FrameLayout>

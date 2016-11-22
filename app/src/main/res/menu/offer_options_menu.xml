@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/action_fitler_sent_sms"
+        android:title="@string/sent_offers"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_fitler_scheduled_sms"
+        android:title="@string/scheduled_offers"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_fitler_all_sms"
+        android:title="@string/all_offers"
+        app:showAsAction="never"
+        />
+
+</menu>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tool_bar"
+    android:layout_width="match_parent"
+    android:theme="@style/no_action_bar_theme"
+    android:layout_height="@dimen/action_bar_height"
+    android:elevation="4dp"
+    android:background="@color/bazaar_app_bar">
+
+    <TextView
+        android:id="@+id/toolbar_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:textSize="@dimen/abc_text_size_subtitle_material_toolbar"
+        android:text="@string/done"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/white"
+        android:onClick="onDone"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/abc_text_size_title_material_toolbar"
+        android:text="@string/my_interests" />
+
+
+</android.support.v7.widget.Toolbar>
+   <!-- <FrameLayout android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <View android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/toolbar_drop_shadow"/>
+
+    </FrameLayout>
+</LinearLayout>-->

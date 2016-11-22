@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="@android:color/white"
+    android:elevation="4dp"
+    android:foreground="?android:selectableItemBackground"
+    android:layout_margin="4dp"
+    >
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:id="@+id/date_summary"
+        android:layout_margin="8dp"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:background="@color/bazaar_app_bar"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="150dp"
+        android:maxHeight="80dp"
+        android:inputType="textMultiLine"
+        android:text="Offer Text : Buy 1 Get 1 Free, Never Before asdasdasd asds asddasds "
+        android:id="@+id/offer_text"
+        android:padding="3dp"
+        android:textSize="12sp"
+        android:maxLines="2"
+        android:lines="2"
+        android:gravity="center"
+        android:ellipsize="end"
+        android:singleLine="false"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_toRightOf="@+id/date_summary"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:layout_marginBottom="8dp"
+         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="70dp"
+        android:maxHeight="40dp"
+        android:inputType="textMultiLine"
+        android:text="28/01/2016 Tuesday"
+        android:maxLines="3"
+        android:lines="3"
+        android:singleLine="false"
+        android:textSize="12sp"
+        android:id="@+id/offer_date"
+        android:layout_marginTop="8dp"
+        android:padding="3dp"
+        android:layout_alignParentRight="true"
+
+         />
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:inputType="textPersonName"
+        android:text="112C"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:ems="10"
+        android:id="@+id/customer_count"
+        android:textColor="@color/white"
+        android:background="@color/bazaar_blue"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+         />
+
+
+</RelativeLayout>

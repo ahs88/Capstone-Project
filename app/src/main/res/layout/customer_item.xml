@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:clickable="false"
+    android:background="@android:color/white"
+    android:foreground="?android:selectableItemBackground"
+    android:elevation="4dp"
+    >
+
+    <shopon.com.shopon.utils.FontFitTextView
+        android:id="@+id/name_font"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="centerCrop"
+        android:clickable="false"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="28sp"
+        android:background="@color/bazaar_app_bar"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:clickable="false"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:text="Title"
+        android:layout_alignTop="@+id/name_font"
+        android:layout_alignLeft="@+id/email"
+        android:layout_alignStart="@+id/email" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/bazaar_light_bg"
+        android:text="ahs@gmail.com"
+        android:layout_below="@+id/name"
+        android:clickable="false"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/name_font"
+        android:layout_toEndOf="@+id/name_font" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/phone_number"
+        android:layout_height="wrap_content"
+        android:text="9844473871"
+        android:textAllCaps="true"
+        android:textColor="@color/red"
+        android:clickable="false"
+        android:layout_toRightOf="@+id/name_font"
+        android:layout_toEndOf="@+id/name_font"
+        android:layout_below="@+id/email" />
+
+    <ImageView
+        android:id="@+id/select_deselect"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
+        android:clickable="false"
+        android:layout_centerVertical="true"
+        android:src="@drawable/b_circlethin_2x"
+        android:visibility="gone" />
+
+</RelativeLayout>

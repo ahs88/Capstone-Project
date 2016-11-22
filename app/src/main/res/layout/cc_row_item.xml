@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="6dp">
+
+    <!--ImageView
+        android:id="@+id/ccflag"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center_vertical"
+        android:padding="5dp"
+         /-->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.7"
+        android:paddingLeft="10dp"
+        android:layout_gravity="center_vertical"
+        >
+    <TextView
+        android:id="@+id/ccname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.7"
+        android:paddingLeft="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:text="TextView" />
+        <TextView
+            android:id="@+id/ccnumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:paddingLeft="10dp"
+            android:textSize="13sp"
+            android:layout_below="@+id/ccname"
+            android:text="91" />
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/select_deselect"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="right|center_vertical|end"
+        android:layout_margin="5dp"
+        android:clickable="false"
+        android:src="@drawable/b_circlethin_2x"
+        android:visibility="visible" />
+
+</LinearLayout>

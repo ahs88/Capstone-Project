@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <include layout="@layout/toolbar"
+        />
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
+   >
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        >
+
+
+
+
+        <!--<EditText
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="10dp"
+            android:inputType="time"
+            android:ems="10"
+            android:padding="5dp"
+            android:id="@+id/time"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/date"
+            android:background="@drawable/bazaar_edit_name"
+            android:hint="Enter Time"
+            android:selectAllOnFocus="false"
+             />-->
+
+        <!--android:layout_below="@+id/offer_tags"-->
+        <TextView
+            android:id="@+id/date_err"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            android:layout_marginTop="58dp"/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/bazaar_edit_name"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Enter Date "
+            android:inputType="date"
+            android:padding="5dp"
+            android:selectAllOnFocus="true"
+            android:layout_below="@+id/date_err"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_marginTop="17dp"
+            android:id="@+id/offer_err"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            android:layout_below="@+id/date"
+            />
+
+        <EditText
+            android:id="@+id/offer_text"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+
+            android:background="@drawable/bazaar_edit_name"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Enter Offer text"
+            android:inputType="textMultiLine"
+            android:padding="5dp"
+            android:layout_below="@+id/offer_err"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tags_err"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:textColor="@color/red"
+            android:layout_below="@+id/offer_text"
+            />
+        <include
+            android:id="@+id/offer_tags"
+            layout="@layout/tag_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/tags_err"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+
+    </RelativeLayout>
+</ScrollView>
+    <Button
+        android:id="@+id/create_offer"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:layout_alignParentBottom="true"
+        android:text="Create Offer" />
+</RelativeLayout>

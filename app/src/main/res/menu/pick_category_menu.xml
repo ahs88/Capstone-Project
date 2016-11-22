@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto" >
+    <!-- Search, should appear as action button -->
+    <!--<item
+        android:id="@+id/action_sera"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/sera"
+        android:icon="@drawable/sera_normal"/>-->
+
+    <!-- <item
+        android:id="@+id/action_done"
+        android:title="@string/done"
+        app:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" /> -->
+
+    <item
+        android:id="@+id/select_all"
+        android:title="Select All"
+        app:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
+
+    <item
+        android:id="@+id/deselect_all"
+        android:title="Deselect All"
+        app:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
+
+</menu>

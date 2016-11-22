@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="shopon.com.shopon">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <application
+        android:name=".ShopOn"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/no_action_bar_theme">
+        <activity
+            android:name=".view.login.ShopOnActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".view.login.ShopOnSplashActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/FullscreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.login.ShopOnMsisdnActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+        <activity
+            android:name=".view.login.ShopCategoryActivity"
+            android:label="@string/title_activity_category"
+            android:theme="@style/no_action_bar_theme" />
+        <activity
+            android:name=".view.login.view.SubCategoryActivity"
+            android:label="@string/title_activity_category"
+            android:theme="@style/no_action_bar_theme" />
+        <activity
+            android:name=".view.login.ShopOnProfileCreation"
+            android:label=""
+            android:theme="@style/no_action_bar_theme" />
+        <activity
+            android:name=".view.login.SmsOtpVerify"
+            android:label="@string/title_activity_sms_otp_verify"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+        <activity
+            android:name=".view.offer.OfferActivity"
+            android:theme="@style/no_action_bar_theme" />
+        <activity
+            android:name=".view.customers.CustomerActivity"
+            android:label="@string/title_activity_customer"
+            android:theme="@style/no_action_bar_theme" />
+        <activity
+            android:name=".view.customers.SelectableCustomers"
+            android:label="@string/select_customer" />
+        <activity
+            android:name=".view.contact.Contacts"
+            android:label="@string/select_contacts" />
+
+        <service
+            android:name=".service.SMSService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".view.offer.OfferDetailActivity"
+            android:label="@string/title_activity_offer_detail"
+            android:theme="@style/no_action_bar_theme"></activity>
+
+        <activity
+            android:name=".view.customers.CustomerDetailActivity"
+            android:label="@string/title_activity_customer_detail"
+            android:theme="@style/no_action_bar_theme"></activity>
+    </application>
+
+</manifest>

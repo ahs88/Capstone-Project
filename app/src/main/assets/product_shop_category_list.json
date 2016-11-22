@@ -1,0 +1,781 @@
+{
+  "categories": [
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Women's Fashion",
+        "b_womensclothes_3x"
+      ],
+      "array": {
+        "string": [
+          "Clothes",
+          "Dress",
+          "Tops",
+          "Tees",
+          "Teen",
+          "Active",
+          "Skirt",
+          "Pant",
+          "Suit",
+          "Sweater",
+          "Short",
+          "Coats",
+          "Jackets",
+          "Hoodies"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Women's Shoes",
+        "b_womenshoes_3x"
+      ],
+      "array": {
+        "string": [
+          "Athletic",
+          "footwear",
+          "sneaker",
+          "sandal",
+          "boot",
+          "Sport shoe",
+          "Platform",
+          "Ankles",
+          "Heels",
+          "Women Shoes",
+          "Men Shoes",
+          "Children Shoes",
+          "Flats",
+          "Slippers",
+          "pumps",
+          "Nike",
+          "Reebok",
+          "Addidas",
+          "Under Armour"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Children",
+        "b_children_3x"
+      ],
+      "array": {
+        "string": [
+          "Clothes",
+          "Shoe",
+          "Accessories",
+          "School Uniform",
+          "Toys",
+          "Games",
+          "Cribs",
+          "Baby Furniture",
+          "Children Book",
+          "Child care"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Jewelry & Accessories",
+        "b_jewelry_3x"
+      ],
+      "array": {
+        "string": [
+          "Fine Jewelry",
+          "Gold",
+          "Diamond",
+          "Silver",
+          "Precious Stones",
+          "Pearl",
+          "Cultured Pearl",
+          "Emerald",
+          "Watch",
+          "wrist watch",
+          "pocket watch",
+          "Fashion Jewelry",
+          "Faux Jewelry",
+          "artificial jewelry",
+          "earrings",
+          "rings",
+          "necklace",
+          "bracelet",
+          "anklet",
+          "charms",
+          "beads",
+          "Wedding ring",
+          "Engagement ring",
+          "Wedding Set",
+          "Childrens Jewelry"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Men's Fashion",
+        "b_menclothing_3x"
+      ],
+      "array": {
+        "string": [
+          "Shirt",
+          "Hoodies",
+          "Sweatshirt",
+          "Sweater",
+          "Jacket",
+          "Coat",
+          "Jean",
+          "Tie",
+          "Pant",
+          "Short",
+          "Polo",
+          "Active",
+          "Swim",
+          "Suit",
+          "Sport Coats",
+          "Underwear",
+          "Socks",
+          "Sleep wear",
+          "Lounge",
+          "Big and Tall",
+          "Designer wear",
+          "Pajama"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Men's Shoes",
+        "b_mensshoes_3x"
+      ],
+      "array": {
+        "string": [
+          "Athletic",
+          "footwear",
+          "sneaker",
+          "sandal",
+          "boot",
+          "Sport shoe",
+          "Platform",
+          "Ankles",
+          "Heels",
+          "Women Shoes",
+          "Men Shoes",
+          "Children Shoes",
+          "Flats",
+          "Slippers",
+          "pumps",
+          "Nike",
+          "Reebok",
+          "Addidas",
+          "Under Armour"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Sports & Fitness",
+        "b_sportsandfitness_3x"
+      ],
+      "array": {
+        "string": [
+          "Athletic",
+          "Bicycle",
+          "Bike",
+          "Equipment",
+          "treadmill",
+          "equipment",
+          "Balls",
+          "Bats",
+          "Racquet",
+          "Soccer",
+          "Football",
+          "Tennis",
+          "Skates",
+          "Team Wear"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Travel & Vacations",
+        "b_travelvacation_3x"
+      ],
+      "array": {
+        "string": [
+          "Hotel",
+          "Bed & Breakfast",
+          "Motel",
+          "Boutique",
+          "Resort",
+          "Guest House",
+          "Hostel",
+          "Brand",
+          "Vacation",
+          "Home Rental",
+          "Travel Agent",
+          "Tour Operator",
+          "Guide"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Home Appliances",
+        "b_homeappliances_3x"
+      ],
+      "array": {
+        "string": [
+          "Home Appliance",
+          "Air Conditioner",
+          "Fans",
+          "Cooktop",
+          "Dishwasher",
+          "Iron",
+          "Microwave",
+          "Oven",
+          "Refrigerator",
+          "Vacuum",
+          "Washer",
+          "Dryer"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Home Furniture",
+        "furniture"
+      ],
+      "array": {
+        "string": [
+          "Living Room",
+          "Kitchen",
+          "Dining Room",
+          "Bedroom",
+          "Nursery",
+          "Sofas",
+          "Chairs",
+          "Table",
+          "Coffee",
+          "Desk",
+          "Night Stand",
+          "Cabinet",
+          "Bookcase",
+          "Bed",
+          "Dresser",
+          "Sets",
+          "Entertainment Center"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Home Decor",
+        "b_homedecor_3x"
+      ],
+      "array": {
+        "string": [
+          "Bath",
+          "Towel",
+          "Rug",
+          "Soap",
+          "Lotion",
+          "Mirror",
+          "Bath Hardware",
+          "Kitchenware",
+          "home Appliance",
+          "Coffee Maker",
+          "Tools",
+          "Utensil",
+          "Cookware",
+          "Cabinet",
+          "Organizer",
+          "Bakeware",
+          "Food Storage",
+          "Knives",
+          "Cutlery",
+          "Bed",
+          "Bedding",
+          "Pillow",
+          "Mattress",
+          "Sheet",
+          "Pillowcase",
+          "Dining",
+          "Dinnerware",
+          "China",
+          "Glass",
+          "Stemware",
+          "Linen",
+          "Tray",
+          "Decor",
+          "Rugs",
+          "Carpet",
+          "Decoration",
+          "Painting",
+          "Art"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Car Dealer",
+        "b_automotives_3x"
+      ],
+      "array": {
+        "string": [
+          "Car Dealer",
+          "Used Car",
+          "New Car",
+          "Motorcycle",
+          "RV",
+          "Boat",
+          "Car Part",
+          "Tire",
+          "Battery",
+          "Electronics",
+          "GPS",
+          "Car Service",
+          "Auto Service",
+          "Auto Repair",
+          "Mechanics",
+          "Tire Repair",
+          "Body shop",
+          "painting",
+          "Bicycle Shop",
+          "Bike repair"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Mobile & Electronics",
+        "b_electronics_3x"
+      ],
+      "array": {
+        "string": [
+          "Phone",
+          "Smartphones",
+          "Tablets",
+          "iPhone",
+          "Android",
+          "Windows",
+          "Cases",
+          "Watches",
+          "Batteries",
+          "Headset",
+          "Protector",
+          "Charger",
+          "Wearable"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Beauty, Salons & Spa",
+        "b_beautysalonspa_3x"
+      ],
+      "array": {
+        "string": [
+          "Cosmetics",
+          "Makeup",
+          "lipstick",
+          "Nail polish",
+          "facial",
+          "skin",
+          "bath",
+          "soap",
+          "lotion",
+          "shampoo",
+          "hair spray",
+          "Feminine",
+          "Foot",
+          "Hair",
+          "Oral",
+          "Vision",
+          "Shaving",
+          "Cream",
+          "body care",
+          "Fragrance",
+          "Personal Hygiene",
+          "Media Center",
+          "TV",
+          "Video",
+          "Audio",
+          "Home Theater",
+          "Camera",
+          "Headphones",
+          "Video Games",
+          "Music",
+          "Computer",
+          "Desktop",
+          "laptop",
+          "All in One",
+          "parts",
+          "software",
+          "components",
+          "speaker",
+          "cables",
+          "Home Appliance",
+          "Air Conditioner",
+          "Fans",
+          "Cooktop",
+          "Dishwasher",
+          "Iron",
+          "Microwave",
+          "Oven",
+          "Refrigerator",
+          "Vacuum",
+          "Washer",
+          "Dryer"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Pets",
+        "b_pets_3x"
+      ],
+      "array": {
+        "string": [
+          "Store",
+          "Supplies",
+          "Acquarium Services",
+          "Veterinarians",
+          "Clinic"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Home Services",
+        "b_homeservices_3x"
+      ],
+      "array": {
+        "string": [
+          "Maid",
+          "Electrician",
+          "Carpenter",
+          "Plumber",
+          "Air Conditioning",
+          "Heating",
+          "Cleaning",
+          "Painter",
+          "Pest Control",
+          "Locksmith",
+          "Gardener",
+          "Handyman",
+          "Movers",
+          "Interior Decorator",
+          "Appliance Repair",
+          "TV repair",
+          "Cabinet",
+          "Window",
+          "Pool",
+          "Carpet",
+          "Flooring",
+          "Garage Door",
+          "Landscaping",
+          "Roofing",
+          "Siding"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Health & Medical",
+        "b_healthmedical_3x"
+      ],
+      "array": {
+        "string": [
+          "Pharmacy",
+          "Chemist",
+          "Vitamins",
+          "Supplements",
+          "Optical"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Auto Services",
+        "b_automaintenance_3x"
+      ],
+      "array": {
+        "string": [
+          "Car Dealer",
+          "Used Car",
+          "New Car",
+          "Motorcycle",
+          "RV",
+          "Boat",
+          "Car Part",
+          "Tire",
+          "Battery",
+          "Electronics",
+          "GPS",
+          "Car Service",
+          "Auto Service",
+          "Auto Repair",
+          "Mechanics",
+          "Tire Repair",
+          "Body shop",
+          "painting",
+          "Bicycle Shop",
+          "Bike repair"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Massage",
+        "b_massage_3x"
+      ],
+      "array": {
+        "string": [
+          "Salon",
+          "Haircut",
+          "Grooming",
+          "Shampoo",
+          "Nails",
+          "Women Massage",
+          "Men Massage",
+          "Erotic Massage",
+          "Backrub",
+          "Foot Massage",
+          "Swedish Massage",
+          "Deep tissue",
+          "Thai Massage",
+          "Head Massage",
+          "Reflexology"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Real-Estate",
+        "b_realestate_3x"
+      ],
+      "array": {
+        "string": [
+          "Agents",
+          "Insurance",
+          "Apartment Rentals",
+          "Paying Guest",
+          "Appraiser",
+          "Inspection",
+          "Home Security"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Food & Restaurants",
+        "b_foodrestaurant_3x"
+      ],
+      "array": {
+        "string": [
+          "Restaurant",
+          "Fast food",
+          "Catering",
+          "Sweets",
+          "Food delivery services",
+          "Tiffin",
+          "Chefs",
+          "Bar",
+          "Pub",
+          "Beer",
+          "Wine",
+          "Brewery",
+          "Brewhouse",
+          "Casual food",
+          "Ethnic Restaurant",
+          "Cafe",
+          "Bakery",
+          "Bread",
+          "Cake",
+          "Pastry",
+          "Donuts",
+          "Sweets",
+          "Chocolates",
+          "Deli",
+          "Ice Cream",
+          "Yougurt",
+          "Juice Bar",
+          "Smoothie",
+          "Ethnic",
+          "Candy",
+          "Brewery",
+          "Winery",
+          "Street"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Professional Services",
+        "b_professionalser_3x"
+      ],
+      "array": {
+        "string": [
+          "Accountant",
+          "Banks",
+          "Financial Advisor",
+          "Tax",
+          "Investment",
+          "Insurance",
+          "Lawyer",
+          "Consultant",
+          "Marketing",
+          "Talent",
+          "Media",
+          "Graphic Design",
+          "Web Design",
+          "Architects",
+          "Interior Designer",
+          "Printer"
+        ]
+      }
+    },
+    {
+      "key": [
+        "name",
+        "image",
+        "subCatArray"
+      ],
+      "string": [
+        "Educational",
+        "b_education_3x"
+      ],
+      "array": {
+        "string": [
+          "PreSchool",
+          "Montessori",
+          "Classes",
+          "Tutoring",
+          "Coaching",
+          "Sports",
+          "Learning",
+          "Dance",
+          "Music",
+          "Cooking",
+          "Art",
+          "Craft",
+          "Language",
+          "Driving",
+          "Tuition",
+          "Computer",
+          "Designing",
+          "Fashion"
+        ]
+      }
+    }
+  ]
+}
+  
