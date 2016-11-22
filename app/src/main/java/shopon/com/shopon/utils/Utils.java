@@ -163,6 +163,11 @@ public class Utils {
         List<Integer> subId = new ArrayList<>();
         SubscriptionManager subscriptionManager = SubscriptionManager.from(context);
         List<SubscriptionInfo> subscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList();
+        if(subscriptionInfoList == null)
+        {
+            return subId;
+        }
+
         for (SubscriptionInfo subscriptionInfo : subscriptionInfoList) {
             int subscriptionId = subscriptionInfo.getSubscriptionId();
             Log.d("apipas", "subscriptionId:" + subscriptionId);
@@ -185,24 +190,28 @@ public class Utils {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-    public static void sendSmsToMobileAPI22(Context context,String otp,String recipient) {
+    public static boolean sendSmsToMobileAPI22(Context context,String otp,String recipient) {
         //SmsManager smsManager = SmsManager.getDefault();
         //int)Math.floor(Math.random()*10000);
 
         List<Integer> subId = Utils.getActiveSubscriptionInfoList(context);
+        if (subId.size() == 0){
+            return false;
+        }
         for (int id : subId) {
             SmsManager.getSmsManagerForSubscriptionId(id).sendTextMessage(recipient, null, String.valueOf(otp), null, null);
         }
+        return true;
     }
 
-    public static void sendSmsToMobile(Context context,String otp,String recipient){
+    public static boolean sendSmsToMobile(Context context,String otp,String recipient){
         Log.d(TAG,"recipient:"+recipient);
         String textSms = otp;
         ArrayList<String> messageList = SmsManager.getDefault().divideMessage(textSms);
         if (messageList.size() > 1) {
-            Utils.sendMultipartTextSMS(context, 0, recipient, null, messageList, null, null);
+            return Utils.sendMultipartTextSMS(context, 0, recipient, null, messageList, null, null);
         } else {
-            Utils.sendSMS(context, 0,recipient, null, textSms, null, null);
+            return Utils.sendSMS(context, 0,recipient, null, textSms, null, null);
         }
     }
 

@@ -60,6 +60,8 @@
                 android:layout_marginTop="2dp"
                 android:background="@drawable/bazaar_edit_name"
                 android:hint="@string/user_name"
+                android:focusable="true"
+                android:nextFocusDown="@+id/email_id"
                 android:gravity="center" />
 
 
@@ -79,7 +81,9 @@
                 android:layout_gravity="center"
                 android:background="@drawable/bazaar_edit_name"
                 android:hint="@string/email_id"
+                android:focusable="true"
                 android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/bazaar_login_button"
                 android:gravity="center" />
 
         </RelativeLayout>
@@ -96,6 +100,7 @@
         android:gravity="center"
         android:onClick="captureProfile"
         android:text="@string/create_profile"
+        android:focusable="true"
         android:layout_marginTop="20dp"
         android:textColor="@android:color/white"
         android:textSize="18sp"/>

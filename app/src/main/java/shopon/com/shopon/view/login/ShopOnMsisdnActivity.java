@@ -118,16 +118,29 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
 
     private void proceedToOTP() {
         String otp = Utils.generateRandomOTP(4);
+        boolean status = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            Utils.sendSmsToMobileAPI22(this,otp,msisdn.getText().toString());
+            status = Utils.sendSmsToMobileAPI22(this,otp,msisdn.getText().toString());
         } else {
-            Utils.sendSmsToMobile(this,otp,msisdn.getText().toString());
+            status = Utils.sendSmsToMobile(this,otp,msisdn.getText().toString());
         }
-        savePref(otp);
-        Intent intent = new Intent(this, SmsOtpVerify.class);
 
-        startActivity(intent);
-        finish();
+        if(status) {
+            savePref(otp);
+            Intent intent = new Intent(this, SmsOtpVerify.class);
+            startActivity(intent);
+            finish();
+        }
+        else
+        {
+            displaySIMWarning();
+        }
+    }
+
+    private void displaySIMWarning() {
+        AlertDialog alertDialog = AlertDialog.newInstance(getString(R.string.sim_warning),getString(R.string.sim_required_err));
+        alertDialog.setPositiveButton(this);
+        alertDialog.show(getFragmentManager(),TAG);
     }
 
 

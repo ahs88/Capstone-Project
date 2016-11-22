@@ -231,6 +231,10 @@ public class ShopCategoriesQuiltAdapter extends RecyclerView.Adapter<ShopCategor
             this.categoryName = categoryName;
             this.position = position;
             category_widget.setText(categoryName);
+
+            //for accessibility
+            categoryImage.setContentDescription(categoryName);
+
             if(selectedTags.contains(categoryName)) {
                 Log.d(TAG, " selected main tags:" + categoryName);
                 //category_widget.setBackgroundColor(mContext.getResources().getColor(R.color.green_shade));

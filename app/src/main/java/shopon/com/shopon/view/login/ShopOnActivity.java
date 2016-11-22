@@ -110,6 +110,16 @@ public class ShopOnActivity extends BaseActivity
         letterView.setText(((merchants.getEmail()!=null) && (!TextUtils.isEmpty(merchants.getEmail())))?String.valueOf(merchants.getEmail().charAt(0)):"");
     }
 
+    public void setContentDescription(){
+        if(getCurrentFragment() instanceof CustomerFragment || getCurrentFragment() instanceof CustomerDetailFragment)
+        {
+            fab.setContentDescription(getString(R.string.create_customer));
+        }
+        else if(getCurrentFragment() instanceof OfferFragment || getCurrentFragment() instanceof OfferDetailFragment){
+            fab.setContentDescription(getString(R.string.create_offer));
+        }
+    }
+
     @OnClick(R.id.fab)
     public void setupFloatActionListener() {
 
@@ -119,11 +129,14 @@ public class ShopOnActivity extends BaseActivity
         Log.d(TAG,"setupFloatActionListener currentFragment:"+currentFragment.getClass().getName());
                 if(getCurrentFragment() instanceof CustomerFragment || getCurrentFragment() instanceof CustomerDetailFragment)
                 {
+                    fab.setContentDescription(getString(R.string.create_customer));
                     Intent intent = new Intent(this, CustomerActivity.class);
                     startActivity(intent);
                     Log.d(TAG,"intent invoked to launch customer activity");
+
                 }
                 else if(getCurrentFragment() instanceof OfferFragment || getCurrentFragment() instanceof OfferDetailFragment){
+                    fab.setContentDescription(getString(R.string.create_offer));
                     Intent intent = new Intent(this, OfferActivity.class);
                     startActivity(intent);
                     Log.d(TAG,"intent invoked to launch offer activity");
@@ -176,7 +189,8 @@ public class ShopOnActivity extends BaseActivity
         } else if (id == R.id.nav_share) {
 
         }
-
+        //accessibility
+        setContentDescription();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

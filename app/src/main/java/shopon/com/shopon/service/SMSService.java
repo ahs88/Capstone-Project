@@ -78,22 +78,25 @@ public class SMSService extends IntentService {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-    private void sendSmsToMobileAPI22(String otp,String msisdn) {
+    private boolean sendSmsToMobileAPI22(String otp,String msisdn) {
         //SmsManager smsManager = SmsManager.getDefault();
         //int)Math.floor(Math.random()*10000);
         List<Integer> subId = Utils.getActiveSubscriptionInfoList(this);
+        if (subId.size() == 0)
+            return false;
         for (int id : subId) {
             SmsManager.getSmsManagerForSubscriptionId(id).sendTextMessage(msisdn, null, String.valueOf(otp), null, null);
         }
+        return true;
     }
 
-    private void sendSmsToMobile(String otp,String msisdn){
+    private boolean sendSmsToMobile(String otp,String msisdn){
         String textSms = otp;
         ArrayList<String> messageList = SmsManager.getDefault().divideMessage(textSms);
         if (messageList.size() > 1) {
-            Utils.sendMultipartTextSMS(this, 0, msisdn, null, messageList, null, null);
+            return Utils.sendMultipartTextSMS(this, 0, msisdn, null, messageList, null, null);
         } else {
-            Utils.sendSMS(this, 0, msisdn, null, textSms, null, null);
+            return Utils.sendSMS(this, 0, msisdn, null, textSms, null, null);
         }
     }
 

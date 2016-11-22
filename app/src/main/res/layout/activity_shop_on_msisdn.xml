@@ -16,6 +16,8 @@
         android:id="@+id/acc_continue"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:focusable="true"
+        android:contentDescription="@string/accept_continue"
         android:background="@color/colorAccent"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
