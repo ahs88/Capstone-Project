@@ -29,7 +29,7 @@ import shopon.com.shopon.view.customers.fragment.CustomerDetailFragment;
 import shopon.com.shopon.view.offer.adpater.DetailOptionsAdapter;
 import shopon.com.shopon.view.offer.dummy.OfferContent;
 import shopon.com.shopon.view.offer.fragment.OfferDetailFragment;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 public class OfferDetailActivity extends BaseActivity {
 

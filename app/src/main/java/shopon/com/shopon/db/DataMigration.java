@@ -7,7 +7,8 @@ import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+import shopon.com.shopon.preferences.UserSharedPreferences;
+
 
 /**
  * Created by Akshath on 06-11-2016.

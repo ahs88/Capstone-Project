@@ -29,9 +29,10 @@ import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
 import shopon.com.shopon.db.CustomerRealmUtil;
 import shopon.com.shopon.db.OfferRealmUtil;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.constants.Constants;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 /**
  * Created by Akshath on 06-11-2016.

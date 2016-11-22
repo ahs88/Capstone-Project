@@ -137,18 +137,7 @@ public class ShopCategoriesQuiltAdapter extends RecyclerView.Adapter<ShopCategor
     @Override
     public void onBindViewHolder(CategoryViewHolder itemViewHolder, int position) {
 
-       /* if(position%10 == 0 && position!=0) {
-            *//*StaggeredGridLayoutManager.LayoutParams layoutParams =
-                    (StaggeredGridLayoutManager.LayoutParams) itemViewHolder.itemView.getLayoutParams(); *//*          //(ViewGroup.LayoutParams.MATCH_PARENT,
-            //ViewGroup.LayoutParams.MATCH_PARENT);
-            GridLayoutManager.LayoutParams layoutParams =
-                    (GridLayoutManager.LayoutParams) itemViewHolder.itemView.getLayoutParams();
-            layoutParams.height = DatabaseUtils.convertDpToPixel(140, mContext);
-            Log.d(TAG, "bindShopFront setting cart layout params screenWidth");
 
-            //layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            itemViewHolder.itemView.setLayoutParams(layoutParams);
-        }*/
 
         if(level == 0) {//|| entryList.get(position).getKey() == null
                 itemViewHolder.bind(entryList.get(position).getKey(), entryList.get(position).getValue(), hashMapSubCategories.get(entryList.get(position).getKey()), position);

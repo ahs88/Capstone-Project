@@ -37,6 +37,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_margin="5dp"
             android:clickable="false"
             android:src="@drawable/b_circlethin_2x"
@@ -49,6 +50,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:gravity="bottom"
             android:shadowColor="@color/black"
             android:shadowDx="0"
@@ -60,25 +62,3 @@
             android:textSize="12sp" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>
-    <!--
-    <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/white"
-        android:layout_margin="5dp">
-
-
-
-            <TextView
-                android:id="@id/categoryText"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:background="@color/bazaar_red"
-                android:textSize="11sp" />
-
-
-    </RelativeLayout>-->

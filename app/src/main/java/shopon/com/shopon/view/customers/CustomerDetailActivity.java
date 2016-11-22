@@ -24,11 +24,12 @@ import shopon.com.shopon.datamodel.customer.CustomerData;
 import shopon.com.shopon.datamodel.customer.CustomersRealm;
 import shopon.com.shopon.datamodel.DetailEntry;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.customers.fragment.CustomerDetailFragment;
 import shopon.com.shopon.view.offer.adpater.DetailOptionsAdapter;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 public class CustomerDetailActivity extends BaseActivity {
 
