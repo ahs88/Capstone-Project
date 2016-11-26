@@ -18,8 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DatabaseReference;
 
 import java.lang.reflect.Method;
@@ -96,6 +100,7 @@ public class OfferDetailFragment extends BaseFragment {
             isTwoPane = getArguments().getBoolean(Constants.EXTRAS_IS_TWO_PANE);
         }
         setRetainInstance(true);
+
     }
 
     @Override
@@ -114,6 +119,11 @@ public class OfferDetailFragment extends BaseFragment {
             setHasOptionsMenu(true);
             setDetailAdapter();
         }
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
+
         return convertView;
     }
 

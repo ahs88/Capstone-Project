@@ -9,6 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -55,6 +59,8 @@ public class OfferDetailActivity extends BaseActivity {
         offerId = getIntent().getExtras().getInt(Constants.EXTRAS_OFFER_ID);
         Log.d(TAG,"offerId:"+offerId);
 
+
+
         setTitle(R.string.offer_details);
         setHomeButton();
 
@@ -64,6 +70,15 @@ public class OfferDetailActivity extends BaseActivity {
             offerDetailFragment = new OfferDetailFragment().newInstance(offerId, false);
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, offerDetailFragment, OfferDetailFragment.TAG).commit();
+
+        MobileAds.initialize(getApplicationContext(), getString(R.string.firebase_app_id));
+
+        //admob view
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        new AdRequest.Builder().addTestDevice("6126975EC3F9F4E7D0554BD539037A02");
+        mAdView.loadAd(adRequest);
+
     }
 
 }

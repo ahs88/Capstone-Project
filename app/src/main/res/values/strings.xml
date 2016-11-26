@@ -72,6 +72,8 @@
     <string name="sent_offers">Sent Offers</string>
     <string name="scheduled_offers">Scheduled Offers</string>
     <string name="all_offers">All Offers</string>
+    <string name="banner_ad_unit_id">ca-app-pub-8202180190350545/4496132111</string>
+
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -101,4 +103,5 @@
     <string name="connect_to_internet">Please connect to internet to proceed with mobile verificaiton</string>
     <string name="sim_warning">SIM Card Not Active</string>
     <string name="sim_required_err">You need to have an active sim to login</string>
+    <string name="firebase_app_id">ca-app-pub-8202180190350545~1542665711</string>
 </resources>
