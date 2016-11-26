@@ -14,9 +14,10 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.constants.Constants;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 public class ShopOnProfileCreation extends AppCompatActivity {
 

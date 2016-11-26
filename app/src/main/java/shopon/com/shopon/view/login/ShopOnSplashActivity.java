@@ -14,8 +14,9 @@ import java.lang.annotation.RetentionPolicy;
 
 import butterknife.ButterKnife;
 import shopon.com.shopon.R;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.view.constants.Constants;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 import static shopon.com.shopon.view.constants.Constants.CATEGORY_STATE;
 import static shopon.com.shopon.view.constants.Constants.LOGIN_COMPLETE;

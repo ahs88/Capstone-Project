@@ -37,10 +37,11 @@ import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.merchant.MerchantData;
 import shopon.com.shopon.datamodel.merchant.Merchants;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
 

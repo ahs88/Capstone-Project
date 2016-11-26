@@ -1,4 +1,4 @@
-package shopon.com.shopon.viewmodel.login.preferences;
+package shopon.com.shopon.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

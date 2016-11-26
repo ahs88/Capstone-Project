@@ -23,6 +23,7 @@ import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.customer.Customers;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.datamodel.offer.Offer;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.remote.SyncInterface;
 import shopon.com.shopon.remote.SyncLocalDB;
 import shopon.com.shopon.view.base.BaseActivity;
@@ -33,7 +34,7 @@ import shopon.com.shopon.view.customers.fragment.CustomerFragment;
 import shopon.com.shopon.view.offer.OfferActivity;
 import shopon.com.shopon.view.offer.fragment.OfferDetailFragment;
 import shopon.com.shopon.view.offer.fragment.OfferFragment;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 public class ShopOnActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,OfferFragment.OnListFragmentInteractionListener,SyncInterface,CustomerFragment.OnListFragmentInteractionListener {

@@ -104,4 +104,5 @@
     <string name="sim_warning">SIM Card Not Active</string>
     <string name="sim_required_err">You need to have an active sim to login</string>
     <string name="firebase_app_id">ca-app-pub-8202180190350545~1542665711</string>
+    <string name="offer_scheduled_today">Offers Scheduled Today</string>
 </resources>

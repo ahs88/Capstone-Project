@@ -13,8 +13,9 @@ import java.util.HashMap;
 
 import shopon.com.shopon.datamodel.customer.Customers;
 import shopon.com.shopon.datamodel.offer.Offer;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.view.constants.Constants;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 
 

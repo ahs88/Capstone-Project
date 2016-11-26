@@ -28,7 +28,9 @@
 
             android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
             android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:textColor="@color/white"/>
 
 
@@ -38,7 +40,9 @@
             android:layout_below="@+id/login_instruction"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
             android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
             android:id="@+id/profile_form">
 
             <TextView
@@ -104,21 +108,6 @@
         android:layout_marginTop="20dp"
         android:textColor="@android:color/white"
         android:textSize="18sp"/>
-
-    <!--<TextView
-        android:id="@+id/bazaar_editprofile_info"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_gravity="center"
-        android:clickable="true"
-        android:gravity="center"
-        android:textAllCaps="true"
-        android:visibility="invisible"
-        android:text="@string/editprofile_picture"
-        android:layout_marginTop="10dp"
-        />-->
-
-
 
 
 </LinearLayout>

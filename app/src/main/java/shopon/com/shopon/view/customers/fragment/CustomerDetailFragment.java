@@ -31,13 +31,14 @@ import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.DetailEntry;
 import shopon.com.shopon.datamodel.customer.CustomerData;
 import shopon.com.shopon.datamodel.customer.CustomersRealm;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseFragment;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.login.ShopCategoryActivity;
 import shopon.com.shopon.view.offer.adpater.DetailOptionsAdapter;
 import shopon.com.shopon.view.offer.fragment.OfferDetailFragment;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 import static android.app.Activity.RESULT_OK;
 

@@ -25,22 +25,7 @@
 
 
 
-        <!--<EditText
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginTop="10dp"
-            android:inputType="time"
-            android:ems="10"
-            android:padding="5dp"
-            android:id="@+id/time"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/date"
-            android:background="@drawable/bazaar_edit_name"
-            android:hint="Enter Time"
-            android:selectAllOnFocus="false"
-             />-->
 
-        <!--android:layout_below="@+id/offer_tags"-->
         <TextView
             android:id="@+id/date_err"
             android:layout_width="match_parent"

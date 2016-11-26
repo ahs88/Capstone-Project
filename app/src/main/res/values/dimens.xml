@@ -16,4 +16,5 @@
     <dimen name="refresh_header_height">80dp</dimen>
     <dimen name="resend_sms_text_size">20sp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="widget_margin">4dp</dimen>
 </resources>

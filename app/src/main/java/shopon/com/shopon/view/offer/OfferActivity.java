@@ -56,6 +56,7 @@ import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
 import shopon.com.shopon.db.OfferRealmUtil;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.remote.FireBaseUtils;
 import shopon.com.shopon.service.SMSService;
 import shopon.com.shopon.utils.Utils;
@@ -70,7 +71,7 @@ import shopon.com.shopon.view.tagview.Tag.OnTagClickListener;
 import shopon.com.shopon.view.tagview.Tag.OnTagDeleteListener;
 import shopon.com.shopon.view.tagview.Tag.Tag;
 import shopon.com.shopon.view.tagview.Tag.TagView;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 public class OfferActivity extends BaseActivity implements DateTimPickerUtils.ScheduledDateInterface {
 

@@ -39,12 +39,13 @@ import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.merchant.MerchantData;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.datamodel.shop_product_categories.CategoryList;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
 
 import shopon.com.shopon.view.login.adapter.ShopCategoriesQuiltAdapter;
 import shopon.com.shopon.view.login.view.GridRecycleView;
-import shopon.com.shopon.viewmodel.login.preferences.UserSharedPreferences;
+
 
 public class ShopCategoryActivity extends BaseActivity implements ShopCategoriesQuiltAdapter.CategoryLevelInterface {
 
