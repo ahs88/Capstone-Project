@@ -11,13 +11,18 @@ import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -228,6 +233,30 @@ public class Utils {
                 return Constants.MOBILE_DATA_ENABLED;
         }
         return Constants.INTERNET_NOT_CONNECTED;
+    }
+
+    public static String getDateDisplayText(String dateCardDate) {
+        String imageText = "";
+        if (!TextUtils.isEmpty(dateCardDate)) {
+            SimpleDateFormat df = new SimpleDateFormat("hh:mm a dd-MMM, yyyy");
+            Date parsed = null;
+            try {
+                parsed = df.parse(dateCardDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.d(TAG,"date parse error:"+e.getMessage());
+                return "";
+            }
+            String dayString = (String) DateFormat.format("dd", parsed);
+            GregorianCalendar newCalendar = new GregorianCalendar();
+            System.out.println("parsed date: " + parsed);
+            newCalendar.setTime(parsed);
+            SimpleDateFormat sdfWeekDay = new SimpleDateFormat("EE");
+            String dayOfTheWeek = sdfWeekDay.format(newCalendar.getTime());
+            imageText = dayString + "\n" + dayOfTheWeek.toUpperCase();
+            // Set AlertTex
+        }
+        return imageText;
     }
 
 }

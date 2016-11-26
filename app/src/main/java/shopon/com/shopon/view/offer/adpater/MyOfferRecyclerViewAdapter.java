@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.offer.Offer;
+import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.customers.fragment.CustomerDetailFragment;
@@ -61,7 +62,7 @@ public class MyOfferRecyclerViewAdapter extends RecyclerView.Adapter<MyOfferRecy
         holder.mItem = mValues.get(position);
         holder.offerDateView.setText(holder.mItem.getDeliverMessageOn());
         holder.offerTextView.setText(((Context)mListener).getString(R.string.offer_tag)+holder.mItem.getOfferText());
-        holder.daySummaryView.setText(getDateDisplayText(holder.mItem.getDeliverMessageOn()));
+        holder.daySummaryView.setText(Utils.getDateDisplayText(holder.mItem.getDeliverMessageOn()));
 
 
         List<String> numberList = new ArrayList<String>(Arrays.asList(holder.mItem.getNumbers().replace("[","").replace("]","").split(",")));
@@ -112,27 +113,5 @@ public class MyOfferRecyclerViewAdapter extends RecyclerView.Adapter<MyOfferRecy
         }
     }
 
-    public String getDateDisplayText(String dateCardDate) {
-        String imageText = "";
-        if (!TextUtils.isEmpty(dateCardDate)) {
-            SimpleDateFormat df = new SimpleDateFormat("hh:mm a dd-MMM, yyyy");
-            Date parsed = null;
-            try {
-                parsed = df.parse(dateCardDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                Log.d(TAG,"date parse error:"+e.getMessage());
-                return "";
-            }
-            String dayString = (String) DateFormat.format("dd", parsed);
-            GregorianCalendar newCalendar = new GregorianCalendar();
-            System.out.println("parsed date: " + parsed);
-            newCalendar.setTime(parsed);
-            SimpleDateFormat sdfWeekDay = new SimpleDateFormat("EE");
-            String dayOfTheWeek = sdfWeekDay.format(newCalendar.getTime());
-            imageText = dayString + "\n" + dayOfTheWeek.toUpperCase();
-            // Set AlertTex
-        }
-        return imageText;
-    }
+
 }
