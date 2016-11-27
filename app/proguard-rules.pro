@@ -15,3 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class io.realm.** { *; }
+-keep class com.google.firebase.** { *; }
+-keep class com.squareup.picasso.** { *; }
+-keep class com.google.ads.** # Don't proguard AdMob classes
+-dontwarn com.google.ads.** # Temporary workaround for v6.2.1. It gives a warning that you can ignor
