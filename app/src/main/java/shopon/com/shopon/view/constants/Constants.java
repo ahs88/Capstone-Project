@@ -46,6 +46,8 @@ public class Constants {
     public static final int MOBILE_DATA_ENABLED = 0;
     public static final int WIFI_ENABLED = 1;
 
+    public static final String FILTER_EQUAL_TO = "equalTo";
+
 
     public static int SPLASH_TIME_OUT = 1000;
 

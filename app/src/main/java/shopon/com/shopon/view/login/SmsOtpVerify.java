@@ -1,7 +1,9 @@
 package shopon.com.shopon.view.login;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,6 +39,8 @@ import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.merchant.MerchantData;
 import shopon.com.shopon.datamodel.merchant.Merchants;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
+import shopon.com.shopon.db.provider.ShopOnContract;
+import shopon.com.shopon.db.provider.ShopOnProvider;
 import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
@@ -168,28 +172,25 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
 
     public void writeToDb() {
         int userId = 0;
-
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        MerchantsRealm user = realm.createObject(MerchantsRealm.class); // Create a new object
         userId = (int) Math.abs(Math.random() * 1000000);
-        user.setUserId(userId);
-        user.setMobile((String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
-        realm.commitTransaction();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContract.Entry.COLUMN_USER_ID,userId);
+        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
+        Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues);
         savePref(userId);
     }
 
     public void writeToDb(Merchants merchant) {
         Log.d(TAG,"merchant:"+merchant);
 
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        MerchantsRealm user = realm.createObject(MerchantsRealm.class); // Create a new object
-        user.setUserId(merchant.getUserId());
-        user.setMobile(merchant.getMobile());
-        user.setName(merchant.getName());
-        user.setEmail(merchant.getEmail());
-        realm.commitTransaction();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContract.Entry.COLUMN_USER_ID,merchant.getUserId());
+        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,merchant.getMobile());
+        contentValues.put(ShopOnContract.Entry.COLUMN_NAME,merchant.getName());
+        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,merchant.getEmail());
+        contentValues.put(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY,merchant.getMerchentCategory());
+        Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues);
+
     }
 
     private void savePref(int user_id) {
