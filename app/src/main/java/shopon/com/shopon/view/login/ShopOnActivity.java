@@ -92,14 +92,26 @@ public class ShopOnActivity extends BaseActivity
 
         bindNavHeader();
 
-        sync();
+
     }
 
     private void sync() {
         syncLocalDB = new SyncLocalDB(this);
         syncLocalDB.register(this);
         syncLocalDB.execute();
+    }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sync();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        syncLocalDB.unregister(this);
     }
 
     private void bindNavHeader() {

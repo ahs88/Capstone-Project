@@ -1,8 +1,10 @@
 package shopon.com.shopon.view.login;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -39,6 +41,7 @@ import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.merchant.MerchantData;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.datamodel.shop_product_categories.CategoryList;
+import shopon.com.shopon.db.provider.ShopOnContract;
 import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
@@ -370,11 +373,24 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         Realm realm = Realm.getDefaultInstance();
 
         UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
+        Log.d(TAG,"merchant id:"+(Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF));
         MerchantsRealm merchants = realm.where(MerchantsRealm.class).equalTo(Constants.MERCHANT_ID_PREF,(Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)).findFirst();
         realm.beginTransaction();
-        Log.d(TAG,"getSelected tags:"+mShopCategoriesAdapter.getSelectedTags().toString());
+        Log.d(TAG,"getSelected tags:"+mShopCategoriesAdapter.getSelectedTags().toString()+" merchant:"+merchants);
         merchants.setMerchentCategory(mShopCategoriesAdapter.getSelectedTags().toString());
         realm.commitTransaction();
+
+
+        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_MERCHANT_URI,null,ShopOnContract.Entry.COLUMN_USER_ID+",equalTo",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))},null);
+        cursor.moveToFirst();
+        //MerchantsRealm merchants = realm.where(MerchantsRealm.class).equalTo("userId",(Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)).findFirst();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContract.Entry.COLUMN_NAME,cursor.getString(1));
+        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,cursor.getString(2));
+        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,cursor.getString(3));
+        contentValues.put(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY,cursor.getString(4));
+        getContentResolver().update(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues,ShopOnContract.Entry.COLUMN_USER_ID+",equalTo",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))});
+
         return merchants;
     }
 

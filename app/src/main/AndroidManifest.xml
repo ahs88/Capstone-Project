@@ -97,6 +97,10 @@
             android:name=".widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+        <provider
+            android:authorities="shopon.com.shopon.db.provider"
+            android:name=".db.provider.ShopOnProvider" >
+        </provider>
 
     </application>
 

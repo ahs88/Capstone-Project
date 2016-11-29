@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
@@ -115,6 +116,11 @@ public class CustomerDetailFragment extends BaseFragment {
             setHasOptionsMenu(true);
             setDetailAdapter();
         }
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
+
         return convertView;
     }
 
