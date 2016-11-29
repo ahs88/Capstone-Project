@@ -20,7 +20,6 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
-import android.content.res.ObbInfo;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,24 +27,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Switch;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import shopon.com.shopon.ShopOn;
-import shopon.com.shopon.datamodel.customer.Customers;
 import shopon.com.shopon.datamodel.customer.CustomersRealm;
-import shopon.com.shopon.datamodel.merchant.Merchants;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
 import shopon.com.shopon.db.DataMigration;
-import shopon.com.shopon.utils.SelectionBuilder;
 import shopon.com.shopon.view.constants.Constants;
-
-import static shopon.com.shopon.view.base.BaseFragment.TAG;
 
 
 public class ShopOnProvider extends ContentProvider {
@@ -370,8 +362,6 @@ public class ShopOnProvider extends ContentProvider {
      */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        SelectionBuilder builder = new SelectionBuilder();
-
         final int match = sUriMatcher.match(uri);
         int count;
         switch (match) {
