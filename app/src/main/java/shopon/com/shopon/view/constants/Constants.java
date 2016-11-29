@@ -48,6 +48,13 @@ public class Constants {
 
     public static final String FILTER_EQUAL_TO = "equalTo";
 
+    public static final int  ALL_OFFERS = 500;
+    public static final int SCHEDULED_OFFER = 501;
+    public static final int SENT_OFFER = 502;
+
+
+    public static final int ALL_CUSTOMERS = 600;
+
 
     public static int SPLASH_TIME_OUT = 1000;
 

@@ -3,8 +3,12 @@ package shopon.com.shopon.view.customers.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,12 +29,15 @@ import io.realm.RealmResults;
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.customer.Customers;
 import shopon.com.shopon.datamodel.customer.CustomersRealm;
+import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.db.CustomerRealmUtil;
+import shopon.com.shopon.db.provider.ShopOnContract;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.customers.CustomerActivity;
 import shopon.com.shopon.view.customers.adapter.MyCustomerRecyclerViewAdapter;
 import shopon.com.shopon.view.customers.dummy.CustomerContent;
+import shopon.com.shopon.view.offer.dummy.OfferContent;
 
 
 /**
@@ -39,7 +46,7 @@ import shopon.com.shopon.view.customers.dummy.CustomerContent;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class CustomerFragment extends Fragment {
+public class CustomerFragment extends Fragment implements LoaderManager.LoaderCallbacks{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -60,6 +67,7 @@ public class CustomerFragment extends Fragment {
     private MyCustomerRecyclerViewAdapter customerAapter;
     private List<Customers> customerList;
     private boolean isTwoPane;
+    private Cursor mCursor;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -113,10 +121,12 @@ public class CustomerFragment extends Fragment {
         }
         customerListView.setLayoutManager(mLinearLayoutManager);
 
-        retrieveCustomerList();
+
         customerAapter = new MyCustomerRecyclerViewAdapter(CustomerContent.ITEMS, mListener,false,isTwoPane);
         customerListView.setAdapter(customerAapter);
         displayEmptyList();
+
+        getActivity().getSupportLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
 
         return view;
     }
@@ -169,9 +179,47 @@ public class CustomerFragment extends Fragment {
 
     public void notifyDataChange() {
         if (customerAapter != null) {
-            retrieveCustomerList();
+            if (mCursor!=null) {
+                populateCustomerListFromCursor(mCursor);
+            }
             displayEmptyList();
             customerAapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(),  // Context
+                ShopOnContract.Entry.CONTENT_CUSTOMER_URI, // URI
+                null,                // Projection
+                null,                           // Selection
+                null,                           // Selection args
+                ShopOnContract.Entry.COLUMN_NAME + " asc");
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Object data) {
+        mCursor = (Cursor)data;
+        notifyDataChange();
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+
+    }
+
+    private void populateCustomerListFromCursor(Cursor cursor){
+        CustomerContent.ITEMS.clear();
+        cursor.moveToFirst();
+        Log.d(TAG,"populateOfferListFromCursor cursor:"+cursor.getCount());
+        for(int i=0;i<cursor.getCount();i++){
+            Customers customer = new Customers();
+            customer.setId(cursor.getInt(0));
+            customer.setName(cursor.getString(1));
+            customer.setMobile(cursor.getString(2));
+            customer.setEmail(cursor.getString(3));
+            customer.setIntrestedIn(cursor.getString(4));
+            CustomerContent.ITEMS.add(customer);
         }
     }
 
@@ -198,7 +246,10 @@ public class CustomerFragment extends Fragment {
         if (isVisibleToUser) {
             displayEmptyList();
             if (customerAapter != null) {
-                retrieveCustomerList();
+                if(mCursor!=null)
+                    populateCustomerListFromCursor(mCursor);
+
+                displayEmptyList();
                 customerAapter.notifyDataSetChanged();
             }
         }
@@ -209,9 +260,7 @@ public class CustomerFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Constants.ADD_CUSTOMER && resultCode == Activity.RESULT_OK){
-            displayEmptyList();
-            retrieveCustomerList();
-            customerAapter.notifyDataSetChanged();
+            getActivity().getSupportLoaderManager().restartLoader(Constants.ALL_CUSTOMERS, null, this);
         }
     }
 }

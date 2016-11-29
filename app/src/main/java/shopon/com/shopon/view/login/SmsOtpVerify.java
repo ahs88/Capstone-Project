@@ -184,12 +184,11 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
         Log.d(TAG,"merchant:"+merchant);
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ShopOnContract.Entry.COLUMN_USER_ID,merchant.getUserId());
         contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,merchant.getMobile());
         contentValues.put(ShopOnContract.Entry.COLUMN_NAME,merchant.getName());
         contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,merchant.getEmail());
         contentValues.put(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY,merchant.getMerchentCategory());
-        Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues);
+        getContentResolver().update(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues,ShopOnContract.Entry.COLUMN_USER_ID+",equalTo",new String[]{ String.valueOf(merchant.getUserId())});
 
     }
 

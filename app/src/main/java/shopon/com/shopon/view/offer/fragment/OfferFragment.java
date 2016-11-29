@@ -3,9 +3,14 @@ package shopon.com.shopon.view.offer.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.BoolRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +36,7 @@ import shopon.com.shopon.datamodel.customer.CustomersRealm;
 import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
 import shopon.com.shopon.db.OfferRealmUtil;
+import shopon.com.shopon.db.provider.ShopOnContract;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
@@ -46,7 +52,7 @@ import shopon.com.shopon.view.offer.dummy.OfferContent;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class OfferFragment extends Fragment {
+public class OfferFragment extends Fragment implements LoaderManager.LoaderCallbacks{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -63,6 +69,7 @@ public class OfferFragment extends Fragment {
     private ArrayList<Offer> offerList;
     private MyOfferRecyclerViewAdapter myOfferAdapter;
     private boolean isTwoPane;
+    private Cursor mCursor;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -112,21 +119,34 @@ public class OfferFragment extends Fragment {
         }
 
         myOfferAdapter = new MyOfferRecyclerViewAdapter(OfferContent.ITEMS, mListener,getActivity(),isTwoPane);
-        retrieveOfferList();
+
         displayEmptyList();
         recyclerView.setAdapter(myOfferAdapter);
+
+        getActivity().getSupportLoaderManager().initLoader(Constants.ALL_OFFERS, null, this);
 
         return view;
     }
 
     private void retrieveOfferList() {
         Log.d(TAG, "retrieveCustomerList");
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<OfferRealm> result = realm.where(OfferRealm.class).findAll();
-        offerList = (ArrayList<Offer>) OfferRealmUtil.convertRealmOfferListToOfferList(result);
-        Log.d(TAG, "customerList:" + offerList.toString());
+        getActivity().getSupportLoaderManager().restartLoader(Constants.ALL_OFFERS, null, this);
+    }
+
+    private void populateOfferListFromCursor(Cursor cursor){
         OfferContent.ITEMS.clear();
-        OfferContent.ITEMS.addAll(offerList);
+        cursor.moveToFirst();
+        Log.d(TAG,"populateOfferListFromCursor cursor:"+cursor.getCount());
+        for(int i=0;i<cursor.getCount();i++){
+            Offer offer = new Offer();
+            offer.setOfferId(cursor.getInt(0));
+            offer.setOfferStatus(Boolean.parseBoolean(cursor.getString(1)));
+            offer.setOfferText(cursor.getString(2));
+            offer.setNumbers(cursor.getString(3));
+            offer.setDeliverMessageOn(cursor.getString(4));
+            OfferContent.ITEMS.add(offer);
+        }
+
     }
 
 
@@ -158,6 +178,54 @@ public class OfferFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case Constants.ALL_OFFERS:
+            Log.d(TAG,"loading all offers");
+            return new CursorLoader(getActivity(),  // Context
+                    ShopOnContract.Entry.CONTENT_OFFER_URI, // URI
+                    null,                // Projection
+                    null,                           // Selection
+                    null,                           // Selection args
+                    ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " desc");
+            case Constants.SCHEDULED_OFFER:
+                Log.d(TAG,"loading scheduled offers");
+                return new CursorLoader(getActivity(),  // Context
+                        ShopOnContract.Entry.CONTENT_OFFER_URI, // URI
+                        null,                // Projection
+                        ShopOnContract.Entry.COLUMN_OFFER_STATUS+",equalTo",                           // Selection
+                        new String[]{String.valueOf(false)},                           // Selection args
+                        ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " desc");
+            case Constants.SENT_OFFER:
+                Log.d(TAG,"loading sent offers");
+                return new CursorLoader(getActivity(),  // Context
+                        ShopOnContract.Entry.CONTENT_OFFER_URI, // URI
+                        null,                // Projection
+                        ShopOnContract.Entry.COLUMN_OFFER_STATUS+",equalTo",                           // Selection
+                        new String[]{String.valueOf(true)},                           // Selection args
+                        ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " desc");
+        }
+        return new CursorLoader(getActivity(),  // Context
+                ShopOnContract.Entry.CONTENT_OFFER_URI, // URI
+                null,                // Projection
+                null,                           // Selection
+                null,                           // Selection args
+                ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " desc");
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Object data) {
+        Cursor cursor = (Cursor)data;
+        mCursor = cursor;
+        notifyDataChange();
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -186,16 +254,17 @@ public class OfferFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Constants.ADD_OFFER && resultCode == Activity.RESULT_OK){
-            displayEmptyList();
-            retrieveOfferList();
-            myOfferAdapter.notifyDataSetChanged();
+
+            getActivity().getSupportLoaderManager().restartLoader(Constants.ALL_OFFERS, null, this);
         }
     }
 
     public void notifyDataChange() {
         if (myOfferAdapter != null) {
+            if(mCursor!=null)
+                populateOfferListFromCursor(mCursor);
+
             displayEmptyList();
-            retrieveOfferList();
             myOfferAdapter.notifyDataSetChanged();
         }
     }
@@ -247,12 +316,8 @@ public class OfferFragment extends Fragment {
 
     private void retrieveScheduledOfferList() {
         Log.d(TAG, "retrieveScheduledOfferList");
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<OfferRealm> result = realm.where(OfferRealm.class).equalTo("offerStatus",false).findAll();
-        offerList = (ArrayList<Offer>) OfferRealmUtil.convertRealmOfferListToOfferList(result);
-        Log.d(TAG, "scheduled offer List size:" + offerList.size());
-        OfferContent.ITEMS.clear();
-        OfferContent.ITEMS.addAll(offerList);
+
+        getActivity().getSupportLoaderManager().restartLoader(Constants.SCHEDULED_OFFER, null, this);
         if(isTwoPane){
             OfferDetailFragment offerDetailFragment = (OfferDetailFragment) ((BaseActivity)mListener).getSupportFragmentManager().findFragmentByTag(OfferDetailFragment.TAG);
             // -1 to clear the detail screen
@@ -262,12 +327,8 @@ public class OfferFragment extends Fragment {
 
     private void retrieveSentOfferList() {
         Log.d(TAG, "retrieveSentOfferList");
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<OfferRealm> result = realm.where(OfferRealm.class).equalTo("offerStatus",true).findAll();
-        offerList = (ArrayList<Offer>) OfferRealmUtil.convertRealmOfferListToOfferList(result);
-        Log.d(TAG, "sent offer List size:" + offerList.toString());
-        OfferContent.ITEMS.clear();
-        OfferContent.ITEMS.addAll(offerList);
+
+        getActivity().getSupportLoaderManager().restartLoader(Constants.SENT_OFFER, null, this);
 
     }
 }
