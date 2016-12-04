@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
-public class ProgressDialog extends DialogFragment {
+public class ProgressDialog extends android.support.v4.app.DialogFragment{
 
     private static final String ARGS_MESSAGE_ID = "message_id";
 

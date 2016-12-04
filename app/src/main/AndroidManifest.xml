@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".ShopOn"
@@ -83,7 +83,7 @@
             android:label="@string/title_activity_customer_detail"
             android:theme="@style/no_action_bar_theme"></activity>
 
-        <receiver android:name=".widget.WidgetProvider" >
+        <receiver android:name=".widget.WidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -98,9 +98,16 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <provider
-            android:authorities="shopon.com.shopon.db.provider"
-            android:name=".db.provider.ShopOnProvider" >
-        </provider>
+            android:name=".db.provider.ShopOnProvider"
+            android:authorities="shopon.com.shopon.db.provider"></provider>
+
+
+        <receiver android:name=".receiver.NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
+            </intent-filter>
+        </receiver>
 
     </application>
 

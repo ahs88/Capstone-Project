@@ -3,6 +3,7 @@ package shopon.com.shopon.view.login;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
@@ -39,10 +40,14 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.merchant.MerchantData;
+import shopon.com.shopon.datamodel.merchant.Merchants;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.datamodel.shop_product_categories.CategoryList;
 import shopon.com.shopon.db.provider.ShopOnContract;
+import shopon.com.shopon.db.provider.ShopOnContractRealm;
+import shopon.com.shopon.db.provider.ShopOnProvider;
 import shopon.com.shopon.preferences.UserSharedPreferences;
+import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
 
@@ -50,7 +55,7 @@ import shopon.com.shopon.view.login.adapter.ShopCategoriesQuiltAdapter;
 import shopon.com.shopon.view.login.view.GridRecycleView;
 
 
-public class ShopCategoryActivity extends BaseActivity implements ShopCategoriesQuiltAdapter.CategoryLevelInterface {
+public class ShopCategoryActivity extends BaseActivity implements ShopCategoriesQuiltAdapter.CategoryLevelInterface, DialogInterface.OnClickListener {
 
     private int GRID_COUNT = 3;
     private String CATEGORY_LIST = "product_shop_category_list.json";
@@ -107,21 +112,13 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         }
 
         needToSaveCategories = false;
-
-
-
         setUpCategoryListView();
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             recyclerShopView.setAdapter(mShopCategoriesAdapter);
-
         }
 
         toolBarOptionsCheck ();
-
-
-
-
     }
 
     private void registerRTUpdateListener() {
@@ -132,11 +129,11 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    MerchantData merchant = postSnapshot.getValue(MerchantData.class);
+                    Merchants merchant = postSnapshot.getValue(Merchants.class);
 
-                    Log.d(TAG,"onDataChange merchat Id:"+ merchant.getMerchants().getUserId()+" userId:"+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF) );
+                    Log.d(TAG,"onDataChange merchat Id:"+ merchant.getUserId()+" userId:"+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF) );
                     //Getting the data from snapshot
-                    if(userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF).equals(merchant.getMerchants().getUserId())) {
+                    if(userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF).equals(merchant.getUserId())) {
                         navigateToMainScreen();
                     }
                 }
@@ -249,6 +246,10 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         } else {
             //setSelectedTag();
             if(shouldUpdateMerchant) {
+                if(!Utils.isReachable()){
+                    Utils.displayConnectToInternet(this,this);
+                    return;
+                }
                 setSelectedTagFromAdapter();
             }
             else{
@@ -277,8 +278,12 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     }
 
     private void setSelectedTagFromAdapter() {
-        MerchantsRealm merchantsRealm = updateMerchantInterest();
-        updateRTDataBase(merchantsRealm);
+        Cursor cursor = updateMerchantInterest();
+        if(cursor == null){
+            return;
+        }
+        cursor.moveToFirst();
+        updateRTDataBase(cursor);
         //navigateToMainScreen();
     }
 
@@ -369,34 +374,40 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         finish();
     }
 
-    private MerchantsRealm updateMerchantInterest() {
-        Realm realm = Realm.getDefaultInstance();
+    private Cursor updateMerchantInterest() {
 
         UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
-        Log.d(TAG,"merchant id:"+(Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF));
-        MerchantsRealm merchants = realm.where(MerchantsRealm.class).equalTo(Constants.MERCHANT_ID_PREF,(Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)).findFirst();
-        realm.beginTransaction();
-        Log.d(TAG,"getSelected tags:"+mShopCategoriesAdapter.getSelectedTags().toString()+" merchant:"+merchants);
-        merchants.setMerchentCategory(mShopCategoriesAdapter.getSelectedTags().toString());
-        realm.commitTransaction();
+        Log.d(TAG,"merchant id:"+(Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)+" selected_tags:"+mShopCategoriesAdapter.getSelectedTags().toString());
+        if(mShopCategoriesAdapter.getSelectedTags()==null || mShopCategoriesAdapter.getSelectedTags().size() == 0)
+        {
+            return null;
+        }
 
-
-        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_MERCHANT_URI,null,ShopOnContract.Entry.COLUMN_USER_ID+",equalTo",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))},null);
+        Cursor cursor = getContentResolver().query(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI,null, ShopOnContractRealm.Entry.COLUMN_USER_ID+"=?",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))},null);
         cursor.moveToFirst();
-        //MerchantsRealm merchants = realm.where(MerchantsRealm.class).equalTo("userId",(Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)).findFirst();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ShopOnContract.Entry.COLUMN_NAME,cursor.getString(1));
-        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,cursor.getString(2));
-        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,cursor.getString(3));
-        contentValues.put(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY,cursor.getString(4));
-        getContentResolver().update(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues,ShopOnContract.Entry.COLUMN_USER_ID+",equalTo",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))});
 
-        return merchants;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContractRealm.Entry.COLUMN_NAME,cursor.getString(1));
+        contentValues.put(ShopOnContractRealm.Entry.COLUMN_EMAIL,cursor.getString(2));
+        contentValues.put(ShopOnContractRealm.Entry.COLUMN_MOBILE,cursor.getString(3));
+        contentValues.put(ShopOnContractRealm.Entry.COLUMN_MERCHANT_CATEGORY,mShopCategoriesAdapter.getSelectedTags().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CREATED_AT,Utils.getCurrentDate());
+        getContentResolver().update(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI,contentValues, ShopOnContractRealm.Entry.COLUMN_USER_ID+"=?",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))});
+
+        Cursor cursor1 = getContentResolver().query(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI,null, ShopOnContractRealm.Entry.COLUMN_USER_ID+"=?",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))},null);
+        return cursor1;
     }
 
     private void updateRTDataBase(MerchantsRealm merchant_realm) {
         MerchantData merchant_data = new MerchantData();
         merchant_data.setRealmMerchant(merchant_realm);
+        UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
+        mDatabase.child(Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).setValue(merchant_data);//+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)
+    }
+
+    private void updateRTDataBase(Cursor cursor) {
+        Merchants merchant_data = Utils.createMerchantFromCursor(cursor);
+        Log.d(TAG,"updateRTDataBase interestedIn:"+merchant_data.getMerchentCategory()+" createdAt:"+merchant_data.getCreatedAt());
         UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
         mDatabase.child(Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).setValue(merchant_data);//+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)
     }
@@ -469,13 +480,17 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     }
 
     public void updateProfile(){
-        Realm realm = Realm.getDefaultInstance();
+        /*Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         userSharedPreferences = new UserSharedPreferences(this);
         MerchantsRealm merchants = realm.where(MerchantsRealm.class).equalTo(Constants.MERCHANT_ID_PREF,(String)userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)).findFirst();
         merchants.setMerchentCategory(mShopCategoriesAdapter.getSelectedTags().toString());
-        realm.commitTransaction();
+        realm.commitTransaction();*/
 
     }
 
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+
+    }
 }

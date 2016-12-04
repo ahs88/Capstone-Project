@@ -42,9 +42,11 @@ public class Constants {
     public static final String CURRENT_FRAGMENT = "current_fragment";
     public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 200;
     public static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 201;
+
     public static final int INTERNET_NOT_CONNECTED = -1;
     public static final int MOBILE_DATA_ENABLED = 0;
     public static final int WIFI_ENABLED = 1;
+    public static final Object INTERNET_CONNECTED = 2;
 
     public static final String FILTER_EQUAL_TO = "equalTo";
 
@@ -54,6 +56,7 @@ public class Constants {
 
 
     public static final int ALL_CUSTOMERS = 600;
+
 
 
     public static int SPLASH_TIME_OUT = 1000;
@@ -73,5 +76,7 @@ public class Constants {
     public static final int CATEGORY_STATE=3;
     public static final int LOGIN_COMPLETE = 4;
 
+    public static final String CONNECTION_STATUS = "connection_status";
 
+    public enum DialogAction{NETWORK_CHECK, SMS_CHECK,NO_DIALOG}
 }

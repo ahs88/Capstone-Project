@@ -1,7 +1,11 @@
 package shopon.com.shopon.view.customers;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -43,6 +47,7 @@ import shopon.com.shopon.datamodel.customer.CustomersRealm;
 import shopon.com.shopon.datamodel.merchant.MerchantData;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.db.CustomerRealmUtil;
+import shopon.com.shopon.db.provider.ShopOnContract;
 import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.remote.FireBaseUtils;
 import shopon.com.shopon.utils.Utils;
@@ -137,22 +142,24 @@ public class CustomerActivity extends BaseActivity {
         if(!validateCustomer()){
             return;
         }
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
+        Log.d(TAG,"addCustomer categoryList:"+categoryList.toString());
         userId = (int) Math.abs(Math.random() * 1000000);
-        CustomersRealm user = realm.createObject(CustomersRealm.class,userId); // Create a new object
-        user.setName(name.getText().toString());
-        user.setEmail(email.getText().toString());
-        user.setMobile(mobile.getText().toString());
-        user.setIntrestedIn(categoryList.toString());
-        realm.commitTransaction();
 
-        CustomerData customers = new CustomerData();
-        customers.setRealmCustomer(user);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_ID,userId);
+        contentValues.put(ShopOnContract.Entry.COLUMN_NAME,name.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,email.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,mobile.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY,categoryList.toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CREATED_AT,Utils.getCurrentDate());
 
-        CustomerContent.ITEMS.add(customers.getCustomers());
+        getContentResolver().insert(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,contentValues);
 
-        CustomerRealmUtil.updateCustomer(this,user);
+        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,null,ShopOnContract.Entry.COLUMN_CUSTOMER_ID+"=?",new String[]{String.valueOf(userId)},null);
+        cursor.moveToFirst();
+        Customers customers = Utils.createCustomerFromCursor(cursor);
+
+        FireBaseUtils.updateCustomer(this,customers);
     }
 
 
@@ -331,5 +338,8 @@ public class CustomerActivity extends BaseActivity {
 
         return true;
     }
+
+
+
 
 }

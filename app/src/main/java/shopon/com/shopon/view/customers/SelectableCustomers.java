@@ -1,7 +1,11 @@
 package shopon.com.shopon.view.customers;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,12 +22,10 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmResults;
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.customer.Customers;
-import shopon.com.shopon.datamodel.customer.CustomersRealm;
-import shopon.com.shopon.db.CustomerRealmUtil;
+
+import shopon.com.shopon.db.provider.ShopOnContract;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
@@ -33,7 +35,7 @@ import shopon.com.shopon.view.customers.dummy.CustomerContent;
 import shopon.com.shopon.view.customers.fragment.CustomerFragment;
 
 
-public class SelectableCustomers extends BaseActivity implements CustomerFragment.OnListFragmentInteractionListener {
+public class SelectableCustomers extends BaseActivity implements CustomerFragment.OnListFragmentInteractionListener,LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = SelectableCustomers.class.getName();
     @Bind(R.id.tool_bar)
@@ -51,6 +53,7 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
     Button addPhoneBookNumber;
     @Bind(R.id.no_customer_label)
     TextView customerLabel;
+    private Cursor mCursor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
         }
         customerListView.setLayoutManager(mLinearLayoutManager);
 
-        retrieveCustomerList();
+
         customerAapter = new MyCustomerRecyclerViewAdapter(CustomerContent.ITEMS, this,true,false);
         displayEmptyList();
         customerListView.setAdapter(customerAapter);
@@ -97,15 +100,7 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
     }
 
 
-    private void retrieveCustomerList() {
-        Log.d(TAG, "retrieveCustomerList");
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<CustomersRealm> result = realm.where(CustomersRealm.class).findAll();
-        customerList = (ArrayList<Customers>) CustomerRealmUtil.convertRealmCustomerListToCustomerList(result);
-        Log.d(TAG, "customerList:" + customerList.toString());
-        CustomerContent.ITEMS.clear();
-        CustomerContent.ITEMS.addAll(customerList);
-    }
+
 
     @Override
     public void onListFragmentInteraction(Customers item) {
@@ -161,7 +156,43 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
     }
 
 
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        Log.d(TAG,"onCreateLoader");
+        return new CursorLoader(this,  // Context
+                ShopOnContract.Entry.CONTENT_CUSTOMER_URI, // URI
+                null,                // Projection
+                null,                           // Selection
+                null,                           // Selection args
+                ShopOnContract.Entry.COLUMN_CREATED_AT + " asc");
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Cursor data) {
+        Log.d(TAG,"onLoadFinished size:"+data.getCount());
+        mCursor = data;
+        populateCustomerListFromCursor(data);
+        if(getSupportLoaderManager().hasRunningLoaders()){
+            getSupportLoaderManager().destroyLoader(Constants.ALL_CUSTOMERS);
+        }
+
+    }
+
+    private void populateCustomerListFromCursor(Cursor cursor){
+        CustomerContent.ITEMS.clear();
+        cursor.moveToFirst();
+        Log.d(TAG,"populateOfferListFromCursor cursor:"+cursor.getCount());
+        for(int i=0;i<cursor.getCount();i++){
+            Customers customers = shopon.com.shopon.utils.Utils.createCustomerFromCursor(cursor);
+            CustomerContent.ITEMS.add(customers);
+            cursor.moveToNext();
+        }
+    }
 
 
+    @Override
+    public void onLoaderReset(Loader loader) {
+
+    }
 
 }

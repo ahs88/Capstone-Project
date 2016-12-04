@@ -1,8 +1,12 @@
 package shopon.com.shopon.view.login;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +27,7 @@ import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.customer.Customers;
 import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.datamodel.offer.Offer;
+import shopon.com.shopon.db.provider.ShopOnContractRealm;
 import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.remote.SyncInterface;
 import shopon.com.shopon.remote.SyncLocalDB;
@@ -91,8 +96,7 @@ public class ShopOnActivity extends BaseActivity
         }
 
         bindNavHeader();
-
-
+        sync();
     }
 
     private void sync() {
@@ -102,25 +106,16 @@ public class ShopOnActivity extends BaseActivity
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sync();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        syncLocalDB.unregister(this);
-    }
-
     private void bindNavHeader() {
         UserSharedPreferences userSharedPrefernce = new UserSharedPreferences(this);
-        MerchantsRealm merchants = Realm.getDefaultInstance().where(MerchantsRealm.class).equalTo("userId",(Integer) userSharedPrefernce.getPref(Constants.MERCHANT_ID_PREF)).findFirst();
-        Log.d(TAG,"merchant name:"+merchants.getName()+" email name:"+merchants.getEmail()+" userId:"+(Integer) userSharedPrefernce.getPref(Constants.MERCHANT_ID_PREF));
-        userNameView.setText(merchants.getName());
-        emailView.setText(merchants.getEmail());
-        letterView.setText(((merchants.getEmail()!=null) && (!TextUtils.isEmpty(merchants.getEmail())))?String.valueOf(merchants.getEmail().charAt(0)):"");
+
+        Cursor cursor = getContentResolver().query(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI,null, ShopOnContractRealm.Entry.COLUMN_USER_ID+"=?",new String[]{String.valueOf((Integer) userSharedPrefernce.getPref(Constants.MERCHANT_ID_PREF))},null);
+        cursor.moveToFirst();
+        userNameView.setText(cursor.getString(1));
+        String email = cursor.getString(2);
+        emailView.setText(email);
+
+        letterView.setText(((email!=null) && (!TextUtils.isEmpty(email)))?String.valueOf(email.charAt(0)):"");
     }
 
     public void setContentDescription(){
@@ -144,14 +139,14 @@ public class ShopOnActivity extends BaseActivity
                 {
                     fab.setContentDescription(getString(R.string.create_customer));
                     Intent intent = new Intent(this, CustomerActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent,Constants.ADD_CUSTOMER);
                     Log.d(TAG,"intent invoked to launch customer activity");
 
                 }
                 else if(getCurrentFragment() instanceof OfferFragment || getCurrentFragment() instanceof OfferDetailFragment){
                     fab.setContentDescription(getString(R.string.create_offer));
                     Intent intent = new Intent(this, OfferActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent,Constants.ADD_OFFER);
                     Log.d(TAG,"intent invoked to launch offer activity");
                 }
     }
@@ -259,17 +254,17 @@ public class ShopOnActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        syncLocalDB.unregister(this);
+        //syncLocalDB.unregister(this);
         customerFragment = null;
         offerFragment = null;
     }
 
     @Override
     public void update(String action, Object... object) {
-        if(customerFragment!=null) {
+        if(currentFragment instanceof CustomerFragment) {
             customerFragment.notifyDataChange();
         }
-        if(offerFragment!=null) {
+        if(currentFragment instanceof OfferFragment) {
             offerFragment.notifyDataChange();
         }
 
@@ -286,6 +281,23 @@ public class ShopOnActivity extends BaseActivity
         if(currentFragment!=null) {
             outState.putString(Constants.CURRENT_FRAGMENT, currentFragment.getTag());
         }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG,"onActivityResult");
+        currentFragment.onActivityResult(requestCode,resultCode,data);
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //readFromRealmOnMainThread();
     }
 
 

@@ -3,10 +3,13 @@ package shopon.com.shopon.view.offer;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -46,7 +49,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.internal.Util;
 import shopon.com.shopon.R;
+import shopon.com.shopon.ShopOn;
 import shopon.com.shopon.datamodel.customer.CustomerData;
 import shopon.com.shopon.datamodel.customer.Customers;
 import shopon.com.shopon.datamodel.customer.CustomersRealm;
@@ -56,6 +61,7 @@ import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
 import shopon.com.shopon.db.OfferRealmUtil;
+import shopon.com.shopon.db.provider.ShopOnContract;
 import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.remote.FireBaseUtils;
 import shopon.com.shopon.service.SMSService;
@@ -71,6 +77,8 @@ import shopon.com.shopon.view.tagview.Tag.OnTagClickListener;
 import shopon.com.shopon.view.tagview.Tag.OnTagDeleteListener;
 import shopon.com.shopon.view.tagview.Tag.Tag;
 import shopon.com.shopon.view.tagview.Tag.TagView;
+
+import static java.lang.Thread.sleep;
 
 
 public class OfferActivity extends BaseActivity implements DateTimPickerUtils.ScheduledDateInterface {
@@ -151,6 +159,13 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
 
                 Offer offer = FireBaseUtils.getOfferById(mContext,offerId,snapshot);
                 if(offer !=null && offer.getOfferText().equals(offerTextView.getText().toString())){
+
+                    try {
+                        Thread.currentThread().sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    hideProgress();
                     setResult(RESULT_OK);
                     finish();
                 }
@@ -239,6 +254,7 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
+            hideProgress();
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -246,27 +262,35 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
 
 
     @OnClick(R.id.create_offer)
-    public void createOffer(){
-        if(!validateOffer()){
+    public void createOffer() {
+        if (!validateOffer()) {
             return;
         }
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
+
         offerId = (int) Math.abs(Math.random() * 1000000);
-        OfferRealm offer = realm.createObject(OfferRealm.class,offerId); // Create a new object
-        offer.setOfferText(offerTextView.getText().toString());
-        offer.setDeliverMessageOn(date.getText().toString());
-        offer.setNumbers(customerList.toString());
-        offer.setOfferStatus(false);
-        realm.commitTransaction();
 
-        Offer fOffer = OfferRealmUtil.converOfferRealmToOffer(offer);
-        //MerchantData merchantData = retrieveMerchantData(realm,fOffer);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_ID,offerId);
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_TEXT,offerTextView.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE,date.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS,customerList.toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_STATUS,false);
+        Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_OFFER_URI,contentValues);
+        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI,null,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offerId)},null);
+        if(cursor!=null) {
+            cursor.moveToFirst();
+            Offer fOffer = Utils.createOfferFromCursor(cursor);
+            //MerchantData merchantData = retrieveMerchantData(realm,fOffer);
+            FireBaseUtils.updateOfferDataBase(mContext, fOffer);
+            //Log.d(TAG, "local update offer_id:" + offer.getOfferId());
+            createSMSPendingIntent(offerId);
+        }
+        else {
+            Toast.makeText(mContext,getString(R.string.offer_create_failed),Toast.LENGTH_LONG).show();
+        }
 
-        FireBaseUtils.updateOfferDataBase(this,fOffer);
-        Log.d(TAG,"local update offer_id:"+offer.getOfferId());
-        createSMSPendingIntent(offerId);
-        OfferContent.ITEMS.add(fOffer);
+
+        //OfferContent.ITEMS.add(fOffer);
     }
 
     private void createSMSPendingIntent(int offerId) {

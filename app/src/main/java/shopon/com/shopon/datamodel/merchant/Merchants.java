@@ -33,6 +33,9 @@ public class Merchants{
     @Expose
     public String shopName;
 
+    @SerializedName("createdAt")
+    @Expose
+    public String createdAt;
    /* public Merchants(){
 
     }*/
@@ -163,4 +166,11 @@ public class Merchants{
         this.shopName = shopName;
     }
 
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 }

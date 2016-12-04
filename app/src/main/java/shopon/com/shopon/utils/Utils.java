@@ -1,7 +1,10 @@
 package shopon.com.shopon.utils;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -14,6 +17,7 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.NoSuchAlgorithmException;
@@ -21,6 +25,7 @@ import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
@@ -28,10 +33,13 @@ import java.util.List;
 import java.util.Objects;
 
 import io.realm.RealmResults;
+import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.customer.Customers;
 import shopon.com.shopon.datamodel.customer.CustomersRealm;
+import shopon.com.shopon.datamodel.merchant.Merchants;
 import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
+import shopon.com.shopon.view.base.AlertDialog;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.contact.AlphabetListAdapter;
 
@@ -259,4 +267,87 @@ public class Utils {
         return imageText;
     }
 
+    public static String getCurrentDate(){
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm a dd-MMM, yyyy");
+        String formattedDate = df.format(c.getTime());
+        return formattedDate;
+
+    }
+
+    public static void displayConnectToInternet(Activity context, DialogInterface.OnClickListener listener) {
+        AlertDialog alertDialog = AlertDialog.newInstance(context.getString(R.string.internet_warning),context.getString(R.string.connect_to_internet));
+        alertDialog.setPositiveButton(listener);
+        alertDialog.show(context.getFragmentManager(),TAG);
+    }
+
+    public static void displaySMSWarning(Activity context, DialogInterface.OnClickListener listener) {
+        AlertDialog alertDialog = AlertDialog.newInstance(context.getString(R.string.sms_warning),context.getString(R.string.carrier_charge_warning));
+        alertDialog.setNegativeButton(listener);
+        alertDialog.setPositiveButton(listener);
+        alertDialog.show(context.getFragmentManager(),TAG);
+    }
+
+    public static boolean isReachable(){
+
+        System.out.println("executeCommand");
+        Runtime runtime = Runtime.getRuntime();
+        try
+        {
+            Process  mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int mExitValue = mIpAddrProcess.waitFor();
+            System.out.println(" mExitValue "+mExitValue);
+            if(mExitValue==0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        catch (InterruptedException ignore)
+        {
+            ignore.printStackTrace();
+            System.out.println(" Exception:"+ignore);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            System.out.println(" Exception:"+e);
+        }
+        return false;
+    }
+
+
+    public static Merchants createMerchantFromCursor(Cursor cursor) {
+        Merchants merchants = new Merchants();
+        merchants.setUserId(cursor.getInt(0));
+        merchants.setName(cursor.getString(1));
+        merchants.setEmail(cursor.getString(2));
+        merchants.setMobile(cursor.getString(3));
+        merchants.setMerchentCategory(cursor.getString(4));
+        merchants.setCreatedAt(cursor.getString(5));
+        return merchants;
+    }
+
+    public static Offer createOfferFromCursor(Cursor cursor) {
+        Log.d(TAG,"offer status:"+cursor.getInt(2)+" offer text:"+cursor.getString(1));
+        Offer offer = new Offer();
+        offer.setOfferId(cursor.getInt(0));
+        offer.setOfferText(cursor.getString(1));
+        offer.setOfferStatus((cursor.getInt(2)==0)?false:true);
+        offer.setNumbers(cursor.getString(3));
+        offer.setDeliverMessageOn(cursor.getString(4));
+        return offer;
+    }
+
+    public static Customers createCustomerFromCursor(Cursor cursor) {
+        Customers customer = new Customers();
+        customer.setId(cursor.getInt(0));
+        customer.setName(cursor.getString(1));
+        customer.setEmail(cursor.getString(2));
+        customer.setMobile(cursor.getString(3));
+        customer.setIntrestedIn(cursor.getString(4));
+        return customer;
+    }
 }

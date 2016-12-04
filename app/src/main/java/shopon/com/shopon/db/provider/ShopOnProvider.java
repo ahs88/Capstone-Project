@@ -28,15 +28,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmObject;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import shopon.com.shopon.datamodel.customer.CustomersRealm;
-import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
-import shopon.com.shopon.datamodel.offer.OfferRealm;
-import shopon.com.shopon.db.DataMigration;
 import shopon.com.shopon.view.constants.Constants;
 
 
@@ -102,18 +93,15 @@ public class ShopOnProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, "customer_entries/*", ROUTE_ENTRIES_CUSTOMER_ID);
     }
 
-    private Realm mRealm;
+
 
     @Override
     public boolean onCreate() {
-        Realm.init(getContext().getApplicationContext());
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder().
-                migration(new DataMigration(getContext().getApplicationContext())).schemaVersion(1).deleteRealmIfMigrationNeeded().
-                build(); //.
-        Realm.setDefaultConfiguration(realmConfig);
-        mRealm = Realm.getDefaultInstance();
+        Log.d(TAG,"onCreate()");
+        mDatabaseHelper = new ShopOnDatabase(getContext());
         return true;
     }
+
 
     /**
      * Determine the mime type for entries returned by a given URI.
@@ -149,112 +137,70 @@ public class ShopOnProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
 
-
+        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+        SelectionBuilder builder = new SelectionBuilder();
         int uriMatch = sUriMatcher.match(uri);
+
         switch (uriMatch) {
+
+            case ROUTE_ENTRIES_CUSTOMER_ID: {
+                String id = uri.getLastPathSegment();
+                builder.where(ShopOnContract.Entry.COLUMN_CUSTOMER_ID + "=?", id);
+            }
             case ROUTE_ENTRIES_CUSTOMER: {
-                Log.d(TAG,"query");
-                Realm mRealm = Realm.getDefaultInstance();
-                RealmQuery<CustomersRealm> query = mRealm.where(CustomersRealm.class);
-                query = (RealmQuery<CustomersRealm>) getSelectionType(query, selection, selectionArgs);
-                RealmResults<CustomersRealm> results = query.findAll();
-                if(projection == null){
-                    projection = new String[]{ShopOnContract.Entry.COLUMN_USER_ID,ShopOnContract.Entry.COLUMN_NAME,ShopOnContract.Entry.COLUMN_MOBILE,ShopOnContract.Entry.COLUMN_EMAIL,ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY};
-                }
-                MatrixCursor matrixCursor =
-                        new MatrixCursor(projection);
-                for (CustomersRealm item : results) {
-                    Object[] rowData =
-                            new
-                                    Object[]{item.getId(), item.getName(), item.getMobile(), item.getEmail(), item.getIntrestedIn()};
-                    matrixCursor.addRow(rowData);
-                }
-                Log.d(TAG,"matrix cursor length:"+matrixCursor.getCount());
-                return matrixCursor;
-            }
-            case ROUTE_ENTRIES_CUSTOMER_ID:
+                builder.table(ShopOnContract.Entry.CUSTOMER_TABLE_NAME)
+                        .where(selection, selectionArgs);
+                Cursor c = builder.query(db, projection, sortOrder);
+                // Note: Notification URI must be manually set here for loaders to correctly
+                // register ContentObservers.
+                Context ctx = getContext();
+                assert ctx != null;
+                c.setNotificationUri(ctx.getContentResolver(), uri);
+                return c;
 
-                break;
+            }
+            case ROUTE_ENTRIES_MERCHANT_ID: {
+                String id = uri.getLastPathSegment();
+                builder.where(ShopOnContract.Entry.COLUMN_USER_ID + "=?", id);
+
+            }
             case ROUTE_ENTRIES_MERCHANT: {
-                RealmQuery<MerchantsRealm> query = mRealm.where(MerchantsRealm.class);
-                query = (RealmQuery<MerchantsRealm>)getSelectionType(query, selection, selectionArgs);
-                RealmResults<MerchantsRealm> results = query.findAll();
-                if(projection == null){
-                    projection = new String[]{ShopOnContract.Entry.COLUMN_USER_ID,ShopOnContract.Entry.COLUMN_NAME,ShopOnContract.Entry.COLUMN_MOBILE,ShopOnContract.Entry.COLUMN_EMAIL,ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY};
-                }
-                MatrixCursor matrixCursor =
-                        new MatrixCursor(projection);
-                for (MerchantsRealm item : results) {
-                    Object[] rowData =
-                            new
-                                    Object[]{item.getUserId(), item.getName(), item.getMobile(), item.getEmail(), item.getMerchentCategory()};
-                    matrixCursor.addRow(rowData);
-                }
-                return matrixCursor;
+                Log.d(TAG,"querry merchant");
+                builder.table(ShopOnContract.Entry.MERCHANT_TABLE_NAME)
+                        .where(selection, selectionArgs);
+                Cursor c = builder.query(db, projection, sortOrder);
+                // Note: Notification URI must be manually set here for loaders to correctly
+                // register ContentObservers.
+                Context ctx = getContext();
+                assert ctx != null;
+                c.setNotificationUri(ctx.getContentResolver(), uri);
+                return c;
+            }
 
+            case ROUTE_ENTRIES_OFFER_ID: {
+                String id = uri.getLastPathSegment();
+                builder.where(ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", id);
             }
-            case ROUTE_ENTRIES_MERCHANT_ID:
-                break;
             case ROUTE_ENTRIES_OFFER: {
-                Realm mRealm = Realm.getDefaultInstance();
-                RealmQuery<OfferRealm> query = mRealm.where(OfferRealm.class);
-                query = (RealmQuery<OfferRealm>) getSelectionType(query, selection, selectionArgs);
-                RealmResults<OfferRealm> results = query.findAll();
-                if (projection == null){
-                    projection = new String[]{ShopOnContract.Entry.COLUMN_OFFER_ID, ShopOnContract.Entry.COLUMN_OFFER_STATUS, ShopOnContract.Entry.COLUMN_OFFER_TEXT,ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, ShopOnContract.Entry.COLUMN_SCHEDULED_DATE};
-                }
-                MatrixCursor matrixCursor =
-                        new MatrixCursor(projection);
-                for (OfferRealm item : results) {
-                    Object[] rowData =
-                            new Object[]{item.getOfferId(), item.getOfferStatus(),item.getOfferText(), item.getNumbers(), item.getDeliverMessageOn()};
-                    matrixCursor.addRow(rowData);
-                }
-                Log.d(TAG,"matrix cursor length:"+results.size());
-                return matrixCursor;
+                Log.d(TAG,"query offers");
+                builder.table(ShopOnContract.Entry.OFFER_TABLE_NAME)
+                        .where(selection, selectionArgs);
+                Cursor c = builder.query(db, projection, sortOrder);
+                // Note: Notification URI must be manually set here for loaders to correctly
+                // register ContentObservers.
+                Context ctx = getContext();
+                assert ctx != null;
+                c.setNotificationUri(ctx.getContentResolver(), uri);
+                return c;
             }
-            case ROUTE_ENTRIES_OFFER_ID:
-                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        return null;
+
     }
 
-    private RealmQuery<? extends RealmObject> getSelectionType(RealmQuery<? extends RealmObject> query, String selection, String selectionArgs[]) {
-        if (selection == null || TextUtils.isEmpty(selection)){
-            return query;
-        }
 
-        try {
-            String query_filters[] = selection.split(";");
-            for (int i = 0; i < query_filters.length; i++) {
-                String query_filter[] = query_filters[i].split(",");
-                String column_name = query_filter[0];
-                String filter_type = query_filter[1];
-                Log.d(TAG,"filterType:"+filter_type+" columnName:"+column_name+" selection args:"+selectionArgs[i]);
-                switch (filter_type) {
-                    case Constants.FILTER_EQUAL_TO:
-                        if(column_name.equals(ShopOnContract.Entry.COLUMN_USER_ID) || column_name.equals(ShopOnContract.Entry.COLUMN_CUSTOMER_ID)|| column_name.equals(ShopOnContract.Entry.COLUMN_OFFER_ID)){
-                            query = query.equalTo(column_name,Integer.parseInt(selectionArgs[i]));
-                        }
-                        else if(column_name.equals(ShopOnContract.Entry.COLUMN_OFFER_STATUS)){
-                            Log.d(TAG,"selection arg:"+Boolean.parseBoolean(selectionArgs[i]));
-                            query = query.equalTo(column_name,Boolean.parseBoolean(selectionArgs[i]));
-                        }
-                        else {
-                            query = query.equalTo(column_name, selectionArgs[i]);
-                        }
-                        break;
-                }
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-            Log.e(TAG,"Improper selection format,  Expected format *****,*****;*****,******");
-            //return query;
-        }
-        return query;
-    }
 
     /**
      * Insert a new entry into the database.
@@ -262,58 +208,31 @@ public class ShopOnProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-
+        Uri result= null;
         final int match = sUriMatcher.match(uri);
-
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         switch (match) {
             case ROUTE_ENTRIES_CUSTOMER:{
                 Log.d(TAG,"insert customer");
-                mRealm.beginTransaction();
-
-                CustomersRealm item = mRealm.createObject(CustomersRealm.class);
-                item.setId(values.getAsInteger(ShopOnContract.Entry.COLUMN_USER_ID));
-                item.setName(values.getAsString(ShopOnContract.Entry.COLUMN_NAME));
-                item.setEmail(values.getAsString(ShopOnContract.Entry.COLUMN_EMAIL));
-                item.setMobile(values.getAsString(ShopOnContract.Entry.COLUMN_MOBILE));
-                item.setMerchentId(values.getAsInteger(ShopOnContract.Entry.COLUMN_CUSTOMER_MERCHANT_ID));
-                item.setIntrestedIn(values.getAsString(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY));
-                mRealm.commitTransaction();
-                return Uri.withAppendedPath(uri, String.valueOf(item.getId()));
-            }
-            case ROUTE_ENTRIES_CUSTOMER_ID:
-
+                long id = db.insertOrThrow(ShopOnContract.Entry.CUSTOMER_TABLE_NAME, null, values);
+                result = Uri.parse(ShopOnContract.Entry.CONTENT_CUSTOMER_URI + "/" + id);
                 break;
+            }
+
             case ROUTE_ENTRIES_MERCHANT: {
                 Log.d(TAG,"insert merchant");
-                mRealm.beginTransaction();
-                MerchantsRealm item = mRealm.createObject(MerchantsRealm.class);
-                item.setUserId(values.getAsInteger(ShopOnContract.Entry.COLUMN_USER_ID));
-                item.setName(values.getAsString(ShopOnContract.Entry.COLUMN_NAME));
-                item.setEmail(values.getAsString(ShopOnContract.Entry.COLUMN_EMAIL));
-                item.setMobile(values.getAsString(ShopOnContract.Entry.COLUMN_MOBILE));
-                item.setMerchentCategory(values.getAsString(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY));
-                mRealm.commitTransaction();
-                return Uri.withAppendedPath(uri, String.valueOf(item.getUserId()));
-            }
-            case ROUTE_ENTRIES_MERCHANT_ID:
+                long id = db.insertOrThrow(ShopOnContract.Entry.MERCHANT_TABLE_NAME, null, values);
+                result = Uri.parse(ShopOnContract.Entry.CONTENT_MERCHANT_URI + "/" + id);
                 break;
+            }
+
             case ROUTE_ENTRIES_OFFER:
             {
                 Log.d(TAG,"insert offer");
-                mRealm.beginTransaction();
-
-                OfferRealm item = mRealm.createObject(OfferRealm.class);
-                item.setOfferId(values.getAsInteger(ShopOnContract.Entry.COLUMN_OFFER_ID));
-                item.setDeliverMessageOn(values.getAsString(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE));
-                item.setNumbers(values.getAsString(ShopOnContract.Entry.COLUMN_MOBILE));
-                item.setOfferStatus(values.getAsBoolean(ShopOnContract.Entry.COLUMN_OFFER_STATUS));
-                item.setOfferText(values.getAsString(ShopOnContract.Entry.COLUMN_OFFER_TEXT));
-                mRealm.commitTransaction();
-                return Uri.withAppendedPath(uri, String.valueOf(item.getOfferId()));
-            }
-
-            case ROUTE_ENTRIES_OFFER_ID:
+                long id = db.insertOrThrow(ShopOnContract.Entry.OFFER_TABLE_NAME, null, values);
+                result = Uri.parse(ShopOnContract.Entry.CONTENT_OFFER_URI + "/" + id);
                 break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -321,7 +240,7 @@ public class ShopOnProvider extends ContentProvider {
         Context ctx = getContext();
         assert ctx != null;
         ctx.getContentResolver().notifyChange(uri, null, false);
-        return null;
+        return result;
     }
 
     /**
@@ -331,22 +250,50 @@ public class ShopOnProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
 
         final int match = sUriMatcher.match(uri);
-
+        SelectionBuilder builder = new SelectionBuilder();
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        int count = 0;
         switch (match) {
             case ROUTE_ENTRIES_CUSTOMER:
+                count = builder.table(ShopOnContract.Entry.CUSTOMER_TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .delete(db);
+                break;
 
+            case ROUTE_ENTRIES_CUSTOMER_ID: {
+                String id = uri.getLastPathSegment();
+                count = builder.table(ShopOnContract.Entry.CUSTOMER_TABLE_NAME)
+                        .where(ShopOnContract.Entry.COLUMN_CUSTOMER_ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .delete(db);
                 break;
-            case ROUTE_ENTRIES_CUSTOMER_ID:
-                /**/
-                break;
+            }
             case ROUTE_ENTRIES_MERCHANT:
+                count = builder.table(ShopOnContract.Entry.MERCHANT_TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .delete(db);
                 break;
-            case ROUTE_ENTRIES_MERCHANT_ID:
+            case ROUTE_ENTRIES_MERCHANT_ID: {
+                String id = uri.getLastPathSegment();
+                count = builder.table(ShopOnContract.Entry.MERCHANT_TABLE_NAME)
+                        .where(ShopOnContract.Entry.COLUMN_USER_ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .delete(db);
                 break;
+            }
             case ROUTE_ENTRIES_OFFER:
+                count = builder.table(ShopOnContract.Entry.OFFER_TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .delete(db);
                 break;
-            case ROUTE_ENTRIES_OFFER_ID:
+            case ROUTE_ENTRIES_OFFER_ID: {
+                String id = uri.getLastPathSegment();
+                count = builder.table(ShopOnContract.Entry.OFFER_TABLE_NAME)
+                        .where(ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .delete(db);
                 break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -354,7 +301,7 @@ public class ShopOnProvider extends ContentProvider {
         Context ctx = getContext();
         assert ctx != null;
         ctx.getContentResolver().notifyChange(uri, null, false);
-        return 0;
+        return count;
     }
 
     /**
@@ -364,38 +311,57 @@ public class ShopOnProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final int match = sUriMatcher.match(uri);
         int count;
+        SelectionBuilder builder = new SelectionBuilder();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+
         switch (match) {
             case ROUTE_ENTRIES_CUSTOMER:
+                count = builder.table(ShopOnContract.Entry.CUSTOMER_TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
+                break;
 
+            case ROUTE_ENTRIES_CUSTOMER_ID: {
+                String id = uri.getLastPathSegment();
+                count = builder.table(ShopOnContract.Entry.CUSTOMER_TABLE_NAME)
+                        .where(ShopOnContract.Entry.COLUMN_CUSTOMER_ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
                 break;
-            case ROUTE_ENTRIES_CUSTOMER_ID:
-                /**/
-                break;
+            }
             case ROUTE_ENTRIES_MERCHANT:
-                mRealm.beginTransaction();
-                RealmQuery<MerchantsRealm> query = mRealm.where(MerchantsRealm.class);
-                query = (RealmQuery<MerchantsRealm>)getSelectionType(query, selection, selectionArgs);
-                MerchantsRealm item = query.findFirst();
-                Log.d(TAG,"update item:"+item.getUserId());
-                item.setName((values.getAsString(ShopOnContract.Entry.COLUMN_NAME)!=null)?(values.getAsString(ShopOnContract.Entry.COLUMN_NAME)):item.getName());
-                item.setEmail((values.getAsString(ShopOnContract.Entry.COLUMN_EMAIL)!=null)?(values.getAsString(ShopOnContract.Entry.COLUMN_EMAIL)):item.getEmail());
-                item.setMobile((values.getAsString(ShopOnContract.Entry.COLUMN_MOBILE)!=null)?(values.getAsString(ShopOnContract.Entry.COLUMN_MOBILE)):item.getMobile());
-                item.setMerchentCategory((values.getAsString(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY)!=null)?(values.getAsString(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY)):item.getMerchentCategory());
-                mRealm.commitTransaction();
+                count = builder.table(ShopOnContract.Entry.MERCHANT_TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
                 break;
-            case ROUTE_ENTRIES_MERCHANT_ID:
+            case ROUTE_ENTRIES_MERCHANT_ID: {
+                String id = uri.getLastPathSegment();
+                count = builder.table(ShopOnContract.Entry.MERCHANT_TABLE_NAME)
+                        .where(ShopOnContract.Entry.COLUMN_USER_ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
                 break;
+            }
             case ROUTE_ENTRIES_OFFER:
+                count = builder.table(ShopOnContract.Entry.OFFER_TABLE_NAME)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
                 break;
-            case ROUTE_ENTRIES_OFFER_ID:
+            case ROUTE_ENTRIES_OFFER_ID: {
+                String id = uri.getLastPathSegment();
+                count = builder.table(ShopOnContract.Entry.OFFER_TABLE_NAME)
+                        .where(ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", id)
+                        .where(selection, selectionArgs)
+                        .update(db, values);
                 break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         Context ctx = getContext();
         assert ctx != null;
         ctx.getContentResolver().notifyChange(uri, null, false);
-        return 0;
+        return count;
     }
 
     /**
@@ -406,19 +372,54 @@ public class ShopOnProvider extends ContentProvider {
      */
     static class ShopOnDatabase extends SQLiteOpenHelper {
         /** Schema version. */
-        public static final int DATABASE_VERSION = 2;
+        public static final int DATABASE_VERSION = 3;
         /** Filename for SQLite file. */
         public static final String DATABASE_NAME = "offersgalore.db";
 
         private static final String TYPE_TEXT = " TEXT";
         private static final String TYPE_INTEGER = " INTEGER";
         private static final String TYPE_BOOL = " BOOL";
+        private static final String TYPE_DATETIME = " DATETIME";
         private static final String COMMA_SEP = ",";
-        /** SQL statement to create "entry" table. */
 
+        /** SQL statement to create "entry" table. */
+        private static final String SQL_CREATE_MERCHANT_ENTRIES =
+                "CREATE TABLE IF NOT EXISTS " + ShopOnContract.Entry.MERCHANT_TABLE_NAME + " (" +
+                        ShopOnContract.Entry.COLUMN_USER_ID + TYPE_INTEGER + " PRIMARY KEY" + COMMA_SEP+
+                        ShopOnContract.Entry.COLUMN_NAME + TYPE_TEXT +COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_EMAIL + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_MOBILE    + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME+
+                        ")";
+
+        private static final String SQL_CREATE_CUSTOMER_ENTRIES =
+                "CREATE TABLE IF NOT EXISTS " + ShopOnContract.Entry.CUSTOMER_TABLE_NAME + " (" +
+                        ShopOnContract.Entry.COLUMN_CUSTOMER_ID + " INTEGER PRIMARY KEY," +
+                        ShopOnContract.Entry.COLUMN_NAME + TYPE_TEXT +COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_EMAIL + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_MOBILE    + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME+
+                        ")";
+
+        private static final String SQL_CREATE_OFFER_ENTRIES =
+                "CREATE TABLE IF NOT EXISTS " + ShopOnContract.Entry.OFFER_TABLE_NAME + " (" +
+                        ShopOnContract.Entry.COLUMN_OFFER_ID + " INTEGER PRIMARY KEY," +
+                        ShopOnContract.Entry.COLUMN_OFFER_TEXT + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_OFFER_STATUS    + TYPE_BOOL + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + TYPE_DATETIME +COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME+
+                        ")";
 
         /** SQL statement to drop "entry" table. */
-
+        private static final String SQL_DELETE_OFFER_ENTRIES =
+                "DROP TABLE IF EXISTS " + ShopOnContract.Entry.OFFER_TABLE_NAME;
+        private static final String SQL_DELETE_MERCHANT_ENTRIES =
+                "DROP TABLE IF EXISTS " + ShopOnContract.Entry.MERCHANT_TABLE_NAME;
+        private static final String SQL_DELETE_CUSTOMER_ENTRIES =
+                "DROP TABLE IF EXISTS " + ShopOnContract.Entry.CUSTOMER_TABLE_NAME;
 
         public ShopOnDatabase(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -426,6 +427,10 @@ public class ShopOnProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+            Log.d(TAG,"onCreate sqlitehelper SQL_CREATE_MERCHANT_ENTRIES:"+SQL_CREATE_MERCHANT_ENTRIES);
+            db.execSQL(SQL_CREATE_MERCHANT_ENTRIES);
+            db.execSQL(SQL_CREATE_CUSTOMER_ENTRIES);
+            db.execSQL(SQL_CREATE_OFFER_ENTRIES);
 
         }
 
@@ -433,6 +438,9 @@ public class ShopOnProvider extends ContentProvider {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // This database is only a cache for online data, so its upgrade policy is
             // to simply to discard the data and start over
+            db.execSQL(SQL_DELETE_CUSTOMER_ENTRIES);
+            db.execSQL(SQL_DELETE_OFFER_ENTRIES);
+            db.execSQL(SQL_DELETE_MERCHANT_ENTRIES);
 
             onCreate(db);
         }

@@ -18,11 +18,10 @@ public class ShopOn extends Application{
     public void onCreate() {
         super.onCreate();
         Log.d(TAG,"Application oncreate");
-        /*Realm.init(this);
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder().
-                migration(new DataMigration(this)).schemaVersion(1).deleteRealmIfMigrationNeeded().
+        /*Realm.init(getApplicationContext());
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder().inMemory().
+                migration(new DataMigration(getApplicationContext())).schemaVersion(1).deleteRealmIfMigrationNeeded().
                 build(); //.
         Realm.setDefaultConfiguration(realmConfig);*/
-       // Toast.makeText(this,"Hello",Toast.LENGTH_SHORT).show();
     }
 }

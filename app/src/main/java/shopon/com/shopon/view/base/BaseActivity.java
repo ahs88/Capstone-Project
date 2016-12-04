@@ -36,20 +36,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public synchronized void showProgress() {
         // Fragment transactions are committed asynchronously. Make sure last hide Operation is complete.
-        getFragmentManager().executePendingTransactions();
+        getSupportFragmentManager().executePendingTransactions();
 
         if (!progress.isAdded()) {
-            progress.show(getFragmentManager(), null);
+            progress.show(getSupportFragmentManager(), null);
         }
     }
 
     public synchronized void showProgress(int text_id) {
         // Fragment transactions are committed asynchronously. Make sure last hide Operation is complete.
-        getFragmentManager().executePendingTransactions();
+        getSupportFragmentManager().executePendingTransactions();
         progress = ProgressDialog.newInstance(text_id);
 
         if (!progress.isAdded()) {
-            progress.show(getFragmentManager(), null);
+            progress.show(getSupportFragmentManager(), null);
         }
     }
 

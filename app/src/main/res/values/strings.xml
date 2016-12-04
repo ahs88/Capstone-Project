@@ -105,4 +105,7 @@
     <string name="sim_required_err">You need to have an active sim to login</string>
     <string name="firebase_app_id">ca-app-pub-8202180190350545~1542665711</string>
     <string name="offer_scheduled_today">Offers Scheduled Today</string>
+    <string name="creating_offer">Creating Offer</string>
+    <string name="offer_create_failed">Failed to create offer, please try again after a while.</string>
+    <string name="failed_to_send_sms">Failed to send SMS</string>
 </resources>

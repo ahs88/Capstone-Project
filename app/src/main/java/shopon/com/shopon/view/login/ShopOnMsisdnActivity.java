@@ -33,9 +33,9 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import io.realm.Realm;
 
-import io.realm.internal.Util;
+
 import shopon.com.shopon.R;
-import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
+
 import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.AlertDialog;
@@ -58,9 +58,10 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
     EditText msisdn;
     @Bind(R.id.acc_continue)
     TextView accContinue;
+    private ShopOnMsisdnActivity mContext;
 
-    enum DialogAction{NETWORK_CHECK, SMS_CHECK}
-    DialogAction currentDialogAction = DialogAction.NETWORK_CHECK;
+
+    Constants.DialogAction currentDialogAction = Constants.DialogAction.NETWORK_CHECK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,9 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
         ButterKnife.bind(this);
         setupActionBar(toolbar);
         toolbarTitle.setText(getString(R.string.verify_phone_number));
-
+        
+        mContext = this;
+        
         ActivityCompat.requestPermissions(this,new String[]{
                 Manifest.permission.SEND_SMS,Manifest.permission.READ_PHONE_STATE
         },1);
@@ -80,10 +83,10 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
     public void navigateToCategory() {
         if (msisdn.getText().toString().length() == 10) { //check if mobile number valid
             if(Utils.getConnectivityStatus(this) == Constants.INTERNET_NOT_CONNECTED){
-                displayConnectToInternet();
+                Utils.displayConnectToInternet(this,this);
                 return;
             }
-            currentDialogAction = DialogAction.SMS_CHECK;
+            currentDialogAction = Constants.DialogAction.SMS_CHECK;
             boolean isGranted = checkIfPermissionGranted(this,Manifest.permission.SEND_SMS);
             if(!isGranted){
                 Log.d(TAG,"send sms not granted");
@@ -99,7 +102,7 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
                             new String[]{Manifest.permission.READ_PHONE_STATE},
                             Constants.MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
                 }else{
-                    displaySMSWarning();
+                    Utils.displaySMSWarning(this,this);
                 }
             }
 
@@ -111,11 +114,7 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
 
     }
 
-    private void displayConnectToInternet() {
-        AlertDialog alertDialog = AlertDialog.newInstance(getString(R.string.internet_warning),getString(R.string.connect_to_internet));
-        alertDialog.setPositiveButton(this);
-        alertDialog.show(getFragmentManager(),TAG);
-    }
+    
 
     private void proceedToOTP() {
         String otp = Utils.generateRandomOTP(4);
@@ -170,7 +169,7 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
         Log.d(TAG,"onclick of dialog i:"+i);
-        if(currentDialogAction == DialogAction.SMS_CHECK) {
+        if(currentDialogAction == Constants.DialogAction.SMS_CHECK) {
             if (i == DialogInterface.BUTTON_POSITIVE) {
                 proceedToOTP();
             } else {
@@ -214,7 +213,7 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
                                 Constants.MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
                     }
                     else{
-                        displaySMSWarning();
+                        Utils.displaySMSWarning(mContext,mContext);
                     }
 
                 }
@@ -231,17 +230,12 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
                     }
                     else
                     {
-                        displaySMSWarning();
+                        Utils.displaySMSWarning(mContext,mContext);
                     }
                 }
             }
         }
     }
 
-    private void displaySMSWarning() {
-        AlertDialog alertDialog = AlertDialog.newInstance(getString(R.string.sms_warning),getString(R.string.carrier_charge_warning));
-        alertDialog.setNegativeButton(this);
-        alertDialog.setPositiveButton(this);
-        alertDialog.show(getFragmentManager(),TAG);
-    }
+    
 }

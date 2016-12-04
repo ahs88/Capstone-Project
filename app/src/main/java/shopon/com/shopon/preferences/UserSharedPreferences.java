@@ -31,6 +31,11 @@ public class UserSharedPreferences {
     }
 
 
+    public SharedPreferences getSharedPreferences(){
+        return sharedPreferences;
+    }
+
+
 
     public void savePref(String key, Object value) {
         delete(key);

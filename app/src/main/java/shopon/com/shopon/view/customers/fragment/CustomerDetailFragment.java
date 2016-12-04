@@ -1,7 +1,9 @@
 package shopon.com.shopon.view.customers.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,18 +29,22 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
+
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.DetailEntry;
-import shopon.com.shopon.datamodel.customer.CustomerData;
-import shopon.com.shopon.datamodel.customer.CustomersRealm;
+
+import shopon.com.shopon.datamodel.customer.Customers;
+
+
+import shopon.com.shopon.db.provider.ShopOnContract;
 import shopon.com.shopon.preferences.UserSharedPreferences;
+import shopon.com.shopon.remote.FireBaseUtils;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseFragment;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.login.ShopCategoryActivity;
 import shopon.com.shopon.view.offer.adpater.DetailOptionsAdapter;
-import shopon.com.shopon.view.offer.fragment.OfferDetailFragment;
+
 
 
 import static android.app.Activity.RESULT_OK;
@@ -59,7 +65,7 @@ public class CustomerDetailFragment extends BaseFragment {
     private DetailOptionsAdapter detailOptionsDetailAdapter;
     private RecyclerView customerDetail;
     private List<DetailEntry> customer_detail_entry = new ArrayList<>();
-    private CustomersRealm customer;
+    private Customers customer;
 
     private DatabaseReference mDatabase;
     private UserSharedPreferences userSharedPreferences;
@@ -146,13 +152,15 @@ public class CustomerDetailFragment extends BaseFragment {
 
     private void populateCustomerDetails(int customerId) {
         convertView.findViewById(R.id.no_customer_label).setVisibility(View.GONE);
-        Realm realm = Realm.getDefaultInstance();
-        customer = realm.where(CustomersRealm.class).equalTo("id", customerId).findFirst();
-        if(customer == null){
-            //TODO part of error handling
-            //display no customer selected
-            convertView.findViewById(R.id.no_customer_label).setVisibility(View.VISIBLE);
-            return;
+        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,null,ShopOnContract.Entry.COLUMN_CUSTOMER_ID+"=?",new String[]{String.valueOf(customerId)},null);
+        if(cursor!=null) {
+            cursor.moveToFirst();
+            customer = Utils.createCustomerFromCursor(cursor);
+
+            if (customer == null) {
+                convertView.findViewById(R.id.no_customer_label).setVisibility(View.VISIBLE);
+                return;
+            }
         }
         String label[] = new String[]{"Name", "Number", "Email", "Interests"};
         String value[] = new String[]{customer.getName(), customer.getMobile(), customer.getEmail(), String.valueOf(customer.getIntrestedIn())};
@@ -255,8 +263,8 @@ public class CustomerDetailFragment extends BaseFragment {
                 }
                 detailOptionsDetailAdapter.setEditEnabled(false);
                 detailOptionsDetailAdapter.notifyDataSetChanged();
-                CustomersRealm customer_realm = updateLocalCustomer(customerId);
-                updateRemoteCustomer(customer_realm);
+                Customers customer = updateLocalCustomer(customerId);
+                updateRemoteCustomer(customer);
                 if (isTwoPane) {
                     getActivity().invalidateOptionsMenu();
                 }
@@ -289,21 +297,28 @@ public class CustomerDetailFragment extends BaseFragment {
         return true;
     }
 
-    private CustomersRealm updateLocalCustomer(int customerId){
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        CustomersRealm user = realm.where(CustomersRealm.class).equalTo("id",customerId).findFirst(); // Create a new object
-        user.setName(customer_detail_entry.get(0).getValue().toString());
-        user.setMobile(customer_detail_entry.get(1).getValue().toString());
-        user.setEmail(customer_detail_entry.get(2).getValue().toString());
-        user.setIntrestedIn(customer_detail_entry.get(3).getValue().toString());
-        realm.commitTransaction();
-        return user;
+    private Customers updateLocalCustomer(int customerId){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContract.Entry.COLUMN_NAME,customer_detail_entry.get(0).getValue().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,customer_detail_entry.get(1).getValue().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,customer_detail_entry.get(2).getValue().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY,customer_detail_entry.get(3).getValue().toString());
+        getActivity().getContentResolver().update(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,contentValues,ShopOnContract.Entry.COLUMN_CUSTOMER_ID+"=?",new String[]{String.valueOf(customerId)});
+
+        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,null,ShopOnContract.Entry.COLUMN_CUSTOMER_ID+"=?",new String[]{String.valueOf(customerId)},null);
+        if(cursor!=null) {
+            cursor.moveToFirst();
+            Customers customer = Utils.createCustomerFromCursor(cursor);
+            return customer;
+        }else
+        {
+            return null;
+        }
+
     }
 
-    private void updateRemoteCustomer(CustomersRealm customer_realm) {
-        CustomerData customer_data = new CustomerData();
-        customer_data.setRealmCustomer(customer_realm);
+    private void updateRemoteCustomer(Customers customer) {
+        FireBaseUtils.updateCustomer(getActivity(),customer);
         //+customer_realm.getMobile()
     }
 

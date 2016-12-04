@@ -29,6 +29,10 @@ public class Customers {
     @Expose
     private String name;
 
+    @SerializedName("createdAt")
+    @Expose
+    private String createdAt;
+
     /**
      *
      * @return
@@ -137,4 +141,11 @@ public class Customers {
         this.name = name;
     }
 
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 }

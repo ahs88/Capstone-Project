@@ -1,7 +1,9 @@
 package shopon.com.shopon.view.offer.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,7 +40,9 @@ import shopon.com.shopon.datamodel.DetailEntry;
 import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
 import shopon.com.shopon.db.OfferRealmUtil;
+import shopon.com.shopon.db.provider.ShopOnContract;
 import shopon.com.shopon.remote.FireBaseUtils;
+import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseFragment;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.customers.SelectableCustomers;
@@ -64,7 +68,7 @@ public class OfferDetailFragment extends BaseFragment {
     private View convertView;
     private DatabaseReference mDatabase;
     private int offerId;
-    private OfferRealm offer;
+    private Offer offer;
     private DetailOptionsAdapter detailOptionsDetailAdapter;
     private RecyclerView offerDetail;
     private List<DetailEntry> offer_detail_entry = new ArrayList<>();
@@ -176,12 +180,15 @@ public class OfferDetailFragment extends BaseFragment {
 
     private void populateOfferDetails(int offerId) {
         convertView.findViewById(R.id.no_offer_label).setVisibility(View.GONE);
-        Realm realm = Realm.getDefaultInstance();
-        offer = realm.where(OfferRealm.class).equalTo("offerId",offerId).findFirst();
-        if(offer == null)
-        {
-            convertView.findViewById(R.id.no_offer_label).setVisibility(View.VISIBLE);
-            return;
+        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI,null,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offerId)},null);
+        if(cursor!=null) {
+            cursor.moveToFirst();
+            offer = Utils.createOfferFromCursor(cursor);
+
+            if (offer == null) {
+                convertView.findViewById(R.id.no_offer_label).setVisibility(View.VISIBLE);
+                return;
+            }
         }
         customerList.addAll(Arrays.asList(offer.getNumbers().replace("[","").replace("]","").split(",")));
         String label[] = new String[]{"Offer Text","Delivery Date","Recipients","Status"};
@@ -285,8 +292,11 @@ public class OfferDetailFragment extends BaseFragment {
                 }
                 detailOptionsDetailAdapter.setEditEnabled(false);
                 detailOptionsDetailAdapter.notifyDataSetChanged();
-                OfferRealm offer_realm = updaLocalOffer(offerId);
-                updateRemoteOffer(offer_realm);
+                Offer offer = updaLocalOffer(offerId);
+                if(offer !=null) {
+                    updateRemoteOffer(offer);
+                }
+
 
                 if (isTwoPane) {
                     getActivity().invalidateOptionsMenu();
@@ -300,23 +310,30 @@ public class OfferDetailFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private OfferRealm updaLocalOffer(int offerId) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        OfferRealm offer = realm.where(OfferRealm.class).equalTo("offerId",offerId).findFirst(); // Create a new object
-        offer.setOfferText(offer_detail_entry.get(0).getValue());
-        offer.setDeliverMessageOn(offer_detail_entry.get(1).getValue());
-        offer.setNumbers(offer_detail_entry.get(2).getValue());
-        offer.setOfferStatus(offer_detail_entry.get(3).getValue().equals(getString(R.string.sms_sent))?true:false);
-        realm.commitTransaction();
-        return offer;
+    private Offer updaLocalOffer(int offerId) {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_TEXT,offer_detail_entry.get(0).getValue());
+        contentValues.put(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE,offer_detail_entry.get(1).getValue());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS,offer_detail_entry.get(2).getValue());
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_STATUS,offer_detail_entry.get(3).getValue().equals(getString(R.string.sms_sent))?true:false);
+        getActivity().getContentResolver().update(ShopOnContract.Entry.CONTENT_OFFER_URI,contentValues,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offerId)});
+
+        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI,null,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offerId)},null);
+        if(cursor!=null) {
+            cursor.moveToFirst();
+            Offer offer = Utils.createOfferFromCursor(cursor);
+            return offer;
+        }else
+        {
+            return null;
+        }
+
     }
 
-    private void updateRemoteOffer(OfferRealm offer_realm){
-        Offer fOffer = OfferRealmUtil.converOfferRealmToOffer(offer_realm);
-        FireBaseUtils.updateOfferDataBase(getActivity(),fOffer);
-        Log.d(TAG,"local update offer_id:"+fOffer.getOfferId());
-
+    private void updateRemoteOffer(Offer offer){
+        Log.d(TAG,"remote update offer_id:"+offer.getOfferId());
+        FireBaseUtils.updateOfferDataBase(getActivity(),offer);
     }
 
 

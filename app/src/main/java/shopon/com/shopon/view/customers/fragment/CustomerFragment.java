@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -29,15 +31,14 @@ import io.realm.RealmResults;
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.customer.Customers;
 import shopon.com.shopon.datamodel.customer.CustomersRealm;
-import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.db.CustomerRealmUtil;
 import shopon.com.shopon.db.provider.ShopOnContract;
-import shopon.com.shopon.utils.Utils;
+import shopon.com.shopon.db.provider.ShopOnContractRealm;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.customers.CustomerActivity;
 import shopon.com.shopon.view.customers.adapter.MyCustomerRecyclerViewAdapter;
 import shopon.com.shopon.view.customers.dummy.CustomerContent;
-import shopon.com.shopon.view.offer.dummy.OfferContent;
+import shopon.com.shopon.view.tagview.Tag.Utils;
 
 
 /**
@@ -46,7 +47,7 @@ import shopon.com.shopon.view.offer.dummy.OfferContent;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class CustomerFragment extends Fragment implements LoaderManager.LoaderCallbacks{
+public class CustomerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -68,7 +69,7 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     private List<Customers> customerList;
     private boolean isTwoPane;
     private Cursor mCursor;
-
+    private CustomerFragment customerFragment;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -95,13 +96,14 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             isTwoPane= getArguments().getBoolean(Constants.EXTRAS_IS_TWO_PANE);
         }
+        customerFragment = this;
         setRetainInstance(true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
     }
 
     @Override
@@ -126,10 +128,11 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
         customerListView.setAdapter(customerAapter);
         displayEmptyList();
 
-        getActivity().getSupportLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
+
 
         return view;
     }
+
 
     private void retrieveCustomerList() {
         Log.d(TAG, "retrieveCustomerList");
@@ -174,10 +177,15 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     @OnClick(R.id.create_customer)
     public void createCustomer() {
         Intent intent = new Intent(getActivity(), CustomerActivity.class);
-        startActivityForResult(intent, Constants.ADD_CUSTOMER);
+        getActivity().startActivityForResult(intent, Constants.ADD_CUSTOMER);
     }
 
     public void notifyDataChange() {
+        Log.d(TAG,"notifyDataChange");
+        getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
+    }
+
+    public void refreshView(){
         if (customerAapter != null) {
             if (mCursor!=null) {
                 populateCustomerListFromCursor(mCursor);
@@ -189,18 +197,24 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
+        Log.d(TAG,"onCreateLoader");
         return new CursorLoader(getActivity(),  // Context
                 ShopOnContract.Entry.CONTENT_CUSTOMER_URI, // URI
                 null,                // Projection
                 null,                           // Selection
                 null,                           // Selection args
-                ShopOnContract.Entry.COLUMN_NAME + " asc");
+                ShopOnContract.Entry.COLUMN_CREATED_AT + " asc");
     }
 
     @Override
-    public void onLoadFinished(Loader loader, Object data) {
-        mCursor = (Cursor)data;
-        notifyDataChange();
+    public void onLoadFinished(Loader loader, Cursor data) {
+        Log.d(TAG,"onLoadFinished size:"+data.getCount());
+        mCursor = data;
+        refreshView();
+        if(getLoaderManager().hasRunningLoaders()){
+            getLoaderManager().destroyLoader(Constants.ALL_CUSTOMERS);
+        }
+
     }
 
     @Override
@@ -213,13 +227,9 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
         cursor.moveToFirst();
         Log.d(TAG,"populateOfferListFromCursor cursor:"+cursor.getCount());
         for(int i=0;i<cursor.getCount();i++){
-            Customers customer = new Customers();
-            customer.setId(cursor.getInt(0));
-            customer.setName(cursor.getString(1));
-            customer.setMobile(cursor.getString(2));
-            customer.setEmail(cursor.getString(3));
-            customer.setIntrestedIn(cursor.getString(4));
-            CustomerContent.ITEMS.add(customer);
+            Customers customers = shopon.com.shopon.utils.Utils.createCustomerFromCursor(cursor);
+            CustomerContent.ITEMS.add(customers);
+            cursor.moveToNext();
         }
     }
 
@@ -244,13 +254,9 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
         Log.d(TAG, "setUserVisibilityHint");
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            displayEmptyList();
+            //displayEmptyList();
             if (customerAapter != null) {
-                if(mCursor!=null)
-                    populateCustomerListFromCursor(mCursor);
-
-                displayEmptyList();
-                customerAapter.notifyDataSetChanged();
+                getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
             }
         }
     }
@@ -259,8 +265,7 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Constants.ADD_CUSTOMER && resultCode == Activity.RESULT_OK){
-            getActivity().getSupportLoaderManager().restartLoader(Constants.ALL_CUSTOMERS, null, this);
-        }
+        Log.d(TAG,"onActivityResult");
+        getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, customerFragment);
     }
 }

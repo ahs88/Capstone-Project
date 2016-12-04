@@ -28,7 +28,9 @@ public class Offer {
     @Expose
     public boolean offerStatus;
 
-
+    @SerializedName("createdAt")
+    @Expose
+    public String createdAt;
 
     /**
      *
@@ -108,5 +110,13 @@ public class Offer {
 
     public void setOfferStatus(boolean offerStatus) {
         this.offerStatus = offerStatus;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

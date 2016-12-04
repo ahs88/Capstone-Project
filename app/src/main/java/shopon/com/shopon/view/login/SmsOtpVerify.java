@@ -2,12 +2,13 @@ package shopon.com.shopon.view.login;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -28,26 +29,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Map;
-import java.util.Objects;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 import shopon.com.shopon.R;
-import shopon.com.shopon.datamodel.merchant.MerchantData;
 import shopon.com.shopon.datamodel.merchant.Merchants;
-import shopon.com.shopon.datamodel.merchant.MerchantsRealm;
 import shopon.com.shopon.db.provider.ShopOnContract;
-import shopon.com.shopon.db.provider.ShopOnProvider;
+import shopon.com.shopon.db.provider.ShopOnContractRealm;
 import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
 
 
-public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
+public class SmsOtpVerify extends BaseActivity implements ChildEventListener,SharedPreferences.OnSharedPreferenceChangeListener,DialogInterface.OnClickListener{
 
     private static final String TAG = SmsOtpVerify.class.getName();
     private UserSharedPreferences userSharedPreferences;
@@ -67,23 +62,49 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
     private Context mContext;
     private Query queryRef;
     private ValueEventListener eventListener;
+    Constants.DialogAction dialogAction = Constants.DialogAction.NO_DIALOG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         userSharedPreferences = new UserSharedPreferences(this);
+        //save pref with some value
+        userSharedPreferences.savePref(Constants.CONNECTION_STATUS,1000);
+
         setContentView(R.layout.sms_otp_verify);
         ButterKnife.bind(this);
         mContext = this;
         toolbarTitle.setText(getString(R.string.title_activity_sms_otp_verify));
         mOtp = userSharedPreferences.getPref(Constants.MERCHANT_OTP);
 
+
+
         Log.d(TAG,"OTP:"+mOtp);
         setOnEditListener();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userSharedPreferences.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        userSharedPreferences.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     private void checkIfNumberExists() {
+        //asuming google servers never go down check if it can be pinged
+        if(!Utils.isReachable()){
+            hideProgress();
+            Utils.displayConnectToInternet(this,this);
+            verificationNumberView.setText("");
+            return;
+        }
+        showProgress(R.string.validate_num);
         mDatabase = FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
         queryRef  = mDatabase.orderByChild("mobile");//.equalTo((String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF))
 
@@ -94,7 +115,7 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
                 hideProgress();
                 Log.d(TAG,"onDataChanged snapshot:"+snapshot);
 
-                System.out.println(snapshot.child("merchants"));
+
 
                 if(snapshot.getValue() == null)
                 {
@@ -103,14 +124,14 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
                 else
                 {
                     //MerchantData merchantData = snapshot.getValue(MerchantData.class);
-                    Merchants merchant = snapshot.child(Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).child("merchants").getValue(Merchants.class);
+                    Merchants merchant = snapshot.child(Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).getValue(Merchants.class);
                     Log.d(TAG,"merchant:"+merchant+" merchant number :"+merchant.getMobile());
-                    launnchMainScreen();
                     writeToDb(merchant);
                     userSharedPreferences.savePref(Constants.MERCHANT_ID_PREF,merchant.getUserId());
                     userSharedPreferences.savePref(Constants.MERCHANT_MSISDN_PREF,merchant.getMobile());
                     userSharedPreferences.savePref(Constants.IS_RETURNING_CUSTOMER,true);
                     userSharedPreferences.savePref(Constants.CURRENT_LOGIN_STATE,Constants.LOGIN_COMPLETE);
+                    launnchMainScreen();
                 }
 
             }
@@ -146,10 +167,8 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
                 if (s.length() == 4) {
                     Log.d(TAG, "verifying number  --- s:" + s.toString()+" mOtp:"+mOtp);
                     if (s.toString().equals(String.valueOf(mOtp))) {
-                        showProgress(R.string.validate_num);
+
                         writeToDb();
-
-
                         checkIfNumberExists();
                     } else {
                         verificationNumberView.setText("");
@@ -172,30 +191,30 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
 
     public void writeToDb() {
         int userId = 0;
-        userId = (int) Math.abs(Math.random() * 1000000);
+        userId = (int) Math.abs(Math.random() * 1000);
         ContentValues contentValues = new ContentValues();
         contentValues.put(ShopOnContract.Entry.COLUMN_USER_ID,userId);
         contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
-        Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues);
+        Log.d(TAG,"initial write id:"+userId+" number:"+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
+         Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues);
         savePref(userId);
     }
 
     public void writeToDb(Merchants merchant) {
-        Log.d(TAG,"merchant:"+merchant);
-
+        Log.d(TAG,"merchant:"+merchant+" merchant");
         ContentValues contentValues = new ContentValues();
+        contentValues.put(ShopOnContract.Entry.COLUMN_USER_ID,merchant.getUserId());
         contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,merchant.getMobile());
         contentValues.put(ShopOnContract.Entry.COLUMN_NAME,merchant.getName());
         contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,merchant.getEmail());
         contentValues.put(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY,merchant.getMerchentCategory());
-        getContentResolver().update(ShopOnContract.Entry.CONTENT_MERCHANT_URI,contentValues,ShopOnContract.Entry.COLUMN_USER_ID+",equalTo",new String[]{ String.valueOf(merchant.getUserId())});
-
+        getContentResolver().insert(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI,contentValues);
     }
 
     private void savePref(int user_id) {
         Log.d(TAG, "saving preferences");
         userSharedPreferences.savePref(Constants.MERCHANT_ID_PREF, user_id);
-        userSharedPreferences.savePref(Constants.CURRENT_LOGIN_STATE,Constants.PROFILE_STATE);
+        //userSharedPreferences.savePref(Constants.CURRENT_LOGIN_STATE,Constants.PROFILE_STATE);
     }
 
     @Override
@@ -212,10 +231,6 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
                 finish();
             }
         }
-        //proceedToNextScreen();
-        //Log.d(TAG,"onChildAdded mobile:"+mobile+" preference mobile number:"+userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
-
-
     }
 
     @Override
@@ -270,5 +285,27 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener{
         handler.postDelayed(displayActionLayout,6000);
     }
 
+
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        dialogAction = Constants.DialogAction.NO_DIALOG;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        synchronized (userSharedPreferences) {
+            Log.d(TAG, "onPreferenceChange");
+
+            if (userSharedPreferences != null) {
+                int status = userSharedPreferences.getPref(Constants.CONNECTION_STATUS);
+                if (status == Constants.INTERNET_NOT_CONNECTED && dialogAction != Constants.DialogAction.NETWORK_CHECK) {
+                    hideProgress();
+                    Utils.displayConnectToInternet(this, this);
+                    dialogAction = Constants.DialogAction.NETWORK_CHECK;
+                }
+            }
+        }
+    }
 }
 

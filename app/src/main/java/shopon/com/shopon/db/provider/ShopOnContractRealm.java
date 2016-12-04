@@ -24,8 +24,8 @@ import android.provider.BaseColumns;
  * Field and table name constants for
  * {@link ShopOnProviderRealm}.
  */
-public class ShopOnContract {
-    private ShopOnContract() {
+public class ShopOnContractRealm {
+    private ShopOnContractRealm() {
     }
 
     /**
@@ -110,7 +110,5 @@ public class ShopOnContract {
         public static final String COLUMN_CUSTOMER_MERCHANT_ID = "merchentId";
 
         public static final String COLUMN_OFFER_STATUS = "offerStatus";
-
-        public static final String COLUMN_CREATED_AT = "createdAt";
     }
 }

@@ -55,13 +55,7 @@ public class CustomerRealmUtil {
         return customersList;
     }
 
-    public static void updateCustomer(Context mContext,CustomersRealm customer_realm) {
-        CustomerData customer_data = new CustomerData();
-        customer_data.setRealmCustomer(customer_realm);
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        UserSharedPreferences userSharedPreferences = new UserSharedPreferences(mContext);
-        mDatabase.child(Constants.FIREBASE_CUSTOMER_PREFIX + Constants.FIREBASE_MERCHANT_PREFIX + (String) userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).child(String.valueOf(customer_data.getCustomers().getId())).setValue(customer_data.getCustomers());//+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)
-    }
+
 
 
 }
