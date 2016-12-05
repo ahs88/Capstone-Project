@@ -336,7 +336,7 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
                 // Entry exists. Remove from entry map to prevent insert later.
                 offerList.remove(String.valueOf(id));
                 // Check to see if the entry needs to be updated
-                Uri existingUri = ShopOnContract.Entry.CONTENT_CUSTOMER_URI.buildUpon()
+                Uri existingUri = ShopOnContract.Entry.CONTENT_OFFER_URI.buildUpon()
                         .appendPath(Integer.toString(id)).build();
                 if ((offer.getDeliverMessageOn() != null && !offer.getDeliverMessageOn().equals(scheduled_date)) || (offer.getOfferText()!=null && !offer.getOfferText().equals(offer_text)) ||
                         (offer.getNumbers() != null && !offer.getNumbers().equals(numbers)) || !(offer.getOfferStatus() == offer_status)) {
@@ -346,7 +346,7 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
                             .withValue(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE, offer.getDeliverMessageOn())
                             .withValue(ShopOnContract.Entry.COLUMN_OFFER_TEXT, offer.getOfferText())
                             .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, offer.getNumbers())
-                            .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS,offer.getOfferStatus())
+                            .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS,(offer.getOfferStatus())?1:0)
                             .build());
 
                 } else {
@@ -364,12 +364,12 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
         // Add new items
         for (Offer offer : offerList.values()) {
             Log.i(TAG, "Scheduling insert: entry_id=" + offer.getOfferId());
-            batch.add(ContentProviderOperation.newInsert(ShopOnContract.Entry.CONTENT_CUSTOMER_URI)
-                    .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_ID, offer.getOfferId())
+            batch.add(ContentProviderOperation.newInsert(ShopOnContract.Entry.CONTENT_OFFER_URI)
+                    .withValue(ShopOnContract.Entry.COLUMN_OFFER_ID, offer.getOfferId())
                     .withValue(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE, offer.getDeliverMessageOn())
                     .withValue(ShopOnContract.Entry.COLUMN_OFFER_TEXT, offer.getOfferText())
                     .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, offer.getNumbers())
-                    .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS,offer.getOfferStatus())
+                    .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS,offer.getOfferStatus()?1:0)
                     .build());
 
         }
