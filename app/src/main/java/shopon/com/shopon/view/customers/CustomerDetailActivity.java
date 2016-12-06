@@ -54,16 +54,16 @@ public class CustomerDetailActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         customerId = getIntent().getExtras().getInt(Constants.EXTRAS_CUSTOMER_ID);
         boolean isTwoPane = getIntent().getExtras().getBoolean(Constants.EXTRAS_IS_TWO_PANE);
-        Log.d(TAG, "customerId:" + customerId+" isTwoPane:"+isTwoPane);
+        Log.d(TAG, "customerId:" + customerId + " isTwoPane:" + isTwoPane);
 
         setTitle(R.string.title_activity_customer_detail);
         titleView.setText(getString(R.string.title_activity_customer_detail));
         setHomeButton();
         CustomerDetailFragment customerDetailFragment = (CustomerDetailFragment) getSupportFragmentManager().findFragmentByTag(CustomerDetailFragment.TAG);
-        if(customerDetailFragment == null) {
+        if (customerDetailFragment == null) {
             customerDetailFragment = new CustomerDetailFragment().newInstance(customerId, isTwoPane);
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.detail_container,customerDetailFragment,CustomerDetailFragment.TAG).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, customerDetailFragment, CustomerDetailFragment.TAG).commit();
     }
 
 

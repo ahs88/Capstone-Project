@@ -46,7 +46,6 @@ import shopon.com.shopon.view.login.ShopCategoryActivity;
 import shopon.com.shopon.view.offer.adpater.DetailOptionsAdapter;
 
 
-
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -85,16 +84,14 @@ public class CustomerDetailFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     *
-     *
      * @return A new instance of fragment CustomerDetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CustomerDetailFragment newInstance(int customer_id,boolean isTwoPane) {
+    public static CustomerDetailFragment newInstance(int customer_id, boolean isTwoPane) {
         CustomerDetailFragment fragment = new CustomerDetailFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.EXTRAS_CUSTOMER_ID, customer_id);
-        args.putBoolean(Constants.EXTRAS_IS_TWO_PANE,isTwoPane);
+        args.putBoolean(Constants.EXTRAS_IS_TWO_PANE, isTwoPane);
         fragment.setArguments(args);
         return fragment;
     }
@@ -130,7 +127,7 @@ public class CustomerDetailFragment extends BaseFragment {
         return convertView;
     }
 
-    public void setCustomerId(int customer_id){
+    public void setCustomerId(int customer_id) {
         this.customerId = customer_id;
         customer_detail_entry.clear();
         populateCustomerDetails(customerId);
@@ -152,8 +149,8 @@ public class CustomerDetailFragment extends BaseFragment {
 
     private void populateCustomerDetails(int customerId) {
         convertView.findViewById(R.id.no_customer_label).setVisibility(View.GONE);
-        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,null,ShopOnContract.Entry.COLUMN_CUSTOMER_ID+"=?",new String[]{String.valueOf(customerId)},null);
-        if(cursor!=null) {
+        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI, null, ShopOnContract.Entry.COLUMN_CUSTOMER_ID + "=?", new String[]{String.valueOf(customerId)}, null);
+        if (cursor != null) {
             cursor.moveToFirst();
             customer = Utils.createCustomerFromCursor(cursor);
 
@@ -164,12 +161,12 @@ public class CustomerDetailFragment extends BaseFragment {
         }
         String label[] = new String[]{"Name", "Number", "Email", "Interests"};
         String value[] = new String[]{customer.getName(), customer.getMobile(), customer.getEmail(), String.valueOf(customer.getIntrestedIn())};
-        String error[] = new String[]{getString(R.string.name_err),getString(R.string.number_err),getString(R.string.email_err),getString(R.string.interests_err)};
-        int editType[] = new int[]{InputType.TYPE_CLASS_TEXT,InputType.TYPE_CLASS_NUMBER,InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,InputType.TYPE_CLASS_TEXT};
-        Boolean isFocusable[] = new Boolean[]{true,true,true,false};
-        Boolean isEditable[] = new Boolean[]{true,true,true,true};
+        String error[] = new String[]{getString(R.string.name_err), getString(R.string.number_err), getString(R.string.email_err), getString(R.string.interests_err)};
+        int editType[] = new int[]{InputType.TYPE_CLASS_TEXT, InputType.TYPE_CLASS_NUMBER, InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS, InputType.TYPE_CLASS_TEXT};
+        Boolean isFocusable[] = new Boolean[]{true, true, true, false};
+        Boolean isEditable[] = new Boolean[]{true, true, true, true};
 
-        Method clickAction[] = new Method[]{null,null,null,getChooseInterests()};
+        Method clickAction[] = new Method[]{null, null, null, getChooseInterests()};
         for (int i = 0; i < label.length; i++) {
             DetailEntry customer_details = new DetailEntry();
             customer_details.setKey(label[i]);
@@ -184,7 +181,7 @@ public class CustomerDetailFragment extends BaseFragment {
     }
 
     public void setDetailAdapter() {
-        detailOptionsDetailAdapter = new DetailOptionsAdapter(getActivity(), customer_detail_entry,this);
+        detailOptionsDetailAdapter = new DetailOptionsAdapter(getActivity(), customer_detail_entry, this);
 
         customerDetail = (RecyclerView) convertView.findViewById(R.id.customer_details);
         // use a linear layout manager
@@ -194,13 +191,13 @@ public class CustomerDetailFragment extends BaseFragment {
         customerDetail.setAdapter(detailOptionsDetailAdapter);
     }
 
-    public void chooseInterests(){
+    public void chooseInterests() {
         Intent intent = new Intent(getActivity(), ShopCategoryActivity.class);
-        intent.putStringArrayListExtra (Constants.SHOP_CATEGORY_SUBSCRIPTION_LIST, categoryList);
+        intent.putStringArrayListExtra(Constants.SHOP_CATEGORY_SUBSCRIPTION_LIST, categoryList);
         startActivityForResult(intent, Constants.RETRIEVE_CATEGORY);
     }
 
-    public Method getChooseInterests(){
+    public Method getChooseInterests() {
         Method selectCustomerMethod = null;
         try {
             selectCustomerMethod = CustomerDetailFragment.class.getMethod("chooseInterests");
@@ -255,8 +252,8 @@ public class CustomerDetailFragment extends BaseFragment {
                 getActivity().invalidateOptionsMenu();
                 break;
             }
-            case R.id.action_save_detail:{
-                if(!validateCustomer()){
+            case R.id.action_save_detail: {
+                if (!validateCustomer()) {
                     detailOptionsDetailAdapter.setEditEnabled(true);
                     detailOptionsDetailAdapter.notifyDataSetChanged();
                     return false;
@@ -267,8 +264,7 @@ public class CustomerDetailFragment extends BaseFragment {
                 updateRemoteCustomer(customer);
                 if (isTwoPane) {
                     getActivity().invalidateOptionsMenu();
-                }
-                else {
+                } else {
                     getActivity().finish();
                 }
             }
@@ -281,54 +277,52 @@ public class CustomerDetailFragment extends BaseFragment {
     private boolean validateCustomer() {
         customer_detail_entry.get(0).setErrStatus((TextUtils.isEmpty(customer_detail_entry.get(0).getValue())));
         boolean notValid = customer_detail_entry.get(0).isErrStatus();
-        if(notValid){
+        if (notValid) {
             return false;
         }
         customer_detail_entry.get(1).setErrStatus(!Utils.isValidMobile(customer_detail_entry.get(1).getValue()));
         notValid = customer_detail_entry.get(1).isErrStatus();
-        if(notValid){
+        if (notValid) {
             return false;
         }
         customer_detail_entry.get(2).setErrStatus(!Utils.isValidEmail(customer_detail_entry.get(2).getValue()));
         notValid = customer_detail_entry.get(2).isErrStatus();
-        if(notValid){
+        if (notValid) {
             return false;
         }
         return true;
     }
 
-    private Customers updateLocalCustomer(int customerId){
+    private Customers updateLocalCustomer(int customerId) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ShopOnContract.Entry.COLUMN_NAME,customer_detail_entry.get(0).getValue().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,customer_detail_entry.get(1).getValue().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,customer_detail_entry.get(2).getValue().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY,customer_detail_entry.get(3).getValue().toString());
-        getActivity().getContentResolver().update(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,contentValues,ShopOnContract.Entry.COLUMN_CUSTOMER_ID+"=?",new String[]{String.valueOf(customerId)});
+        contentValues.put(ShopOnContract.Entry.COLUMN_NAME, customer_detail_entry.get(0).getValue().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE, customer_detail_entry.get(1).getValue().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL, customer_detail_entry.get(2).getValue().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY, customer_detail_entry.get(3).getValue().toString());
+        getActivity().getContentResolver().update(ShopOnContract.Entry.CONTENT_CUSTOMER_URI, contentValues, ShopOnContract.Entry.COLUMN_CUSTOMER_ID + "=?", new String[]{String.valueOf(customerId)});
 
-        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,null,ShopOnContract.Entry.COLUMN_CUSTOMER_ID+"=?",new String[]{String.valueOf(customerId)},null);
-        if(cursor!=null) {
+        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI, null, ShopOnContract.Entry.COLUMN_CUSTOMER_ID + "=?", new String[]{String.valueOf(customerId)}, null);
+        if (cursor != null) {
             cursor.moveToFirst();
             Customers customer = Utils.createCustomerFromCursor(cursor);
             return customer;
-        }else
-        {
+        } else {
             return null;
         }
 
     }
 
     private void updateRemoteCustomer(Customers customer) {
-        FireBaseUtils.updateCustomer(getActivity(),customer);
+        FireBaseUtils.updateCustomer(getActivity(), customer);
         //+customer_realm.getMobile()
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if(customer == null){
-            hideOption(menu,R.id.action_save_detail);
-            hideOption(menu,R.id.action_edit_detail);
-        }
-        else {
+        if (customer == null) {
+            hideOption(menu, R.id.action_save_detail);
+            hideOption(menu, R.id.action_edit_detail);
+        } else {
             if (detailOptionsDetailAdapter.isEditEnabled()) {
                 Log.d(TAG, "edit enabled");
                 hideOption(menu, R.id.action_edit_detail);
@@ -343,11 +337,9 @@ public class CustomerDetailFragment extends BaseFragment {
     }
 
 
-
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.customer_options_menu,menu);
+        inflater.inflate(R.menu.customer_options_menu, menu);
     }
 
     @Override
@@ -357,8 +349,8 @@ public class CustomerDetailFragment extends BaseFragment {
             categoryList.clear();
             categoryList.addAll(data.getExtras().getStringArrayList(ShopCategoryActivity.SELECTED_TAGS));
             categoryList = Utils.getUinqueElementsInList(categoryList);
-            Log.d(TAG,"selectedTags:"+categoryList.toString());
-            detailOptionsDetailAdapter.setNumbers(3,categoryList.toString().replace("[","").replace("]",""));
+            Log.d(TAG, "selectedTags:" + categoryList.toString());
+            detailOptionsDetailAdapter.setNumbers(3, categoryList.toString().replace("[", "").replace("]", ""));
         }
     }
 

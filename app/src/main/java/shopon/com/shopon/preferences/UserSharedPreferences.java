@@ -15,7 +15,7 @@ public class UserSharedPreferences {
 
     public UserSharedPreferences(Context activity) {
         mContext = activity;
-        sharedPreferences = mContext.getSharedPreferences (USER_PREFERENCE, Context.MODE_PRIVATE);
+        sharedPreferences = mContext.getSharedPreferences(USER_PREFERENCE, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
@@ -31,10 +31,9 @@ public class UserSharedPreferences {
     }
 
 
-    public SharedPreferences getSharedPreferences(){
+    public SharedPreferences getSharedPreferences() {
         return sharedPreferences;
     }
-
 
 
     public void savePref(String key, Object value) {
@@ -53,7 +52,7 @@ public class UserSharedPreferences {
         } else if (value instanceof Enum) {
             editor.putString(key, value.toString());
         } else if (value != null) {
-            throw new RuntimeException ("Attempting to save non-primitive preference");
+            throw new RuntimeException("Attempting to save non-primitive preference");
         }
 
         editor.apply();

@@ -15,7 +15,7 @@ import shopon.com.shopon.datamodel.offer.OfferRealm;
 
 public class OfferRealmUtil {
     public static OfferRealm convertRemoteOfferToRealmCustomer(OfferRealm offer_realm, Offer offer_remote_data) {
-        if(offer_realm.getOfferId() == 0 || TextUtils.isEmpty(String.valueOf(offer_realm.getOfferId()))) {
+        if (offer_realm.getOfferId() == 0 || TextUtils.isEmpty(String.valueOf(offer_realm.getOfferId()))) {
             offer_realm.setOfferId(offer_remote_data.getOfferId());
         }
 
@@ -27,7 +27,7 @@ public class OfferRealmUtil {
     }
 
     public static Offer converOfferRealmToOffer(OfferRealm offer_realm) {
-        Offer offer  = new Offer();
+        Offer offer = new Offer();
         offer.setOfferId(offer_realm.getOfferId());
         offer.setOfferText(offer_realm.getOfferText());
         offer.setDeliverMessageOn(offer_realm.getDeliverMessageOn());
@@ -38,12 +38,11 @@ public class OfferRealmUtil {
 
     public static List<Offer> convertRealmOfferListToOfferList(List<OfferRealm> offersRealm) {
         List<Offer> offerList = new ArrayList<>();
-        for(int i =0;i<offersRealm.size();i++){
+        for (int i = 0; i < offersRealm.size(); i++) {
             offerList.add(converOfferRealmToOffer(offersRealm.get(i)));
         }
         return offerList;
     }
-
 
 
 }

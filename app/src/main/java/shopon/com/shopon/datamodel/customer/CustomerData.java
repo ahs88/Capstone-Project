@@ -16,24 +16,20 @@ public class CustomerData {
     public Customers customers;
 
     /**
-     * 
-     * @return
-     *     The customers
+     * @return The customers
      */
     public Customers getCustomers() {
         return customers;
     }
 
     /**
-     * 
-     * @param customers
-     *     The customers
+     * @param customers The customers
      */
     public void setCustomers(Customers customers) {
         this.customers = customers;
     }
 
-    public void setRealmCustomer(CustomersRealm customersRealm){
+    public void setRealmCustomer(CustomersRealm customersRealm) {
         customers = new Customers();
         customers.setEmail(customersRealm.getEmail());
         customers.setId(customersRealm.getId());
@@ -42,7 +38,6 @@ public class CustomerData {
         customers.setIntrestedIn(customersRealm.getIntrestedIn());
 
     }
-
 
 
 }

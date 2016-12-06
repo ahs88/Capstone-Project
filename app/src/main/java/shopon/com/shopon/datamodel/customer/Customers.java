@@ -34,108 +34,84 @@ public class Customers {
     private String createdAt;
 
     /**
-     *
-     * @return
-     *     The email
+     * @return The email
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     *
-     * @param email
-     *     The email
+     * @param email The email
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     *
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     *
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     *
-     * @return
-     *     The intrestedIn
+     * @return The intrestedIn
      */
     public String getIntrestedIn() {
         return intrestedIn;
     }
 
     /**
-     *
-     * @param intrestedIn
-     *     The intrestedIn
+     * @param intrestedIn The intrestedIn
      */
     public void setIntrestedIn(String intrestedIn) {
         this.intrestedIn = intrestedIn;
     }
 
     /**
-     *
-     * @return
-     *     The merchentId
+     * @return The merchentId
      */
     public Integer getMerchentId() {
         return merchentId;
     }
 
     /**
-     *
-     * @param merchentId
-     *     The merchentId
+     * @param merchentId The merchentId
      */
     public void setMerchentId(Integer merchentId) {
         this.merchentId = merchentId;
     }
 
     /**
-     *
-     * @return
-     *     The mobile
+     * @return The mobile
      */
     public String getMobile() {
         return mobile;
     }
 
     /**
-     *
-     * @param mobile
-     *     The mobile
+     * @param mobile The mobile
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }
 
     /**
-     *
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;

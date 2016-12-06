@@ -29,14 +29,6 @@ import static shopon.com.shopon.view.constants.Constants.PROFILE_STATE;
  * status bar and navigation/system bar) with user interaction.
  */
 public class ShopOnSplashActivity extends AppCompatActivity {
-
-   // @IntDef({MSISDN_STATE, OTP_STATE, PROFILE_STATE, CATEGORY_STATE})
-   // @Retention(RetentionPolicy.RUNTIME)
-   // public @interface LoginState{};
-
-   // @LoginState Integer mCurrentState = MSISDN_STATE;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,15 +46,14 @@ public class ShopOnSplashActivity extends AppCompatActivity {
         int loginState = MSISDN_STATE;
         try {
             loginState = userSharedPreferences.getPref(Constants.CURRENT_LOGIN_STATE);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-
         //mCurrentState = loginState;
         Class classType = ShopOnMsisdnActivity.class;
-        switch (loginState){
+        switch (loginState) {
             case MSISDN_STATE:
                 classType = ShopOnMsisdnActivity.class;
                 break;
@@ -79,7 +70,7 @@ public class ShopOnSplashActivity extends AppCompatActivity {
                 classType = ShopOnActivity.class;
                 break;
         }
-        Intent intent = new Intent(this,classType);
+        Intent intent = new Intent(this, classType);
         startActivity(intent);
         finish();
     }
@@ -88,8 +79,7 @@ public class ShopOnSplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-               nextScreen();
-                // startBazaar();
+                nextScreen();
             }
         }, Constants.SPLASH_TIME_OUT);
     }

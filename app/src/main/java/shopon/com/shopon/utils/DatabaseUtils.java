@@ -8,7 +8,7 @@ import shopon.com.shopon.datamodel.offer.OfferRealm;
 
 public class DatabaseUtils {
 
-    public void createCustomer(String emailId,int user_id,String subscribed_categories,int merchant_id,String name,String mobile_number){
+    public void createCustomer(String emailId, int user_id, String subscribed_categories, int merchant_id, String name, String mobile_number) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         CustomersRealm user = realm.createObject(CustomersRealm.class); // Create a new object
@@ -21,12 +21,12 @@ public class DatabaseUtils {
         realm.commitTransaction();
     }
 
-    public void updateCustomer(){
-        
+    public void updateCustomer() {
+
     }
 
 
-    public void createMerchant(String emailId,int user_id,String subscribed_categories,int merchant_id,String name,String mobile_number){
+    public void createMerchant(String emailId, int user_id, String subscribed_categories, int merchant_id, String name, String mobile_number) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         MerchantsRealm user = realm.createObject(MerchantsRealm.class); // Create a new object
@@ -35,7 +35,6 @@ public class DatabaseUtils {
         user.setUserId(user_id);
         user.setName(name);
         user.setMobile(mobile_number);
-        //user.setOffers(offers);
         realm.commitTransaction();
     }
 }

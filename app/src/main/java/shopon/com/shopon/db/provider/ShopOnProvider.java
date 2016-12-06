@@ -82,6 +82,7 @@ public class ShopOnProvider extends ContentProvider {
      * UriMatcher, used to decode incoming URIs.
      */
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         sUriMatcher.addURI(AUTHORITY, "merchant_entries", ROUTE_ENTRIES_MERCHANT);
         sUriMatcher.addURI(AUTHORITY, "merchant_entries/*", ROUTE_ENTRIES_MERCHANT_ID);
@@ -94,10 +95,9 @@ public class ShopOnProvider extends ContentProvider {
     }
 
 
-
     @Override
     public boolean onCreate() {
-        Log.d(TAG,"onCreate()");
+        Log.d(TAG, "onCreate()");
         mDatabaseHelper = new ShopOnDatabase(getContext());
         return true;
     }
@@ -129,7 +129,7 @@ public class ShopOnProvider extends ContentProvider {
 
     /**
      * Perform a database query by URI.
-     *
+     * <p>
      * <p>Currently supports returning all entries (/entries) and individual entries by ID
      * (/entries/{ID}).
      */
@@ -165,7 +165,7 @@ public class ShopOnProvider extends ContentProvider {
 
             }
             case ROUTE_ENTRIES_MERCHANT: {
-                Log.d(TAG,"querry merchant");
+                Log.d(TAG, "querry merchant");
                 builder.table(ShopOnContract.Entry.MERCHANT_TABLE_NAME)
                         .where(selection, selectionArgs);
                 Cursor c = builder.query(db, projection, sortOrder);
@@ -182,7 +182,7 @@ public class ShopOnProvider extends ContentProvider {
                 builder.where(ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", id);
             }
             case ROUTE_ENTRIES_OFFER: {
-                Log.d(TAG,"query offers");
+                Log.d(TAG, "query offers");
                 builder.table(ShopOnContract.Entry.OFFER_TABLE_NAME)
                         .where(selection, selectionArgs);
                 Cursor c = builder.query(db, projection, sortOrder);
@@ -201,34 +201,32 @@ public class ShopOnProvider extends ContentProvider {
     }
 
 
-
     /**
      * Insert a new entry into the database.
      */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
-        Uri result= null;
+        Uri result = null;
         final int match = sUriMatcher.match(uri);
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         switch (match) {
-            case ROUTE_ENTRIES_CUSTOMER:{
-                Log.d(TAG,"insert customer");
+            case ROUTE_ENTRIES_CUSTOMER: {
+                Log.d(TAG, "insert customer");
                 long id = db.insertOrThrow(ShopOnContract.Entry.CUSTOMER_TABLE_NAME, null, values);
                 result = Uri.parse(ShopOnContract.Entry.CONTENT_CUSTOMER_URI + "/" + id);
                 break;
             }
 
             case ROUTE_ENTRIES_MERCHANT: {
-                Log.d(TAG,"insert merchant");
+                Log.d(TAG, "insert merchant");
                 long id = db.insertOrThrow(ShopOnContract.Entry.MERCHANT_TABLE_NAME, null, values);
                 result = Uri.parse(ShopOnContract.Entry.CONTENT_MERCHANT_URI + "/" + id);
                 break;
             }
 
-            case ROUTE_ENTRIES_OFFER:
-            {
-                Log.d(TAG,"insert offer");
+            case ROUTE_ENTRIES_OFFER: {
+                Log.d(TAG, "insert offer");
                 long id = db.insertOrThrow(ShopOnContract.Entry.OFFER_TABLE_NAME, null, values);
                 result = Uri.parse(ShopOnContract.Entry.CONTENT_OFFER_URI + "/" + id);
                 break;
@@ -366,14 +364,18 @@ public class ShopOnProvider extends ContentProvider {
 
     /**
      * SQLite backend for @{link ShopOnProvider}.
-     *
+     * <p>
      * Provides access to an disk-backed, SQLite datastore which is utilized by ShopOnProvider. This
      * database should never be accessed by other parts of the application directly.
      */
     static class ShopOnDatabase extends SQLiteOpenHelper {
-        /** Schema version. */
+        /**
+         * Schema version.
+         */
         public static final int DATABASE_VERSION = 3;
-        /** Filename for SQLite file. */
+        /**
+         * Filename for SQLite file.
+         */
         public static final String DATABASE_NAME = "offersgalore.db";
 
         private static final String TYPE_TEXT = " TEXT";
@@ -382,38 +384,42 @@ public class ShopOnProvider extends ContentProvider {
         private static final String TYPE_DATETIME = " DATETIME";
         private static final String COMMA_SEP = ",";
 
-        /** SQL statement to create "entry" table. */
+        /**
+         * SQL statement to create "entry" table.
+         */
         private static final String SQL_CREATE_MERCHANT_ENTRIES =
                 "CREATE TABLE IF NOT EXISTS " + ShopOnContract.Entry.MERCHANT_TABLE_NAME + " (" +
-                        ShopOnContract.Entry.COLUMN_USER_ID + TYPE_INTEGER + " PRIMARY KEY" + COMMA_SEP+
-                        ShopOnContract.Entry.COLUMN_NAME + TYPE_TEXT +COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_USER_ID + TYPE_INTEGER + " PRIMARY KEY" + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_NAME + TYPE_TEXT + COMMA_SEP +
                         ShopOnContract.Entry.COLUMN_EMAIL + TYPE_TEXT + COMMA_SEP +
-                        ShopOnContract.Entry.COLUMN_MOBILE    + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_MOBILE + TYPE_TEXT + COMMA_SEP +
                         ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY + TYPE_TEXT + COMMA_SEP +
-                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME+
+                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME +
                         ")";
 
         private static final String SQL_CREATE_CUSTOMER_ENTRIES =
                 "CREATE TABLE IF NOT EXISTS " + ShopOnContract.Entry.CUSTOMER_TABLE_NAME + " (" +
                         ShopOnContract.Entry.COLUMN_CUSTOMER_ID + " INTEGER PRIMARY KEY," +
-                        ShopOnContract.Entry.COLUMN_NAME + TYPE_TEXT +COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_NAME + TYPE_TEXT + COMMA_SEP +
                         ShopOnContract.Entry.COLUMN_EMAIL + TYPE_TEXT + COMMA_SEP +
-                        ShopOnContract.Entry.COLUMN_MOBILE    + TYPE_TEXT + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_MOBILE + TYPE_TEXT + COMMA_SEP +
                         ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY + TYPE_TEXT + COMMA_SEP +
-                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME+
+                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME +
                         ")";
 
         private static final String SQL_CREATE_OFFER_ENTRIES =
                 "CREATE TABLE IF NOT EXISTS " + ShopOnContract.Entry.OFFER_TABLE_NAME + " (" +
                         ShopOnContract.Entry.COLUMN_OFFER_ID + " INTEGER PRIMARY KEY," +
                         ShopOnContract.Entry.COLUMN_OFFER_TEXT + TYPE_TEXT + COMMA_SEP +
-                        ShopOnContract.Entry.COLUMN_OFFER_STATUS    + TYPE_BOOL + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_OFFER_STATUS + TYPE_BOOL + COMMA_SEP +
                         ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS + TYPE_TEXT + COMMA_SEP +
-                        ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + TYPE_DATETIME +COMMA_SEP +
-                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME+
+                        ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + TYPE_DATETIME + COMMA_SEP +
+                        ShopOnContract.Entry.COLUMN_CREATED_AT + TYPE_DATETIME +
                         ")";
 
-        /** SQL statement to drop "entry" table. */
+        /**
+         * SQL statement to drop "entry" table.
+         */
         private static final String SQL_DELETE_OFFER_ENTRIES =
                 "DROP TABLE IF EXISTS " + ShopOnContract.Entry.OFFER_TABLE_NAME;
         private static final String SQL_DELETE_MERCHANT_ENTRIES =
@@ -427,7 +433,7 @@ public class ShopOnProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.d(TAG,"onCreate sqlitehelper SQL_CREATE_MERCHANT_ENTRIES:"+SQL_CREATE_MERCHANT_ENTRIES);
+            Log.d(TAG, "onCreate sqlitehelper SQL_CREATE_MERCHANT_ENTRIES:" + SQL_CREATE_MERCHANT_ENTRIES);
             db.execSQL(SQL_CREATE_MERCHANT_ENTRIES);
             db.execSQL(SQL_CREATE_CUSTOMER_ENTRIES);
             db.execSQL(SQL_CREATE_OFFER_ENTRIES);

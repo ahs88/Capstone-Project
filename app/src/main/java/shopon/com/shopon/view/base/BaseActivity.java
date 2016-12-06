@@ -139,7 +139,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return (T) findViewById(viewId);
     }
 
-    public void setCurrentFragment(android.support.v4.app.Fragment fragment, int container_id,String TAG) {
+    public void setCurrentFragment(android.support.v4.app.Fragment fragment, int container_id, String TAG) {
         currentFragment = fragment;
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction transaction = buildTransaction();
@@ -147,7 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public Fragment getCurrentFragment(){
+    public Fragment getCurrentFragment() {
 
         return currentFragment;
     }
@@ -160,7 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void popBackStack(Fragment fragment){
+    public void popBackStack(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction trans = manager.beginTransaction();
         trans.remove(fragment);
@@ -199,14 +199,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void setCustomHomeButton(Drawable drawable_icon) {
-        if(toolbar!=null) {
+        if (toolbar != null) {
             toolbar.setNavigationIcon(drawable_icon);
         }
     }
 
     public void hideOption(Menu menu, int id) {
 
-        if(menu == null)
+        if (menu == null)
             return;
         MenuItem item = menu.findItem(id);
         if (item != null)
@@ -214,17 +214,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         android.util.Log.d(TAG, "hideOption invoked");
     }
 
-    public void showOption(Menu menu,int id) {
+    public void showOption(Menu menu, int id) {
 
-        if(menu == null)
+        if (menu == null)
             return;
         MenuItem item = menu.findItem(id);
         if (item != null)
             item.setVisible(true);
         android.util.Log.d(TAG, "showOption invoked");
     }
-
-
 
 
 }

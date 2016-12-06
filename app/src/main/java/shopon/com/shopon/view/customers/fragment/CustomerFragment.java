@@ -47,7 +47,7 @@ import shopon.com.shopon.view.tagview.Tag.Utils;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class CustomerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class CustomerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -70,6 +70,7 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean isTwoPane;
     private Cursor mCursor;
     private CustomerFragment customerFragment;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -79,11 +80,11 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static CustomerFragment newInstance(int columnCount,boolean isTwoPane) {
+    public static CustomerFragment newInstance(int columnCount, boolean isTwoPane) {
         CustomerFragment fragment = new CustomerFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putBoolean(Constants.EXTRAS_IS_TWO_PANE,isTwoPane);
+        args.putBoolean(Constants.EXTRAS_IS_TWO_PANE, isTwoPane);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,7 +95,7 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            isTwoPane= getArguments().getBoolean(Constants.EXTRAS_IS_TWO_PANE);
+            isTwoPane = getArguments().getBoolean(Constants.EXTRAS_IS_TWO_PANE);
         }
         customerFragment = this;
         setRetainInstance(true);
@@ -124,10 +125,9 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
         customerListView.setLayoutManager(mLinearLayoutManager);
 
 
-        customerAapter = new MyCustomerRecyclerViewAdapter(CustomerContent.ITEMS, mListener,false,isTwoPane);
+        customerAapter = new MyCustomerRecyclerViewAdapter(CustomerContent.ITEMS, mListener, false, isTwoPane);
         customerListView.setAdapter(customerAapter);
         displayEmptyList();
-
 
 
         return view;
@@ -150,13 +150,9 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            //throw new RuntimeException(context.toString()
-            //        + " must implement OnListFragmentInteractionListener");
         }
     }
 
-    
 
     @Override
     public void onDetach() {
@@ -181,13 +177,13 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     public void notifyDataChange() {
-        Log.d(TAG,"notifyDataChange");
+        Log.d(TAG, "notifyDataChange");
         getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
     }
 
-    public void refreshView(){
+    public void refreshView() {
         if (customerAapter != null) {
-            if (mCursor!=null) {
+            if (mCursor != null) {
                 populateCustomerListFromCursor(mCursor);
             }
             displayEmptyList();
@@ -197,7 +193,7 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        Log.d(TAG,"onCreateLoader");
+        Log.d(TAG, "onCreateLoader");
         return new CursorLoader(getActivity(),  // Context
                 ShopOnContract.Entry.CONTENT_CUSTOMER_URI, // URI
                 null,                // Projection
@@ -208,10 +204,10 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader loader, Cursor data) {
-        Log.d(TAG,"onLoadFinished size:"+data.getCount());
+        Log.d(TAG, "onLoadFinished size:" + data.getCount());
         mCursor = data;
         refreshView();
-        if(getLoaderManager().hasRunningLoaders()){
+        if (getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().destroyLoader(Constants.ALL_CUSTOMERS);
         }
 
@@ -222,11 +218,11 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
 
     }
 
-    private void populateCustomerListFromCursor(Cursor cursor){
+    private void populateCustomerListFromCursor(Cursor cursor) {
         CustomerContent.ITEMS.clear();
         cursor.moveToFirst();
-        Log.d(TAG,"populateOfferListFromCursor cursor:"+cursor.getCount());
-        for(int i=0;i<cursor.getCount();i++){
+        Log.d(TAG, "populateOfferListFromCursor cursor:" + cursor.getCount());
+        for (int i = 0; i < cursor.getCount(); i++) {
             Customers customers = shopon.com.shopon.utils.Utils.createCustomerFromCursor(cursor);
             CustomerContent.ITEMS.add(customers);
             cursor.moveToNext();
@@ -254,7 +250,6 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
         Log.d(TAG, "setUserVisibilityHint");
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            //displayEmptyList();
             if (customerAapter != null) {
                 getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
             }
@@ -265,7 +260,7 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG,"onActivityResult");
+        Log.d(TAG, "onActivityResult");
         getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, customerFragment);
     }
 }

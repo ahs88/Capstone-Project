@@ -61,7 +61,6 @@ import static android.app.Activity.RESULT_OK;
  * create an instance of this fragment.
  */
 public class OfferDetailFragment extends BaseFragment {
-   
 
 
     private OnFragmentInteractionListener mListener;
@@ -83,11 +82,11 @@ public class OfferDetailFragment extends BaseFragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     
+     *
      * @return A new instance of fragment OfferDetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OfferDetailFragment newInstance(int offer_id,boolean isTwoPane) {
+    public static OfferDetailFragment newInstance(int offer_id, boolean isTwoPane) {
         OfferDetailFragment fragment = new OfferDetailFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.EXTRAS_OFFER_ID, offer_id);
@@ -116,8 +115,8 @@ public class OfferDetailFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.d(TAG,"onCreateView");
-        if(convertView == null) {
+        Log.d(TAG, "onCreateView");
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.content_offer_detail, container, false);
             populateOfferDetails(offerId);
             setHasOptionsMenu(true);
@@ -180,8 +179,8 @@ public class OfferDetailFragment extends BaseFragment {
 
     private void populateOfferDetails(int offerId) {
         convertView.findViewById(R.id.no_offer_label).setVisibility(View.GONE);
-        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI,null,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offerId)},null);
-        if(cursor!=null) {
+        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI, null, ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", new String[]{String.valueOf(offerId)}, null);
+        if (cursor != null) {
             cursor.moveToFirst();
             offer = Utils.createOfferFromCursor(cursor);
 
@@ -190,15 +189,15 @@ public class OfferDetailFragment extends BaseFragment {
                 return;
             }
         }
-        customerList.addAll(Arrays.asList(offer.getNumbers().replace("[","").replace("]","").split(",")));
-        String label[] = new String[]{"Offer Text","Delivery Date","Recipients","Status"};
-        int editType[] = new int[]{InputType.TYPE_CLASS_TEXT,InputType.TYPE_CLASS_TEXT,InputType.TYPE_CLASS_TEXT,InputType.TYPE_CLASS_TEXT};
-        String value[] =new String[]{offer.getOfferText(),offer.getDeliverMessageOn(),offer.getNumbers().replace("[","").replace("]",""),offer.getOfferStatus()?getString(R.string.sms_sent):getString(R.string.sms_scheduled)};
-        String error[] = new String[]{getString(R.string.offer_text_err),getString(R.string.delivery_date_err),getString(R.string.receipient_err),""};
-        Boolean isFocusable[] = new Boolean[]{true,false,false,false};
-        Boolean isEditable[] = new Boolean[]{true,true,true,false};
-        Method clickAction[] = new Method[]{null,getChooseDate(),getSelectableCustomers(),null};
-        for(int i =0;i<label.length;i++){
+        customerList.addAll(Arrays.asList(offer.getNumbers().replace("[", "").replace("]", "").split(",")));
+        String label[] = new String[]{"Offer Text", "Delivery Date", "Recipients", "Status"};
+        int editType[] = new int[]{InputType.TYPE_CLASS_TEXT, InputType.TYPE_CLASS_TEXT, InputType.TYPE_CLASS_TEXT, InputType.TYPE_CLASS_TEXT};
+        String value[] = new String[]{offer.getOfferText(), offer.getDeliverMessageOn(), offer.getNumbers().replace("[", "").replace("]", ""), offer.getOfferStatus() ? getString(R.string.sms_sent) : getString(R.string.sms_scheduled)};
+        String error[] = new String[]{getString(R.string.offer_text_err), getString(R.string.delivery_date_err), getString(R.string.receipient_err), ""};
+        Boolean isFocusable[] = new Boolean[]{true, false, false, false};
+        Boolean isEditable[] = new Boolean[]{true, true, true, false};
+        Method clickAction[] = new Method[]{null, getChooseDate(), getSelectableCustomers(), null};
+        for (int i = 0; i < label.length; i++) {
             DetailEntry offerDetail = new DetailEntry();
             offerDetail.setKey(label[i]);
             offerDetail.setValue(value[i]);
@@ -211,8 +210,8 @@ public class OfferDetailFragment extends BaseFragment {
         }
     }
 
-    public void setDetailAdapter(){
-        detailOptionsDetailAdapter = new DetailOptionsAdapter(getActivity(),offer_detail_entry,this);
+    public void setDetailAdapter() {
+        detailOptionsDetailAdapter = new DetailOptionsAdapter(getActivity(), offer_detail_entry, this);
 
         offerDetail = (RecyclerView) convertView.findViewById(R.id.offer_details);
         // use a linear layout manager
@@ -221,9 +220,6 @@ public class OfferDetailFragment extends BaseFragment {
         offerDetail.setLayoutManager(mLayoutManager);
         offerDetail.setAdapter(detailOptionsDetailAdapter);
     }
-
-
-
 
 
     public void chooseDate(final Context context, final DateTimPickerUtils.ScheduledDateInterface date_interface) {
@@ -236,15 +232,15 @@ public class OfferDetailFragment extends BaseFragment {
             }
         };
         View view = getActivity().getCurrentFocus();
-        Log.d(TAG,"choose date detail view:"+view);
+        Log.d(TAG, "choose date detail view:" + view);
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             handler.postDelayed(runnable, 500);
         }
     }
 
-    public Method getChooseDate(){
+    public Method getChooseDate() {
         //date method
         Class[] parameterTypes = new Class[2];
         parameterTypes[0] = Context.class;
@@ -258,7 +254,7 @@ public class OfferDetailFragment extends BaseFragment {
         return dateMethod;
     }
 
-    public Method getSelectableCustomers(){
+    public Method getSelectableCustomers() {
         Method selectCustomerMethod = null;
         try {
             selectCustomerMethod = OfferDetailFragment.class.getMethod("selectableCustomers");
@@ -268,7 +264,7 @@ public class OfferDetailFragment extends BaseFragment {
         return selectCustomerMethod;
     }
 
-    public void selectableCustomers(){
+    public void selectableCustomers() {
         Intent intent = new Intent(getActivity(), SelectableCustomers.class);
         startActivityForResult(intent, Constants.RETRIEVE_MSISDN);
     }
@@ -285,23 +281,22 @@ public class OfferDetailFragment extends BaseFragment {
                 getActivity().invalidateOptionsMenu();
                 break;
             }
-            case R.id.action_save_detail:{
-                if(!validateOffer()) {
+            case R.id.action_save_detail: {
+                if (!validateOffer()) {
                     detailOptionsDetailAdapter.setEditEnabled(true);
                     return false;
                 }
                 detailOptionsDetailAdapter.setEditEnabled(false);
                 detailOptionsDetailAdapter.notifyDataSetChanged();
                 Offer offer = updaLocalOffer(offerId);
-                if(offer !=null) {
+                if (offer != null) {
                     updateRemoteOffer(offer);
                 }
 
 
                 if (isTwoPane) {
                     getActivity().invalidateOptionsMenu();
-                }
-                else {
+                } else {
                     getActivity().finish();
 
                 }
@@ -313,39 +308,36 @@ public class OfferDetailFragment extends BaseFragment {
     private Offer updaLocalOffer(int offerId) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_TEXT,offer_detail_entry.get(0).getValue());
-        contentValues.put(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE,offer_detail_entry.get(1).getValue());
-        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS,offer_detail_entry.get(2).getValue());
-        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_STATUS,offer_detail_entry.get(3).getValue().equals(getString(R.string.sms_sent))?true:false);
-        getActivity().getContentResolver().update(ShopOnContract.Entry.CONTENT_OFFER_URI,contentValues,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offerId)});
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_TEXT, offer_detail_entry.get(0).getValue());
+        contentValues.put(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE, offer_detail_entry.get(1).getValue());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, offer_detail_entry.get(2).getValue());
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_STATUS, offer_detail_entry.get(3).getValue().equals(getString(R.string.sms_sent)) ? true : false);
+        getActivity().getContentResolver().update(ShopOnContract.Entry.CONTENT_OFFER_URI, contentValues, ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", new String[]{String.valueOf(offerId)});
 
-        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI,null,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offerId)},null);
-        if(cursor!=null) {
+        Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI, null, ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", new String[]{String.valueOf(offerId)}, null);
+        if (cursor != null) {
             cursor.moveToFirst();
             Offer offer = Utils.createOfferFromCursor(cursor);
             return offer;
-        }else
-        {
+        } else {
             return null;
         }
 
     }
 
-    private void updateRemoteOffer(Offer offer){
-        Log.d(TAG,"remote update offer_id:"+offer.getOfferId());
-        FireBaseUtils.updateOfferDataBase(getActivity(),offer);
+    private void updateRemoteOffer(Offer offer) {
+        Log.d(TAG, "remote update offer_id:" + offer.getOfferId());
+        FireBaseUtils.updateOfferDataBase(getActivity(), offer);
     }
-
 
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        Log.d(TAG,"onPrepareOptionsMenu");
-        if(offer == null || offer.getOfferStatus()){
-            hideOption(menu,R.id.action_save_detail);
-            hideOption(menu,R.id.action_edit_detail);
-        }
-        else {
+        Log.d(TAG, "onPrepareOptionsMenu");
+        if (offer == null || offer.getOfferStatus()) {
+            hideOption(menu, R.id.action_save_detail);
+            hideOption(menu, R.id.action_edit_detail);
+        } else {
             if (detailOptionsDetailAdapter.isEditEnabled()) {
                 Log.d(TAG, "edit enabled");
                 hideOption(menu, R.id.action_edit_detail);
@@ -358,42 +350,41 @@ public class OfferDetailFragment extends BaseFragment {
         }
 
 
-
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            this.menu = menu;
-            inflater.inflate(R.menu.detail_options, menu);
+        this.menu = menu;
+        inflater.inflate(R.menu.detail_options, menu);
     }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == Constants.RETRIEVE_MSISDN){
+        if (resultCode == RESULT_OK && requestCode == Constants.RETRIEVE_MSISDN) {
             customerList.clear();
             customerList.addAll(data.getExtras().getStringArrayList(Constants.SELECTED_NUMBERS));
-            detailOptionsDetailAdapter.setNumbers(2,customerList.toString().replace("[","").replace("]",""));
+            detailOptionsDetailAdapter.setNumbers(2, customerList.toString().replace("[", "").replace("]", ""));
         }
     }
 
 
-    public boolean validateOffer(){
-        if(TextUtils.isEmpty(offer_detail_entry.get(0).getValue().trim())){
+    public boolean validateOffer() {
+        if (TextUtils.isEmpty(offer_detail_entry.get(0).getValue().trim())) {
             offer_detail_entry.get(0).setErrStatus(true);
             detailOptionsDetailAdapter.notifyDataSetChanged();
             return false;
-        }else {
+        } else {
             offer_detail_entry.get(0).setErrStatus(false);
         }
 
 
-        if(TextUtils.isEmpty(offer_detail_entry.get(2).getValue().trim())){
+        if (TextUtils.isEmpty(offer_detail_entry.get(2).getValue().trim())) {
             offer_detail_entry.get(2).setErrStatus(true);
             detailOptionsDetailAdapter.notifyDataSetChanged();
             return false;
-        }else{
+        } else {
             offer_detail_entry.get(0).setErrStatus(false);
         }
 

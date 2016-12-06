@@ -47,7 +47,7 @@ import shopon.com.shopon.view.constants.Constants;
 /**
  * Created by Akshath on 06-11-2016.
  */
-public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
+public class SyncLocalDB extends AsyncTask<Void, Void, Void> {
 
     private final Context mContext;
     private DatabaseReference mDatabase;
@@ -56,7 +56,7 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
     private final Object MUTEX = new Object();
     private List<SyncInterface> observers = new ArrayList<>();
 
-    public SyncLocalDB(Context ctx){
+    public SyncLocalDB(Context ctx) {
         mContext = ctx;
         userSharedPreferences = new UserSharedPreferences(mContext);
     }
@@ -74,7 +74,7 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.d(TAG,"onDataChange snapshot:"+snapshot.getValue());
+                Log.d(TAG, "onDataChange snapshot:" + snapshot.getValue());
 
 
                 syncSQLCustomerDB(snapshot);
@@ -82,7 +82,7 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
                 syncSQLOfferDB(snapshot);
 
                 updateObservers();
-                Log.d(TAG,"onDataChange snapshot:"+snapshot.getValue());
+                Log.d(TAG, "onDataChange snapshot:" + snapshot.getValue());
             }
 
             @Override
@@ -106,13 +106,14 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
     }
 
     private void syncOfferDB(DataSnapshot snapshot) {
-        GenericTypeIndicator<HashMap<String,Offer>> offer_list = new GenericTypeIndicator<HashMap<String, Offer>>() {};
-        HashMap<String,Offer> offerList = snapshot.child(Constants.OFFER_PREFIX+Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).getValue(offer_list);
+        GenericTypeIndicator<HashMap<String, Offer>> offer_list = new GenericTypeIndicator<HashMap<String, Offer>>() {
+        };
+        HashMap<String, Offer> offerList = snapshot.child(Constants.OFFER_PREFIX + Constants.FIREBASE_MERCHANT_PREFIX + (String) userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).getValue(offer_list);
         Realm realm = Realm.getDefaultInstance();
 
         RealmResults<OfferRealm> offers = realm.where(OfferRealm.class).findAll();
         //no data in remote db hence clear local db
-        if (offerList == null){
+        if (offerList == null) {
             realm.beginTransaction();
             offers.deleteAllFromRealm();
             realm.commitTransaction();
@@ -120,17 +121,17 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
         }
 
         int position = 0;
-        for (OfferRealm offer : offers){
+        for (OfferRealm offer : offers) {
             realm.beginTransaction();
             Offer offer_remote_data = offerList.get(String.valueOf(offer.getOfferId()));
             //update exsiting data(remove in remote data list after updating)
-            if (offer_remote_data!=null){
-                Log.d(TAG,"update exsiting data id:"+offer.getOfferId());
-                offer = OfferRealmUtil.convertRemoteOfferToRealmCustomer(offer,offer_remote_data);
+            if (offer_remote_data != null) {
+                Log.d(TAG, "update exsiting data id:" + offer.getOfferId());
+                offer = OfferRealmUtil.convertRemoteOfferToRealmCustomer(offer, offer_remote_data);
                 realm.insertOrUpdate(offer);
-                    offerList.remove(String.valueOf(offer.getOfferId()));
-            }else{
-                Log.d(TAG,"remove exsiting data id:"+offer.getOfferId());
+                offerList.remove(String.valueOf(offer.getOfferId()));
+            } else {
+                Log.d(TAG, "remove exsiting data id:" + offer.getOfferId());
                 // remove from realm that is not found in remote list
                 offers.deleteFromRealm(position);
             }
@@ -139,8 +140,7 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
         }
 
         //add the remaining data in remotelist to local realm db)
-        for (Map.Entry<String, Offer> entry : offerList.entrySet())
-        {
+        for (Map.Entry<String, Offer> entry : offerList.entrySet()) {
             try {
                 realm.beginTransaction();
                 Log.d("TAG", " inserting Key :" + entry.getKey() + " Value:" + entry.getValue());
@@ -149,20 +149,20 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
                 OfferRealm offer_local = realm.createObject(OfferRealm.class, offerId);
                 OfferRealmUtil.convertRemoteOfferToRealmCustomer(offer_local, offer);
                 realm.commitTransaction();
-            }catch (RealmPrimaryKeyConstraintException re){
+            } catch (RealmPrimaryKeyConstraintException re) {
                 Log.e(TAG, "failed to write key already exists:" + entry.getKey());
             }
         }
     }
 
-    private void syncCustomerDB(DataSnapshot snapshot){//Realm realm,RealmResults<CustomersRealm> customers,HashMap<String,Customers> customerList) {
+    private void syncCustomerDB(DataSnapshot snapshot) {//Realm realm,RealmResults<CustomersRealm> customers,HashMap<String,Customers> customerList) {
 
-        HashMap<String,Customers> customerList = FireBaseUtils.getAllCustomers(mContext,snapshot);
+        HashMap<String, Customers> customerList = FireBaseUtils.getAllCustomers(mContext, snapshot);
         Realm realm = Realm.getDefaultInstance();
 
         RealmResults<CustomersRealm> customers = realm.where(CustomersRealm.class).findAll();
         //no data in remote db hence clear local db
-        if(customerList == null){
+        if (customerList == null) {
             realm.beginTransaction();
             customers.deleteAllFromRealm();
             realm.commitTransaction();
@@ -170,18 +170,18 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
         }
 
         int position = 0;
-        for (CustomersRealm customer : customers){
+        for (CustomersRealm customer : customers) {
             realm.beginTransaction();
             Customers customer_remote_data = customerList.get(String.valueOf(customer.getId()));
             //update exsiting data(remove in remote data list after updating)
-            if (customer_remote_data!=null){
-                Log.d(TAG,"update exsiting data id:"+customer.getId());
+            if (customer_remote_data != null) {
+                Log.d(TAG, "update exsiting data id:" + customer.getId());
 
-                customer = CustomerRealmUtil.convertRemoteCustomerToRealmCustomer(customer,customer_remote_data);
+                customer = CustomerRealmUtil.convertRemoteCustomerToRealmCustomer(customer, customer_remote_data);
                 realm.insertOrUpdate(customer);
                 customerList.remove(String.valueOf(customer.getId()));
-            }else{
-                Log.d(TAG,"remove exsiting data id:"+customer.getId());
+            } else {
+                Log.d(TAG, "remove exsiting data id:" + customer.getId());
                 // remove from realm that is not found in remote list
                 customers.deleteFromRealm(position);
             }
@@ -190,8 +190,7 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
         }
 
         //add the remaining data in remotelist to local realm db)
-        for (Map.Entry<String, Customers> entry : customerList.entrySet())
-        {
+        for (Map.Entry<String, Customers> entry : customerList.entrySet()) {
             try {
                 realm.beginTransaction();
                 Log.d("TAG", " inserting Key :" + entry.getKey() + " Value:" + entry.getValue());
@@ -200,17 +199,17 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
                 CustomersRealm customer_local = realm.createObject(CustomersRealm.class, customerId);
                 CustomerRealmUtil.convertRemoteCustomerToRealmCustomer(customer_local, customer);
                 realm.commitTransaction();
-            }catch (RealmPrimaryKeyConstraintException re){
-                Log.e(TAG,"failed to write key already exists:"+entry.getKey());
+            } catch (RealmPrimaryKeyConstraintException re) {
+                Log.e(TAG, "failed to write key already exists:" + entry.getKey());
             }
         }
     }
 
 
-    public void syncSQLCustomerDB(DataSnapshot snapshot){
+    public void syncSQLCustomerDB(DataSnapshot snapshot) {
         ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
-        HashMap<String,Customers> customerList = FireBaseUtils.getAllCustomers(mContext,snapshot);
+        HashMap<String, Customers> customerList = FireBaseUtils.getAllCustomers(mContext, snapshot);
         final ContentResolver contentResolver = mContext.getContentResolver();
         // Get list of all items
         Log.i(TAG, "Fetching local entries for merge");
@@ -239,13 +238,13 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
             Customers customer = customerList.get(String.valueOf(id));
 
             if (customer != null) {
-                Log.d(TAG," found local customer with id :"+id+" in remote list");
+                Log.d(TAG, " found local customer with id :" + id + " in remote list");
                 // Entry exists. Remove from entry map to prevent insert later.
                 customerList.remove(String.valueOf(id));
                 // Check to see if the entry needs to be updated
                 Uri existingUri = ShopOnContract.Entry.CONTENT_CUSTOMER_URI.buildUpon()
                         .appendPath(Integer.toString(id)).build();
-                if ((customer.getName() != null && !customer.getName().equals(name)) || (customer.getMobile()!=null && !customer.getMobile().equals(mobile)) ||
+                if ((customer.getName() != null && !customer.getName().equals(name)) || (customer.getMobile() != null && !customer.getMobile().equals(mobile)) ||
 
                         (customer.getEmail() != null && !customer.getEmail().equals(email)) ||
                         (customer.getIntrestedIn() != null && !customer.getIntrestedIn().equals(category))) {
@@ -262,10 +261,10 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
                     Log.i(TAG, "No action: " + existingUri);
                 }
             } else {
-                Log.d(TAG,"did not find local customer with id :"+id+" in remote list");
+                Log.d(TAG, "did not find local customer with id :" + id + " in remote list");
                 // try pushing local data to remote db, since creating customers and offers will not require internet.
                 customer = Utils.createCustomerFromCursor(c);
-                FireBaseUtils.updateCustomer(mContext,customer);
+                FireBaseUtils.updateCustomer(mContext, customer);
             }
         }
         c.close();
@@ -301,9 +300,9 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
     }
 
 
-    public void syncSQLOfferDB(DataSnapshot snapshot){
+    public void syncSQLOfferDB(DataSnapshot snapshot) {
         ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
-        HashMap<String,Offer> offerList = FireBaseUtils.getAllOffer(mContext,snapshot);
+        HashMap<String, Offer> offerList = FireBaseUtils.getAllOffer(mContext, snapshot);
         final ContentResolver contentResolver = mContext.getContentResolver();
         // Get list of all items
         Log.i(TAG, "Fetching local entries for merge");
@@ -326,19 +325,19 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
 
             scheduled_date = c.getString(c.getColumnIndex(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE));
             offer_text = c.getString(c.getColumnIndex(ShopOnContract.Entry.COLUMN_OFFER_TEXT));
-            offer_status = (c.getInt(c.getColumnIndex(ShopOnContract.Entry.COLUMN_OFFER_STATUS)) == 0)?false:true;
+            offer_status = (c.getInt(c.getColumnIndex(ShopOnContract.Entry.COLUMN_OFFER_STATUS)) == 0) ? false : true;
             numbers = c.getString(c.getColumnIndex(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS));
 
             Offer offer = offerList.get(String.valueOf(id));
 
             if (offer != null) {
-                Log.d(TAG," found local customer with id :"+id+" in remote list");
+                Log.d(TAG, " found local customer with id :" + id + " in remote list");
                 // Entry exists. Remove from entry map to prevent insert later.
                 offerList.remove(String.valueOf(id));
                 // Check to see if the entry needs to be updated
                 Uri existingUri = ShopOnContract.Entry.CONTENT_OFFER_URI.buildUpon()
                         .appendPath(Integer.toString(id)).build();
-                if ((offer.getDeliverMessageOn() != null && !offer.getDeliverMessageOn().equals(scheduled_date)) || (offer.getOfferText()!=null && !offer.getOfferText().equals(offer_text)) ||
+                if ((offer.getDeliverMessageOn() != null && !offer.getDeliverMessageOn().equals(scheduled_date)) || (offer.getOfferText() != null && !offer.getOfferText().equals(offer_text)) ||
                         (offer.getNumbers() != null && !offer.getNumbers().equals(numbers)) || !(offer.getOfferStatus() == offer_status)) {
                     // Update existing record
                     Log.i(TAG, "Scheduling update: " + existingUri);
@@ -346,17 +345,17 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
                             .withValue(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE, offer.getDeliverMessageOn())
                             .withValue(ShopOnContract.Entry.COLUMN_OFFER_TEXT, offer.getOfferText())
                             .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, offer.getNumbers())
-                            .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS,(offer.getOfferStatus())?1:0)
+                            .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS, (offer.getOfferStatus()) ? 1 : 0)
                             .build());
 
                 } else {
                     Log.i(TAG, "No action: " + existingUri);
                 }
             } else {
-                Log.d(TAG,"did not find local customer with id :"+id+" in remote list");
+                Log.d(TAG, "did not find local customer with id :" + id + " in remote list");
                 // try pushing local data to remote db, since creating customers and offers will not require internet.
                 offer = Utils.createOfferFromCursor(c);
-                FireBaseUtils.updateOfferDataBase(mContext,offer);
+                FireBaseUtils.updateOfferDataBase(mContext, offer);
             }
         }
         c.close();
@@ -369,7 +368,7 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
                     .withValue(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE, offer.getDeliverMessageOn())
                     .withValue(ShopOnContract.Entry.COLUMN_OFFER_TEXT, offer.getOfferText())
                     .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, offer.getNumbers())
-                    .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS,offer.getOfferStatus()?1:0)
+                    .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS, offer.getOfferStatus() ? 1 : 0)
                     .build());
 
         }
@@ -391,27 +390,27 @@ public class SyncLocalDB extends AsyncTask<Void,Void,Void>{
     }
 
 
-    public void unregister (SyncInterface obj) {
+    public void unregister(SyncInterface obj) {
         synchronized (MUTEX) {
-            for(int i=0;i<observers.size();i++)
-                Log.i(TAG,"unregister : Object Name is :" + observers.get(i).getClass().getSimpleName()+" obj:"+obj);
-            Log.i(TAG,"unregister :Before remove :size is :" + observers.size());
-            observers.remove (obj);
-           // observerMap.remove(obj);
-            Log.i(TAG,"unregister :After remove :size is :" + observers.size());
+            for (int i = 0; i < observers.size(); i++)
+                Log.i(TAG, "unregister : Object Name is :" + observers.get(i).getClass().getSimpleName() + " obj:" + obj);
+            Log.i(TAG, "unregister :Before remove :size is :" + observers.size());
+            observers.remove(obj);
+            // observerMap.remove(obj);
+            Log.i(TAG, "unregister :After remove :size is :" + observers.size());
         }
     }
 
-    public void register (SyncInterface obj) {
-        Log.i(TAG,"register : Object Name is :" + obj.getClass().getSimpleName()+" obj:"+obj);
-        if(obj == null) throw new NullPointerException("Null Observer");
+    public void register(SyncInterface obj) {
+        Log.i(TAG, "register : Object Name is :" + obj.getClass().getSimpleName() + " obj:" + obj);
+        if (obj == null) throw new NullPointerException("Null Observer");
         synchronized (MUTEX) {
-            if(!observers.contains(obj)) {
+            if (!observers.contains(obj)) {
                 observers.add(obj);
                 //observerMap.put(obj, true);
             }
 
-            Log.i(TAG,"register : Object Name is : Size is :" + obj.getClass().getSimpleName() + "," + observers.size());
+            Log.i(TAG, "register : Object Name is : Size is :" + obj.getClass().getSimpleName() + "," + observers.size());
         }
     }
 

@@ -65,24 +65,35 @@ public class CustomerActivity extends BaseActivity {
 
 
     private static final String TAG = ShopOn.class.getCanonicalName();
-    @Bind(R.id.name) public EditText name;
+    @Bind(R.id.name)
+    public EditText name;
 
-    @Bind(R.id.mobile_number) public EditText mobile;
+    @Bind(R.id.mobile_number)
+    public EditText mobile;
 
-    @Bind(R.id.name_err)TextView nameError;
-    @Bind(R.id.mobile_err) public TextView mobileError;
-    @Bind(R.id.email_err) public TextView emailError;
-    @Bind(R.id.interest_err) public TextView interestError;
+    @Bind(R.id.name_err)
+    TextView nameError;
+    @Bind(R.id.mobile_err)
+    public TextView mobileError;
+    @Bind(R.id.email_err)
+    public TextView emailError;
+    @Bind(R.id.interest_err)
+    public TextView interestError;
 
 
-    @Bind(R.id.add_cutomer) public Button addCustomer;
+    @Bind(R.id.add_cutomer)
+    public Button addCustomer;
 
-    @Bind(R.id.tags) public TagView tagGroup;
-    @Bind(R.id.tool_bar)Toolbar toolbar;
-    @Bind(R.id.toolbar_title)TextView toolbarTitle;
+    @Bind(R.id.tags)
+    public TagView tagGroup;
+    @Bind(R.id.tool_bar)
+    Toolbar toolbar;
+    @Bind(R.id.toolbar_title)
+    TextView toolbarTitle;
     protected ArrayList<String> categoryList = new ArrayList<>();
 
-    @Bind(R.id.email) public EditText email;
+    @Bind(R.id.email)
+    public EditText email;
     private EditText phone;
     private CustomerActivity mContext;
     private DatabaseReference mDatabase;
@@ -99,7 +110,7 @@ public class CustomerActivity extends BaseActivity {
         setHomeButton();
         mContext = this;
 
-        setTags(categoryList,tagGroup);
+        setTags(categoryList, tagGroup);
         setTagDeleteListener();
         setTagClickListener();
 
@@ -111,14 +122,14 @@ public class CustomerActivity extends BaseActivity {
     }
 
     private void loadSavedInstanceState(Bundle savedState) {
-        if(savedState!=null) {
+        if (savedState != null) {
             name.setText(savedState.getString(Constants.EXTRAS_CUSTOMER_NAME));
             mobile.setText(savedState.getString(Constants.EXTRAS_MOBILE));
             email.setText(savedState.getString(Constants.EXTRAS_EMAIL));
             categoryList = savedState.getStringArrayList(Constants.EXTRAS_CATEGORY_LIST);
-            Log.d(TAG,"customerList:"+categoryList);
-            if(categoryList!=null) {
-                Log.d(TAG,"customerList size: "+categoryList.size());
+            Log.d(TAG, "customerList:" + categoryList);
+            if (categoryList != null) {
+                Log.d(TAG, "customerList size: " + categoryList.size());
                 setTags(categoryList, tagGroup);
             }
         }
@@ -128,42 +139,39 @@ public class CustomerActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(Constants.EXTRAS_CUSTOMER_NAME,name.getText().toString());
-        outState.putString(Constants.EXTRAS_MOBILE,mobile.getText().toString());
-        outState.putString(Constants.EXTRAS_EMAIL,email.getText().toString());
+        outState.putString(Constants.EXTRAS_CUSTOMER_NAME, name.getText().toString());
+        outState.putString(Constants.EXTRAS_MOBILE, mobile.getText().toString());
+        outState.putString(Constants.EXTRAS_EMAIL, email.getText().toString());
 
-        if(categoryList!=null) {
+        if (categoryList != null) {
             outState.putStringArrayList(Constants.EXTRAS_CATEGORY_LIST, categoryList);
         }
     }
 
     @OnClick(R.id.add_cutomer)
-    public void addCustomer(){
-        if(!validateCustomer()){
+    public void addCustomer() {
+        if (!validateCustomer()) {
             return;
         }
-        Log.d(TAG,"addCustomer categoryList:"+categoryList.toString());
+        Log.d(TAG, "addCustomer categoryList:" + categoryList.toString());
         userId = (int) Math.abs(Math.random() * 1000000);
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_ID,userId);
-        contentValues.put(ShopOnContract.Entry.COLUMN_NAME,name.getText().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL,email.getText().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE,mobile.getText().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY,categoryList.toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_CREATED_AT,Utils.getCurrentDate());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_ID, userId);
+        contentValues.put(ShopOnContract.Entry.COLUMN_NAME, name.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL, email.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE, mobile.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY, categoryList.toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CREATED_AT, Utils.getCurrentDate());
 
-        getContentResolver().insert(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,contentValues);
+        getContentResolver().insert(ShopOnContract.Entry.CONTENT_CUSTOMER_URI, contentValues);
 
-        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI,null,ShopOnContract.Entry.COLUMN_CUSTOMER_ID+"=?",new String[]{String.valueOf(userId)},null);
+        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI, null, ShopOnContract.Entry.COLUMN_CUSTOMER_ID + "=?", new String[]{String.valueOf(userId)}, null);
         cursor.moveToFirst();
         Customers customers = Utils.createCustomerFromCursor(cursor);
 
-        FireBaseUtils.updateCustomer(this,customers);
+        FireBaseUtils.updateCustomer(this, customers);
     }
-
-
-
 
 
     private void registerRTUpdateListener() {
@@ -172,12 +180,12 @@ public class CustomerActivity extends BaseActivity {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.d(TAG,"onDataChange snapshot:"+snapshot.getValue());
+                Log.d(TAG, "onDataChange snapshot:" + snapshot.getValue());
 
-                Customers customers = FireBaseUtils.getCustomerById(mContext,userId,snapshot);
+                Customers customers = FireBaseUtils.getCustomerById(mContext, userId, snapshot);
 
-                if(customers !=null && email.getText().toString().equals(customers.getEmail())) {
-                    Log.d(TAG,"onDataChange snapshot:"+snapshot.getValue()+" customers.getEmail:"+customers.getEmail());
+                if (customers != null && email.getText().toString().equals(customers.getEmail())) {
+                    Log.d(TAG, "onDataChange snapshot:" + snapshot.getValue() + " customers.getEmail:" + customers.getEmail());
                     setResult(RESULT_OK);
                     finish();
                 }
@@ -196,7 +204,7 @@ public class CustomerActivity extends BaseActivity {
         Tag tag;
 
         for (int i = 0; i < stringList.size(); i++) {
-            Log.d(TAG,"category string:"+stringList.get(i));
+            Log.d(TAG, "category string:" + stringList.get(i));
             tag = new Tag(stringList.get(i));
             tag.radius = 10f;
             tag.layoutColor = Color.parseColor("#003366");//getResources().getColor(R.color.bazaar_darker_gray)
@@ -211,12 +219,12 @@ public class CustomerActivity extends BaseActivity {
     }
 
     private void addMoreAsFirstTag(ArrayList<Tag> tags) {
-        if(tags.size()==0 || (tags.size()>0 && !tags.get(0).text.equalsIgnoreCase("More"))) {
+        if (tags.size() == 0 || (tags.size() > 0 && !tags.get(0).text.equalsIgnoreCase("More"))) {
             Tag tag = new Tag(getString(R.string.select_interests));
             tag.radius = 10f;
             tag.layoutColor = Color.parseColor("#003366");//getResources().getColor(R.color.bazaar_darker_gray);
             tag.tagTextColor = Color.parseColor("#ffffff");
-            tags.add(0,tag);
+            tags.add(0, tag);
         }
     }
 
@@ -227,15 +235,14 @@ public class CustomerActivity extends BaseActivity {
                 if (position == 0) {
                     Intent intent = new Intent(mContext, ShopCategoryActivity.class);
                     ArrayList<String> tags = new ArrayList<String>();
-                    Log.d (TAG, "Starting ShopCategoryActivity:: " + tagGroup.getTags().size());
-                    for(int i=0;i<tagGroup.getTags().size();i++)
-                    {
-                        if(i>1) {
+                    Log.d(TAG, "Starting ShopCategoryActivity:: " + tagGroup.getTags().size());
+                    for (int i = 0; i < tagGroup.getTags().size(); i++) {
+                        if (i > 1) {
                             System.out.println("SHOP CATEGORY TAG Value :" + tagGroup.getTags().get(i).text);
                             tags.add(tagGroup.getTags().get(i).text);
                         }
                     }
-                    intent.putStringArrayListExtra (Constants.SHOP_CATEGORY_SUBSCRIPTION_LIST, categoryList);
+                    intent.putStringArrayListExtra(Constants.SHOP_CATEGORY_SUBSCRIPTION_LIST, categoryList);
                     startActivityForResult(intent, Constants.RETRIEVE_CATEGORY);
                 }
             }
@@ -249,20 +256,18 @@ public class CustomerActivity extends BaseActivity {
             public void onTagDeleted(final TagView view, final Tag tag, final int position) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("POSITION", position);
-                removeTag(view,position);
+                removeTag(view, position);
             }
         });
         //validate launch/product
     }
 
-    public void removeTag(TagView view, int position){
+    public void removeTag(TagView view, int position) {
         view.remove(position);
         // list doesnt not contain more option
         categoryList.remove((position == 0) ? position : position - 1);
 
     }
-
-
 
 
     @Override
@@ -277,8 +282,8 @@ public class CustomerActivity extends BaseActivity {
         if (requestCode == Constants.RETRIEVE_CATEGORY && resultCode == RESULT_OK) {
             categoryList.addAll(data.getExtras().getStringArrayList(ShopCategoryActivity.SELECTED_TAGS));
             categoryList = Utils.getUinqueElementsInList(categoryList);
-            Log.d(TAG,"selectedTags:"+categoryList);
-            setTags(categoryList,tagGroup);
+            Log.d(TAG, "selectedTags:" + categoryList);
+            setTags(categoryList, tagGroup);
 
         }
     }
@@ -286,7 +291,7 @@ public class CustomerActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -299,47 +304,37 @@ public class CustomerActivity extends BaseActivity {
     }
 
     private boolean validateCustomer() {
-        if(TextUtils.isEmpty(name.getText().toString())){
+        if (TextUtils.isEmpty(name.getText().toString())) {
             nameError.setText(getString(R.string.name_err));
             return false;
-        }
-        else
-        {
+        } else {
             nameError.setText("");
         }
 
-        if(!Utils.isValidMobile(mobile.getText().toString())){
+        if (!Utils.isValidMobile(mobile.getText().toString())) {
             mobileError.setText(getString(R.string.number_err));
             return false;
-        }
-        else
-        {
+        } else {
             mobileError.setText("");
         }
 
-        if(!Utils.isValidEmail(email.getText().toString())){
+        if (!Utils.isValidEmail(email.getText().toString())) {
             emailError.setText(getString(R.string.email_err));
             return false;
-        }
-        else
-        {
+        } else {
             emailError.setText("");
         }
 
-        if(categoryList.size() <=1){
+        if (categoryList.size() <= 1) {
             interestError.setText(getString(R.string.interests_err));
             return false;
-        }
-        else
-        {
+        } else {
             interestError.setText("");
         }
 
 
         return true;
     }
-
-
 
 
 }

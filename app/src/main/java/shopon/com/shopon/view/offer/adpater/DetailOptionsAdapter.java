@@ -36,17 +36,16 @@ public class DetailOptionsAdapter extends RecyclerView.Adapter<DetailOptionsAdap
     private boolean isEditEnabled;
     private android.support.v4.app.Fragment fragment;
 
-    public DetailOptionsAdapter(Activity context, List<DetailEntry> offer_details, android.support.v4.app.Fragment fragment){
+    public DetailOptionsAdapter(Activity context, List<DetailEntry> offer_details, android.support.v4.app.Fragment fragment) {
         mContext = context;
         offerDetails = offer_details;
         this.fragment = fragment;
     }
-    
 
 
     @Override
     public DetailOptionHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        Log.d(TAG,"onCreateViewHolder");
+        Log.d(TAG, "onCreateViewHolder");
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.detail_item, viewGroup, false);
         return new DetailOptionHolder(view);
@@ -54,7 +53,7 @@ public class DetailOptionsAdapter extends RecyclerView.Adapter<DetailOptionsAdap
 
     @Override
     public void onBindViewHolder(DetailOptionHolder itemViewHolder, int position) {
-        Log.d(TAG,"onBindViewHolder  position:"+position);
+        Log.d(TAG, "onBindViewHolder  position:" + position);
         itemViewHolder.bindView(position);
         //Here you can fill your row view
     }
@@ -64,11 +63,11 @@ public class DetailOptionsAdapter extends RecyclerView.Adapter<DetailOptionsAdap
         return offerDetails.size();
     }
 
-    public void setEditEnabled(boolean is_enabled){
+    public void setEditEnabled(boolean is_enabled) {
         isEditEnabled = is_enabled;
     }
 
-    public boolean isEditEnabled(){
+    public boolean isEditEnabled() {
         return isEditEnabled;
     }
 
@@ -77,19 +76,14 @@ public class DetailOptionsAdapter extends RecyclerView.Adapter<DetailOptionsAdap
 
     }
 
-    public void setNumbers(int key,String value) {
+    public void setNumbers(int key, String value) {
         DetailEntry detailEntry = offerDetails.get(key);
         detailEntry.setValue(value);
         notifyDataSetChanged();
     }
 
-    /*public void setInterests(int key, String value) {
-        DetailEntry detailEntry = offerDetails.get(key);
-        detailEntry.setValue(value);
-        notifyDataSetChanged();
-    }*/
 
-    public class DetailOptionHolder extends RecyclerView.ViewHolder implements View.OnClickListener,DateTimPickerUtils.ScheduledDateInterface{
+    public class DetailOptionHolder extends RecyclerView.ViewHolder implements View.OnClickListener, DateTimPickerUtils.ScheduledDateInterface {
 
         @Bind(R.id.label_name)
         TextView label;
@@ -111,25 +105,22 @@ public class DetailOptionsAdapter extends RecyclerView.Adapter<DetailOptionsAdap
         }
 
 
-
         public void bindView(int pos) {
             position = pos;
-            Log.d(TAG,"bindView details:"+offerDetails.get(pos).toString());
+            Log.d(TAG, "bindView details:" + offerDetails.get(pos).toString());
             try {
                 this.offerDetailEntry = offerDetails.get(pos);
                 //set key/value name
-                this.label.setText (offerDetailEntry.getKey());
+                this.label.setText(offerDetailEntry.getKey());
                 this.value.setText(offerDetailEntry.getValue());
 
-                //label.setText(priceTag[1]);
                 //setEditstate and event listener
-                Log.d(TAG,"iseditable :"+offerDetailEntry.isEditable()+" isFocusable:"+offerDetailEntry.isFocusable()+" iseditenabled:"+isEditEnabled);
-                if(isEditEnabled ) {
+                Log.d(TAG, "iseditable :" + offerDetailEntry.isEditable() + " isFocusable:" + offerDetailEntry.isFocusable() + " iseditenabled:" + isEditEnabled);
+                if (isEditEnabled) {
                     value.setEnabled(offerDetailEntry.isEditable());
                     value.setFocusable(offerDetailEntry.isFocusable());
                     value.setOnClickListener(this);
-                }
-                else{
+                } else {
                     value.setEnabled(false);
                 }
 
@@ -137,18 +128,16 @@ public class DetailOptionsAdapter extends RecyclerView.Adapter<DetailOptionsAdap
                 value.setInputType(offerDetailEntry.getInputType());
 
                 //display error if client validation failed
-                if(offerDetailEntry.isErrStatus()){
+                if (offerDetailEntry.isErrStatus()) {
                     errorView.setText(offerDetailEntry.getErrorMsg());
                     errorView.setVisibility(View.VISIBLE);
-                }
-                else
-                {
+                } else {
                     errorView.setVisibility(View.GONE);
                 }
 
-            }catch (IndexOutOfBoundsException io){
-               return;
-            }catch(NullPointerException ne){
+            } catch (IndexOutOfBoundsException io) {
+                return;
+            } catch (NullPointerException ne) {
                 return;
             }
         }
@@ -156,63 +145,65 @@ public class DetailOptionsAdapter extends RecyclerView.Adapter<DetailOptionsAdap
 
         @OnFocusChange(R.id.label_value)
         void onFocusChanged(boolean focused) {
-            Log.d(TAG,"onFocusChanged");
-            if(focused) {
+            Log.d(TAG, "onFocusChanged");
+            if (focused) {
                 //value.setText("");
             } else {
-                if(TextUtils.isEmpty(value.getText().toString())){
-                    value.setText((offerDetailEntry!=null)?offerDetailEntry.getValue():"");
+                if (TextUtils.isEmpty(value.getText().toString())) {
+                    value.setText((offerDetailEntry != null) ? offerDetailEntry.getValue() : "");
                 }
-                if(!TextUtils.isEmpty(value.getText().toString())) {
+                if (!TextUtils.isEmpty(value.getText().toString())) {
                     offerDetailEntry.setValue(value.getText().toString());
                 }
             }
         }
 
         @OnTextChanged(R.id.label_value)
-        void onTextChanged(Editable editable){
-            Log.d(TAG,"onTextChanged:"+editable.toString());
-            //if(!TextUtils.isEmpty(value.getText().toString())) {
-                offerDetailEntry.setValue(value.getText().toString());
-            //}
+        void onTextChanged(Editable editable) {
+            Log.d(TAG, "onTextChanged:" + editable.toString());
+            offerDetailEntry.setValue(value.getText().toString());
+
         }
 
 
         @Override
         public void onClick(View view) {
-            Log.d(TAG,"onCLick");
+            Log.d(TAG, "onCLick");
             Method method = offerDetailEntry.getClickEventAction();
 
-            if(method != null) {
-                if(method.getName().equals("chooseDate")) {
+            if (method != null) {
+                if (method.getName().equals("chooseDate")) {
 
                     try {
                         method.invoke(fragment, mContext, this);
-                        Log.d(TAG,"choose date clicked in detail");
+                        Log.d(TAG, "choose date clicked in detail");
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
-                    };
+                    }
+                    ;
                 }
-                if(method.getName().equals("selectableCustomers")) {
+                if (method.getName().equals("selectableCustomers")) {
                     try {
                         method.invoke(fragment);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
-                    };
+                    }
+                    ;
                 }
 
-                if(method.getName().equals("chooseInterests")) {
+                if (method.getName().equals("chooseInterests")) {
                     try {
                         method.invoke(fragment);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
-                    };
+                    }
+                    ;
                 }
 
             }

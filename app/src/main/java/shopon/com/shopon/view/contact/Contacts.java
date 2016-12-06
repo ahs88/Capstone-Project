@@ -57,12 +57,15 @@ public class Contacts extends BaseActivity {
     private static float sideIndexY;
     private int indexListSize;
     private List<AlphabetListAdapter.Item> contacts;
-    private List<AlphabetListAdapter.Item>selectedContacts = new ArrayList<>();
+    private List<AlphabetListAdapter.Item> selectedContacts = new ArrayList<>();
     AssetManager asm;
     private String LOGTAG = "Contacts";
-    @Bind(R.id.tool_bar)Toolbar toolbar;
-    @Bind(R.id.toolbar_title)TextView toolbarTitle;
-    @Bind(R.id.listView)ListView contactList;
+    @Bind(R.id.tool_bar)
+    Toolbar toolbar;
+    @Bind(R.id.toolbar_title)
+    TextView toolbarTitle;
+    @Bind(R.id.listView)
+    ListView contactList;
 
     class SideIndexGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
@@ -95,7 +98,6 @@ public class Contacts extends BaseActivity {
         setHomeButton();
         toolbarTitle.setText(getString(R.string.create_offer));
         //asm = this.getAssets();
-        
 
 
     }
@@ -108,7 +110,7 @@ public class Contacts extends BaseActivity {
         Object[] tmpIndexItem = null;
         Pattern numberPattern = Pattern.compile("[0-9]");
 
-        for (AlphabetListAdapter.Item item: contacts) {
+        for (AlphabetListAdapter.Item item : contacts) {
             String firstLetter = item.text.substring(0, 1);
 
             // Group numbers together in the Scroller.
@@ -160,49 +162,32 @@ public class Contacts extends BaseActivity {
                 AlphabetListAdapter.Item contact = contacts.get(position);
                 TextView cn = (TextView) paramView.findViewById(R.id.ccname);
                 ImageView selectDeselect = (ImageView) paramView.findViewById(R.id.select_deselect);
-                if(!adapter.getSelectedContacts().contains(contact)){
+                if (!adapter.getSelectedContacts().contains(contact)) {
                     selectDeselect.setImageResource(R.drawable.ok_filled);
                     adapter.addSelectedItem(contact);
-                    //categoryContainer.setBackgroundResource(R.drawable.category_bg_selected);
-                }
-                else
-                {
+                } else {
                     selectDeselect.setImageResource(R.drawable.b_circlethin_2x);
                     adapter.removeSelectedItem(contact);
-                    //categoryContainer.setBackgroundResource(R.drawable.category_bg_selected);
                 }
-                /* TextView cn = (TextView) paramView.findViewById(R.id.ccname);
-                //ImageView cf = (ImageView) paramView.findViewById(R.id.ccflag);
 
-                String ccname = cn.getText().toString();
-                String ccode = getCC(ccname);
-
-
-                Intent intent = new Intent();
-                intent.putExtra("cc", ccode);
-                intent.putExtra("ccname", ccname.replace("(+" + ccode + ")", ""));
-
-                //intent.putExtra("flag", fpath);
-                setResult(RESULT_OK, intent);
-                finish();*/
             }
         });
     }
 
     @Override
-	public void onDestroy() {
-    	Log.d("Roll", "OnDestroy invoked of Contacts");
+    public void onDestroy() {
+        Log.d("Roll", "OnDestroy invoked of Contacts");
         contactList.setAdapter(null);
-		if (adapter != null) {
-			adapter.clearAll();
-			adapter = null;
-		}
-		
-		ViewGroup vg = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
-		unbindDrawables(vg);
-		System.gc();
+        if (adapter != null) {
+            adapter.clearAll();
+            adapter = null;
+        }
 
-		super.onDestroy();
+        ViewGroup vg = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
+        unbindDrawables(vg);
+        System.gc();
+
+        super.onDestroy();
     }
 
 
@@ -311,34 +296,32 @@ public class Contacts extends BaseActivity {
                     .getString(phones
                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-            contacts.add(new AlphabetListAdapter.Item(name,phoneNumber));
+            contacts.add(new AlphabetListAdapter.Item(name, phoneNumber));
         }
         contacts = Utils.getUinqueElementsInList((ArrayList<AlphabetListAdapter.Item>) contacts);
 
         phones.close();
         return contacts;
     }
-    
+
     private void unbindDrawables(View view) {
         if (view.getBackground() != null) {
-                view.getBackground().setCallback(null);
+            view.getBackground().setCallback(null);
         }
         if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
-                for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                        unbindDrawables(((ViewGroup) view).getChildAt(i));
-                }
-                ((ViewGroup) view).removeAllViews();
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
         }
-	}
+    }
 
     private void showContacts() {
         // Check the SDK version and whether the permission is already granted or not.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, Constants.PERMISSIONS_REQUEST_READ_CONTACTS);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-        }
-        else
-        {
+        } else {
             displayContacts();
         }
     }
@@ -357,7 +340,7 @@ public class Contacts extends BaseActivity {
         if (requestCode == Constants.PERMISSIONS_REQUEST_READ_CONTACTS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
-               displayContacts();
+                displayContacts();
             } else {
                 finish();
                 Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
@@ -367,17 +350,17 @@ public class Contacts extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
-        if (item.getItemId() == R.id.action_done){
+        if (item.getItemId() == R.id.action_done) {
             Bundle bundle = new Bundle();
-            bundle.putStringArrayList(Constants.SELECTED_NUMBERS,getSelectedNumbers((ArrayList)adapter.getSelectedContacts()));
-            Intent intent= getIntent();
+            bundle.putStringArrayList(Constants.SELECTED_NUMBERS, getSelectedNumbers((ArrayList) adapter.getSelectedContacts()));
+            Intent intent = getIntent();
             intent.putExtras(bundle);
-            setResult(RESULT_OK,intent);
+            setResult(RESULT_OK, intent);
             finish();
-           // finish();
+            // finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -385,7 +368,7 @@ public class Contacts extends BaseActivity {
 
     private ArrayList<String> getSelectedNumbers(ArrayList<AlphabetListAdapter.Item> selectedContacts) {
         ArrayList<String> numbers = new ArrayList<>();
-        for (AlphabetListAdapter.Item contact : selectedContacts){
+        for (AlphabetListAdapter.Item contact : selectedContacts) {
             numbers.add(contact.fpath);
         }
         return numbers;

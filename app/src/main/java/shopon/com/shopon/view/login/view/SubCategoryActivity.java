@@ -35,7 +35,7 @@ public class SubCategoryActivity extends BaseActivity {
         setupActionBar(toolbar);
         subCategoryData = getIntent().getStringArrayListExtra(Constants.SUB_CATEGORY_LIST);
         selectedCategoryData = getIntent().getStringArrayListExtra(Constants.SELECTED_CATEGORY_LIST);
-        Log.d(TAG,"selectedCategoryData:"+selectedCategoryData);
+        Log.d(TAG, "selectedCategoryData:" + selectedCategoryData);
         if (selectedCategoryData.containsAll(subCategoryData)) {
             isSelected = true;
         }
@@ -43,28 +43,27 @@ public class SubCategoryActivity extends BaseActivity {
     }
 
     private void setupCategoryList() {
-        subCategoryList  = (RecyclerView)findViewById(R.id.sub_category_list);
+        subCategoryList = (RecyclerView) findViewById(R.id.sub_category_list);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         subCategoryList.setLayoutManager(mLinearLayoutManager);
-        subCategoryAdapter = new SubCategoriesAdapter(this,subCategoryData);
+        subCategoryAdapter = new SubCategoriesAdapter(this, subCategoryData);
         subCategoryAdapter.setSubscribedTags(selectedCategoryData);
         subCategoryList.setAdapter(subCategoryAdapter);
 
     }
 
-    public void onDone (View v) {
+    public void onDone(View v) {
 
         onActionDone();
     }
 
-    private void onActionDone () {
-        //Log.d (TAG, "Clicked on action done: " + mShopCategoriesAdapter.getCategoryLevel());
+    private void onActionDone() {
         Intent intent = getIntent();
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList(Constants.SELECTED_CATEGORY_LIST,(ArrayList<String>) subCategoryAdapter.getSelecedTags());
-        bundle.putStringArrayList(Constants.SUB_CATEGORY_LIST,(ArrayList)subCategoryData);
+        bundle.putStringArrayList(Constants.SELECTED_CATEGORY_LIST, (ArrayList<String>) subCategoryAdapter.getSelecedTags());
+        bundle.putStringArrayList(Constants.SUB_CATEGORY_LIST, (ArrayList) subCategoryData);
         intent.putExtras(bundle);
-        setResult(RESULT_OK,intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -77,14 +76,14 @@ public class SubCategoryActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(subCategoryAdapter!=null) {
-                if (!isSelected) {
-                    showOption(menu,R.id.select_all);
-                    hideOption(menu,R.id.deselect_all);
-                } else {
-                    showOption(menu,R.id.deselect_all);
-                    hideOption(menu,R.id.select_all);
-                }
+        if (subCategoryAdapter != null) {
+            if (!isSelected) {
+                showOption(menu, R.id.select_all);
+                hideOption(menu, R.id.deselect_all);
+            } else {
+                showOption(menu, R.id.deselect_all);
+                hideOption(menu, R.id.select_all);
+            }
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -93,10 +92,6 @@ public class SubCategoryActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.action_done:
-                onActionDone();
-                // send list of tags to edit/add product/shop
-                return true;*/
             case R.id.select_all:
                 subCategoryAdapter.selectAllItems();
                 subCategoryAdapter.notifyDataSetChanged();
@@ -113,7 +108,6 @@ public class SubCategoryActivity extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 
 }

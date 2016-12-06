@@ -15,24 +15,20 @@ public class MerchantData {
     public Merchants merchants;
 
     /**
-     * 
-     * @return
-     *     The merchants
+     * @return The merchants
      */
     public Merchants getMerchants() {
         return merchants;
     }
 
     /**
-     * 
-     * @param merchants
-     *     The merchants
+     * @param merchants The merchants
      */
     public void setMerchants(Merchants merchants) {
         this.merchants = merchants;
     }
 
-    public void setRealmMerchant(MerchantsRealm merchants){
+    public void setRealmMerchant(MerchantsRealm merchants) {
         this.merchants = new Merchants();
         this.merchants.setUserId(merchants.getUserId());
         this.merchants.setEmail(merchants.getEmail());

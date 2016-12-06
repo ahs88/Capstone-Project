@@ -35,7 +35,7 @@ import shopon.com.shopon.view.customers.dummy.CustomerContent;
 import shopon.com.shopon.view.customers.fragment.CustomerFragment;
 
 
-public class SelectableCustomers extends BaseActivity implements CustomerFragment.OnListFragmentInteractionListener,LoaderManager.LoaderCallbacks<Cursor> {
+public class SelectableCustomers extends BaseActivity implements CustomerFragment.OnListFragmentInteractionListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = SelectableCustomers.class.getName();
     @Bind(R.id.tool_bar)
@@ -75,7 +75,7 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
         customerListView.setLayoutManager(mLinearLayoutManager);
 
 
-        customerAapter = new MyCustomerRecyclerViewAdapter(CustomerContent.ITEMS, this,true,false);
+        customerAapter = new MyCustomerRecyclerViewAdapter(CustomerContent.ITEMS, this, true, false);
         displayEmptyList();
         customerListView.setAdapter(customerAapter);
     }
@@ -92,14 +92,12 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
 
 
     @OnClick(R.id.phone_book)
-    public void selectFromPhoneBoook(){
+    public void selectFromPhoneBoook() {
         /*Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
         startActivityForResult(intent, Constants.PICK_CONTACT);*/
 
     }
-
-
 
 
     @Override
@@ -115,16 +113,16 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_done: {
                 Bundle bundle = new Bundle();
-                bundle.putStringArrayList(Constants.SELECTED_NUMBERS,(ArrayList)customerAapter.getSelectedNumbers());
-                Intent intent= getIntent();
-                        intent.putExtras(bundle);
-                setResult(RESULT_OK,intent);
+                bundle.putStringArrayList(Constants.SELECTED_NUMBERS, (ArrayList) customerAapter.getSelectedNumbers());
+                Intent intent = getIntent();
+                intent.putExtras(bundle);
+                setResult(RESULT_OK, intent);
                 finish();
             }
-            case android.R.id.home:{
+            case android.R.id.home: {
                 finish();
             }
         }
@@ -137,28 +135,28 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == Constants.ADD_CONTACTS){
-            Log.d(TAG,"onActivityResult");
+        if (resultCode == RESULT_OK && requestCode == Constants.ADD_CONTACTS) {
+            Log.d(TAG, "onActivityResult");
             Bundle bundle = new Bundle();
-            bundle.putStringArrayList(Constants.SELECTED_NUMBERS,data.getExtras().getStringArrayList(Constants.SELECTED_NUMBERS));
-            Intent intent= getIntent();
+            bundle.putStringArrayList(Constants.SELECTED_NUMBERS, data.getExtras().getStringArrayList(Constants.SELECTED_NUMBERS));
+            Intent intent = getIntent();
             intent.putExtras(bundle);
-            setResult(RESULT_OK,intent);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }
 
 
     @OnClick(R.id.phone_book)
-    public void launchContacts(){
+    public void launchContacts() {
         Intent intent = new Intent(this, Contacts.class);
-        startActivityForResult(intent,Constants.ADD_CONTACTS);
+        startActivityForResult(intent, Constants.ADD_CONTACTS);
     }
 
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        Log.d(TAG,"onCreateLoader");
+        Log.d(TAG, "onCreateLoader");
         return new CursorLoader(this,  // Context
                 ShopOnContract.Entry.CONTENT_CUSTOMER_URI, // URI
                 null,                // Projection
@@ -169,20 +167,20 @@ public class SelectableCustomers extends BaseActivity implements CustomerFragmen
 
     @Override
     public void onLoadFinished(Loader loader, Cursor data) {
-        Log.d(TAG,"onLoadFinished size:"+data.getCount());
+        Log.d(TAG, "onLoadFinished size:" + data.getCount());
         mCursor = data;
         populateCustomerListFromCursor(data);
-        if(getSupportLoaderManager().hasRunningLoaders()){
+        if (getSupportLoaderManager().hasRunningLoaders()) {
             getSupportLoaderManager().destroyLoader(Constants.ALL_CUSTOMERS);
         }
 
     }
 
-    private void populateCustomerListFromCursor(Cursor cursor){
+    private void populateCustomerListFromCursor(Cursor cursor) {
         CustomerContent.ITEMS.clear();
         cursor.moveToFirst();
-        Log.d(TAG,"populateOfferListFromCursor cursor:"+cursor.getCount());
-        for(int i=0;i<cursor.getCount();i++){
+        Log.d(TAG, "populateOfferListFromCursor cursor:" + cursor.getCount());
+        for (int i = 0; i < cursor.getCount(); i++) {
             Customers customers = shopon.com.shopon.utils.Utils.createCustomerFromCursor(cursor);
             CustomerContent.ITEMS.add(customers);
             cursor.moveToNext();

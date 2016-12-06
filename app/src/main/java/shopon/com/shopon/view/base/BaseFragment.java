@@ -59,17 +59,18 @@ public abstract class BaseFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(title);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
     }
 
     public Activity getBaseActivity() {
         return (Activity) getActivity();
     }
+
     public abstract void initializeData();
+
     protected boolean isExistActivity() {
         return ((!isDetached()) && (getBaseActivity() != null));
     }
-
 
 
     public synchronized void showProgress() {
@@ -123,7 +124,7 @@ public abstract class BaseFragment extends android.support.v4.app.Fragment {
 
     public void hideOption(Menu menu, int id) {
 
-        if(menu == null)
+        if (menu == null)
             return;
         MenuItem item = menu.findItem(id);
         if (item != null)
@@ -131,9 +132,9 @@ public abstract class BaseFragment extends android.support.v4.app.Fragment {
         android.util.Log.d(TAG, "hideOption invoked");
     }
 
-    public void showOption(Menu menu,int id) {
+    public void showOption(Menu menu, int id) {
 
-        if(menu == null)
+        if (menu == null)
             return;
         MenuItem item = menu.findItem(id);
         if (item != null)

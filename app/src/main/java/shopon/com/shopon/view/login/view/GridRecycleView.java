@@ -29,7 +29,7 @@ import android.view.animation.GridLayoutAnimationController;
  * {@code <gridLayoutAnimation>} as long as you provide it a
  * {@link android.support.v7.widget.GridLayoutManager} in
  * {@code setLayoutManager(LayoutManager layout)}.
- *
+ * <p>
  * Created by Freddie (Musenkishi) Lust-Hed.
  */
 public class GridRecycleView extends RecyclerView {
@@ -49,7 +49,7 @@ public class GridRecycleView extends RecyclerView {
 
     @Override
     public void setLayoutManager(LayoutManager layout) {
-        if (layout instanceof GridLayoutManager){
+        if (layout instanceof GridLayoutManager) {
             super.setLayoutManager(layout);
         } else {
             throw new ClassCastException("You should only use a GridLayoutManager with GridRecyclerView.");
@@ -59,7 +59,7 @@ public class GridRecycleView extends RecyclerView {
     @Override
     protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
 
-        if (getAdapter() != null && getLayoutManager() instanceof GridLayoutManager){
+        if (getAdapter() != null && getLayoutManager() instanceof GridLayoutManager) {
 
             GridLayoutAnimationController.AnimationParameters animationParams =
                     (GridLayoutAnimationController.AnimationParameters) params.layoutAnimationParameters;

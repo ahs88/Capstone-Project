@@ -24,7 +24,7 @@ import shopon.com.shopon.view.constants.Constants;
  */
 
 public class CustomerRealmUtil {
-    public static Customers convertRealmCustomerToCustomers(CustomersRealm customersRealm){
+    public static Customers convertRealmCustomerToCustomers(CustomersRealm customersRealm) {
         Customers customers = new Customers();
         customers.setEmail(customersRealm.getEmail());
         customers.setId(customersRealm.getId());
@@ -34,9 +34,9 @@ public class CustomerRealmUtil {
         return customers;
     }
 
-    public static CustomersRealm convertRemoteCustomerToRealmCustomer(CustomersRealm customer_realm,Customers customers){
+    public static CustomersRealm convertRemoteCustomerToRealmCustomer(CustomersRealm customer_realm, Customers customers) {
         customer_realm.setEmail(customers.getEmail());
-        if(customer_realm.getId() == null || TextUtils.isEmpty(String.valueOf(customer_realm.getId()))) {
+        if (customer_realm.getId() == null || TextUtils.isEmpty(String.valueOf(customer_realm.getId()))) {
             customer_realm.setId(customers.getId());
         }
         customer_realm.setMobile(customers.getMobile());
@@ -46,16 +46,13 @@ public class CustomerRealmUtil {
     }
 
 
-
     public static List<Customers> convertRealmCustomerListToCustomerList(List<CustomersRealm> customersRealms) {
         List<Customers> customersList = new ArrayList<>();
-        for(int i =0;i<customersRealms.size();i++){
+        for (int i = 0; i < customersRealms.size(); i++) {
             customersList.add(convertRealmCustomerToCustomers(customersRealms.get(i)));
         }
         return customersList;
     }
-
-
 
 
 }

@@ -9,26 +9,22 @@ import java.util.List;
 
 public class CategoryList {
 
-@SerializedName("categories")
-@Expose
-private List<Category> categories = new ArrayList<Category>();
+    @SerializedName("categories")
+    @Expose
+    private List<Category> categories = new ArrayList<Category>();
 
-/**
-*
-* @return
-* The categories
-*/
-public List<Category> getCategories() {
-return categories;
-}
+    /**
+     * @return The categories
+     */
+    public List<Category> getCategories() {
+        return categories;
+    }
 
-/**
-*
-* @param categories
-* The categories
-*/
-public void setCategories(List<Category> categories) {
-this.categories = categories;
-}
+    /**
+     * @param categories The categories
+     */
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
 
 }

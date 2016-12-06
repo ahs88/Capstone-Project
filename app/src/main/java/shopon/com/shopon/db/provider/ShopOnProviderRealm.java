@@ -91,6 +91,7 @@ public class ShopOnProviderRealm extends ContentProvider {
      * UriMatcher, used to decode incoming URIs.
      */
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         sUriMatcher.addURI(AUTHORITY, "merchant_entries", ROUTE_ENTRIES_MERCHANT);
         sUriMatcher.addURI(AUTHORITY, "merchant_entries/*", ROUTE_ENTRIES_MERCHANT_ID);
@@ -101,7 +102,6 @@ public class ShopOnProviderRealm extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, "customer_entries", ROUTE_ENTRIES_CUSTOMER);
         sUriMatcher.addURI(AUTHORITY, "customer_entries/*", ROUTE_ENTRIES_CUSTOMER_ID);
     }
-
 
 
     @Override
@@ -142,7 +142,7 @@ public class ShopOnProviderRealm extends ContentProvider {
 
     /**
      * Perform a database query by URI.
-     *
+     * <p>
      * <p>Currently supports returning all entries (/entries) and individual entries by ID
      * (/entries/{ID}).
      */
@@ -154,13 +154,13 @@ public class ShopOnProviderRealm extends ContentProvider {
         int uriMatch = sUriMatcher.match(uri);
         switch (uriMatch) {
             case ROUTE_ENTRIES_CUSTOMER: {
-                Log.d(TAG,"query customers");
+                Log.d(TAG, "query customers");
                 Realm mRealm = Realm.getDefaultInstance();
 
                 RealmQuery<CustomersRealm> query = mRealm.where(CustomersRealm.class);
                 query = (RealmQuery<CustomersRealm>) getSelectionType(query, selection, selectionArgs);
                 RealmResults<CustomersRealm> results = query.findAll();
-                if(projection == null){
+                if (projection == null) {
                     projection = new String[]{ShopOnContractRealm.Entry.COLUMN_USER_ID, ShopOnContractRealm.Entry.COLUMN_NAME, ShopOnContractRealm.Entry.COLUMN_MOBILE, ShopOnContractRealm.Entry.COLUMN_EMAIL, ShopOnContractRealm.Entry.COLUMN_CUSTOMER_CATEGORY};
                 }
                 MatrixCursor matrixCursor =
@@ -171,19 +171,19 @@ public class ShopOnProviderRealm extends ContentProvider {
                                     Object[]{item.getId(), item.getName(), item.getMobile(), item.getEmail(), item.getIntrestedIn()};
                     matrixCursor.addRow(rowData);
                 }
-                Log.d(TAG,"matrix cursor length:"+matrixCursor.getCount()+" results size:"+results.size());
+                Log.d(TAG, "matrix cursor length:" + matrixCursor.getCount() + " results size:" + results.size());
                 return matrixCursor;
             }
             case ROUTE_ENTRIES_CUSTOMER_ID:
 
                 break;
             case ROUTE_ENTRIES_MERCHANT: {
-                Log.d(TAG,"querry merchant");
+                Log.d(TAG, "querry merchant");
                 Realm mRealm = Realm.getDefaultInstance();
                 RealmQuery<MerchantsRealm> query = mRealm.where(MerchantsRealm.class);
-                query = (RealmQuery<MerchantsRealm>)getSelectionType(query, selection, selectionArgs);
+                query = (RealmQuery<MerchantsRealm>) getSelectionType(query, selection, selectionArgs);
                 RealmResults<MerchantsRealm> results = query.findAll();
-                if(projection == null){
+                if (projection == null) {
                     projection = new String[]{ShopOnContractRealm.Entry.COLUMN_USER_ID, ShopOnContractRealm.Entry.COLUMN_NAME, ShopOnContractRealm.Entry.COLUMN_MOBILE, ShopOnContractRealm.Entry.COLUMN_EMAIL, ShopOnContractRealm.Entry.COLUMN_MERCHANT_CATEGORY};
                 }
                 MatrixCursor matrixCursor =
@@ -200,25 +200,25 @@ public class ShopOnProviderRealm extends ContentProvider {
             case ROUTE_ENTRIES_MERCHANT_ID:
                 break;
             case ROUTE_ENTRIES_OFFER: {
-                Log.d(TAG,"query offers");
+                Log.d(TAG, "query offers");
                 Realm mRealm = Realm.getDefaultInstance();
                 //mRealm.setAutoRefresh(true);
 
                 RealmQuery<OfferRealm> query = mRealm.where(OfferRealm.class);
-                if(selection!=null && !TextUtils.isEmpty(selection))
-                query = (RealmQuery<OfferRealm>) getSelectionType(query, selection, selectionArgs);
+                if (selection != null && !TextUtils.isEmpty(selection))
+                    query = (RealmQuery<OfferRealm>) getSelectionType(query, selection, selectionArgs);
                 RealmResults<OfferRealm> results = query.findAll();
-                if (projection == null){
+                if (projection == null) {
                     projection = new String[]{ShopOnContractRealm.Entry.COLUMN_OFFER_ID, ShopOnContractRealm.Entry.COLUMN_OFFER_STATUS, ShopOnContractRealm.Entry.COLUMN_OFFER_TEXT, ShopOnContractRealm.Entry.COLUMN_CUSTOMER_NUMBERS, ShopOnContractRealm.Entry.COLUMN_SCHEDULED_DATE};
                 }
                 MatrixCursor matrixCursor =
                         new MatrixCursor(projection);
                 for (OfferRealm item : results) {
                     Object[] rowData =
-                            new Object[]{item.getOfferId(), item.getOfferStatus(),item.getOfferText(), item.getNumbers(), item.getDeliverMessageOn()};
+                            new Object[]{item.getOfferId(), item.getOfferStatus(), item.getOfferText(), item.getNumbers(), item.getDeliverMessageOn()};
                     matrixCursor.addRow(rowData);
                 }
-                Log.d(TAG,"matrix cursor length:"+results.size()+" result size:"+results.size());
+                Log.d(TAG, "matrix cursor length:" + results.size() + " result size:" + results.size());
                 return matrixCursor;
             }
             case ROUTE_ENTRIES_OFFER_ID:
@@ -230,7 +230,7 @@ public class ShopOnProviderRealm extends ContentProvider {
     }
 
     private RealmQuery<? extends RealmObject> getSelectionType(RealmQuery<? extends RealmObject> query, String selection, String selectionArgs[]) {
-        if (selection == null || TextUtils.isEmpty(selection)){
+        if (selection == null || TextUtils.isEmpty(selection)) {
             return query;
         }
 
@@ -240,25 +240,23 @@ public class ShopOnProviderRealm extends ContentProvider {
                 String query_filter[] = query_filters[i].split(",");
                 String column_name = query_filter[0];
                 String filter_type = query_filter[1];
-                Log.d(TAG,"filterType:"+filter_type+" columnName:"+column_name+" selection args:"+selectionArgs[i]);
+                Log.d(TAG, "filterType:" + filter_type + " columnName:" + column_name + " selection args:" + selectionArgs[i]);
                 switch (filter_type) {
                     case Constants.FILTER_EQUAL_TO:
-                        if(column_name.equals(ShopOnContractRealm.Entry.COLUMN_USER_ID) || column_name.equals(ShopOnContractRealm.Entry.COLUMN_CUSTOMER_ID)|| column_name.equals(ShopOnContractRealm.Entry.COLUMN_OFFER_ID)){
-                            query = query.equalTo(column_name,Integer.parseInt(selectionArgs[i]));
-                        }
-                        else if(column_name.equals(ShopOnContractRealm.Entry.COLUMN_OFFER_STATUS)){
-                            Log.d(TAG,"selection arg:"+Boolean.parseBoolean(selectionArgs[i]));
-                            query = query.equalTo(column_name,Boolean.parseBoolean(selectionArgs[i]));
-                        }
-                        else {
+                        if (column_name.equals(ShopOnContractRealm.Entry.COLUMN_USER_ID) || column_name.equals(ShopOnContractRealm.Entry.COLUMN_CUSTOMER_ID) || column_name.equals(ShopOnContractRealm.Entry.COLUMN_OFFER_ID)) {
+                            query = query.equalTo(column_name, Integer.parseInt(selectionArgs[i]));
+                        } else if (column_name.equals(ShopOnContractRealm.Entry.COLUMN_OFFER_STATUS)) {
+                            Log.d(TAG, "selection arg:" + Boolean.parseBoolean(selectionArgs[i]));
+                            query = query.equalTo(column_name, Boolean.parseBoolean(selectionArgs[i]));
+                        } else {
                             query = query.equalTo(column_name, selectionArgs[i]);
                         }
                         break;
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            Log.e(TAG,"Improper selection format,  Expected format *****,*****;*****,******");
+            Log.e(TAG, "Improper selection format,  Expected format *****,*****;*****,******");
             //return query;
         }
         return query;
@@ -274,8 +272,8 @@ public class ShopOnProviderRealm extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
-            case ROUTE_ENTRIES_CUSTOMER:{
-                Log.d(TAG,"insert customer");
+            case ROUTE_ENTRIES_CUSTOMER: {
+                Log.d(TAG, "insert customer");
                 Realm mRealm = Realm.getDefaultInstance();
 
                 mRealm.beginTransaction();
@@ -294,7 +292,7 @@ public class ShopOnProviderRealm extends ContentProvider {
 
                 break;
             case ROUTE_ENTRIES_MERCHANT: {
-                Log.d(TAG,"insert merchant");
+                Log.d(TAG, "insert merchant");
                 Realm mRealm = Realm.getDefaultInstance();
                 mRealm.beginTransaction();
                 MerchantsRealm item = mRealm.createObject(MerchantsRealm.class);
@@ -308,9 +306,8 @@ public class ShopOnProviderRealm extends ContentProvider {
             }
             case ROUTE_ENTRIES_MERCHANT_ID:
                 break;
-            case ROUTE_ENTRIES_OFFER:
-            {
-                Log.d(TAG,"insert offer");
+            case ROUTE_ENTRIES_OFFER: {
+                Log.d(TAG, "insert offer");
                 Realm mRealm = Realm.getDefaultInstance();
                 mRealm.beginTransaction();
 
@@ -387,13 +384,13 @@ public class ShopOnProviderRealm extends ContentProvider {
                 Realm mRealm = Realm.getDefaultInstance();
                 mRealm.beginTransaction();
                 RealmQuery<MerchantsRealm> query = mRealm.where(MerchantsRealm.class);
-                query = (RealmQuery<MerchantsRealm>)getSelectionType(query, selection, selectionArgs);
+                query = (RealmQuery<MerchantsRealm>) getSelectionType(query, selection, selectionArgs);
                 MerchantsRealm item = query.findFirst();
-                Log.d(TAG,"update item:"+item.getUserId());
-                item.setName((values.getAsString(ShopOnContractRealm.Entry.COLUMN_NAME)!=null)?(values.getAsString(ShopOnContractRealm.Entry.COLUMN_NAME)):item.getName());
-                item.setEmail((values.getAsString(ShopOnContractRealm.Entry.COLUMN_EMAIL)!=null)?(values.getAsString(ShopOnContractRealm.Entry.COLUMN_EMAIL)):item.getEmail());
-                item.setMobile((values.getAsString(ShopOnContractRealm.Entry.COLUMN_MOBILE)!=null)?(values.getAsString(ShopOnContractRealm.Entry.COLUMN_MOBILE)):item.getMobile());
-                item.setMerchentCategory((values.getAsString(ShopOnContractRealm.Entry.COLUMN_MERCHANT_CATEGORY)!=null)?(values.getAsString(ShopOnContractRealm.Entry.COLUMN_MERCHANT_CATEGORY)):item.getMerchentCategory());
+                Log.d(TAG, "update item:" + item.getUserId());
+                item.setName((values.getAsString(ShopOnContractRealm.Entry.COLUMN_NAME) != null) ? (values.getAsString(ShopOnContractRealm.Entry.COLUMN_NAME)) : item.getName());
+                item.setEmail((values.getAsString(ShopOnContractRealm.Entry.COLUMN_EMAIL) != null) ? (values.getAsString(ShopOnContractRealm.Entry.COLUMN_EMAIL)) : item.getEmail());
+                item.setMobile((values.getAsString(ShopOnContractRealm.Entry.COLUMN_MOBILE) != null) ? (values.getAsString(ShopOnContractRealm.Entry.COLUMN_MOBILE)) : item.getMobile());
+                item.setMerchentCategory((values.getAsString(ShopOnContractRealm.Entry.COLUMN_MERCHANT_CATEGORY) != null) ? (values.getAsString(ShopOnContractRealm.Entry.COLUMN_MERCHANT_CATEGORY)) : item.getMerchentCategory());
                 mRealm.commitTransaction();
                 break;
             case ROUTE_ENTRIES_MERCHANT_ID:
@@ -413,14 +410,18 @@ public class ShopOnProviderRealm extends ContentProvider {
 
     /**
      * SQLite backend for @{link ShopOnProviderRealm}.
-     *
+     * <p>
      * Provides access to an disk-backed, SQLite datastore which is utilized by ShopOnProviderRealm. This
      * database should never be accessed by other parts of the application directly.
      */
     static class ShopOnDatabase extends SQLiteOpenHelper {
-        /** Schema version. */
+        /**
+         * Schema version.
+         */
         public static final int DATABASE_VERSION = 2;
-        /** Filename for SQLite file. */
+        /**
+         * Filename for SQLite file.
+         */
         public static final String DATABASE_NAME = "offersgalore.db";
 
         private static final String TYPE_TEXT = " TEXT";
@@ -430,7 +431,9 @@ public class ShopOnProviderRealm extends ContentProvider {
         /** SQL statement to create "entry" table. */
 
 
-        /** SQL statement to drop "entry" table. */
+        /**
+         * SQL statement to drop "entry" table.
+         */
 
 
         public ShopOnDatabase(Context context) {

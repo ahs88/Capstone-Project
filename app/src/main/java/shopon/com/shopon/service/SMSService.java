@@ -36,7 +36,7 @@ public class SMSService extends IntentService {
     private static final String TAG = SMSService.class.getName();
     private DatabaseReference mDatabase;
 
-    public SMSService(){
+    public SMSService() {
         super("SMSService");
     }
 
@@ -54,32 +54,32 @@ public class SMSService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         int offer_id = intent.getExtras().getInt(Constants.EXTRAS_OFFER_ID);
         intent.removeExtra(Constants.EXTRAS_OFFER_ID);
-        Log.d(TAG,"onHandleIntent offer_id:"+offer_id);
+        Log.d(TAG, "onHandleIntent offer_id:" + offer_id);
 
         //change status to sent
         ContentValues contentValues = new ContentValues();
         contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_STATUS, true);
-        getContentResolver().update(ShopOnContract.Entry.CONTENT_OFFER_URI,contentValues,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offer_id)});
+        getContentResolver().update(ShopOnContract.Entry.CONTENT_OFFER_URI, contentValues, ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", new String[]{String.valueOf(offer_id)});
 
         Offer offer_remote = null;
-        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI,null,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offer_id)},null);
-        if(cursor!=null) {
+        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI, null, ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", new String[]{String.valueOf(offer_id)}, null);
+        if (cursor != null) {
             cursor.moveToFirst();
             offer_remote = Utils.createOfferFromCursor(cursor);
 
             //update in remote db
 
-            Log.d(TAG,"updating remote offer with id:"+offer_remote.getOfferId());
+            Log.d(TAG, "updating remote offer with id:" + offer_remote.getOfferId());
             UserSharedPreferences userSharedPreference = new UserSharedPreferences(this);
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            mDatabase.child(Constants.OFFER_PREFIX+Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreference.getPref(Constants.MERCHANT_MSISDN_PREF)).child(String.valueOf(offer_remote.getOfferId())).setValue(offer_remote);
+            mDatabase.child(Constants.OFFER_PREFIX + Constants.FIREBASE_MERCHANT_PREFIX + (String) userSharedPreference.getPref(Constants.MERCHANT_MSISDN_PREF)).child(String.valueOf(offer_remote.getOfferId())).setValue(offer_remote);
 
             //send sms to recipients
             //TODO need to replace with a decent sms API which doesnt charge much
-            String recipients[] = offer_remote.getNumbers().replace("[","").replace("]","").split(",");
-            for (int i=0;i<recipients.length;i++) {
+            String recipients[] = offer_remote.getNumbers().replace("[", "").replace("]", "").split(",");
+            for (int i = 0; i < recipients.length; i++) {
 
-                Log.d(TAG,"sending sms to recipient "+i+" msisdn:"+recipients[i]);
+                Log.d(TAG, "sending sms to recipient " + i + " msisdn:" + recipients[i]);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                     sendSmsToMobileAPI22(offer_remote.getOfferText(), recipients[i]);
                 } else {
@@ -88,15 +88,14 @@ public class SMSService extends IntentService {
             }
 
         } else {
-            Toast.makeText(this,getString(R.string.failed_to_send_sms),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.failed_to_send_sms), Toast.LENGTH_SHORT).show();
         }
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-    private boolean sendSmsToMobileAPI22(String otp,String msisdn) {
-        //SmsManager smsManager = SmsManager.getDefault();
-        //int)Math.floor(Math.random()*10000);
+    private boolean sendSmsToMobileAPI22(String otp, String msisdn) {
+
         List<Integer> subId = Utils.getActiveSubscriptionInfoList(this);
         if (subId.size() == 0)
             return false;
@@ -106,7 +105,7 @@ public class SMSService extends IntentService {
         return true;
     }
 
-    private boolean sendSmsToMobile(String otp,String msisdn){
+    private boolean sendSmsToMobile(String otp, String msisdn) {
         String textSms = otp;
         ArrayList<String> messageList = SmsManager.getDefault().divideMessage(textSms);
         if (messageList.size() > 1) {

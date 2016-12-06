@@ -50,13 +50,12 @@ public class Constants {
 
     public static final String FILTER_EQUAL_TO = "equalTo";
 
-    public static final int  ALL_OFFERS = 500;
+    public static final int ALL_OFFERS = 500;
     public static final int SCHEDULED_OFFER = 501;
     public static final int SENT_OFFER = 502;
 
 
     public static final int ALL_CUSTOMERS = 600;
-
 
 
     public static int SPLASH_TIME_OUT = 1000;
@@ -70,13 +69,13 @@ public class Constants {
     public static final String MERCHANT_MSISDN_PREF = "MERCHANT_MSISDN_PREF";
     public static final String MERCHANT_ID_PREF = "userId";
 
-    public static final int MSISDN_STATE=0;
-    public static final int OTP_STATE=1;
-    public static final int PROFILE_STATE=2;
-    public static final int CATEGORY_STATE=3;
+    public static final int MSISDN_STATE = 0;
+    public static final int OTP_STATE = 1;
+    public static final int PROFILE_STATE = 2;
+    public static final int CATEGORY_STATE = 3;
     public static final int LOGIN_COMPLETE = 4;
 
     public static final String CONNECTION_STATUS = "connection_status";
 
-    public enum DialogAction{NETWORK_CHECK, SMS_CHECK,NO_DIALOG}
+    public enum DialogAction {NETWORK_CHECK, SMS_CHECK, NO_DIALOG}
 }

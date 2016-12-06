@@ -65,7 +65,7 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     public static final String ENABLE_SUB_LEVEL = "ENABLE_SUB_LEVEL";
     private GridLayoutManager mLayoutManager;
     private CategoryList categoryList;
-    private HashMap <String, List<String>> selectedTags = new HashMap<>();
+    private HashMap<String, List<String>> selectedTags = new HashMap<>();
 
     private List<String> mSubscribedTags;
     ShopCategoriesQuiltAdapter mShopCategoriesAdapter;
@@ -79,8 +79,10 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     private boolean isSelected;
     private GridRecycleView recyclerShopView;
 
-    @Bind(R.id.tool_bar)Toolbar toolbar;
-    @Bind(R.id.toolbar_title)TextView toolbarTitle;
+    @Bind(R.id.tool_bar)
+    Toolbar toolbar;
+    @Bind(R.id.toolbar_title)
+    TextView toolbarTitle;
     private LinearLayoutManager mLinearLayoutManager;
 
     private boolean animationComplete = false;
@@ -104,9 +106,9 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         setupActionBar(toolbar);
         toolbarTitle.setText(getString(R.string.my_interests));
 
-        if(getIntent().hasExtra(Constants.UPDATE_MERCHANT_DETAIL)) {
+        if (getIntent().hasExtra(Constants.UPDATE_MERCHANT_DETAIL)) {
             shouldUpdateMerchant = getIntent().getExtras().getBoolean(Constants.UPDATE_MERCHANT_DETAIL);
-            if(shouldUpdateMerchant) {
+            if (shouldUpdateMerchant) {
                 registerRTUpdateListener();
             }
         }
@@ -118,12 +120,12 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
             recyclerShopView.setAdapter(mShopCategoriesAdapter);
         }
 
-        toolBarOptionsCheck ();
+        toolBarOptionsCheck();
     }
 
     private void registerRTUpdateListener() {
         userSharedPreferences = new UserSharedPreferences(mContext);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_MERCHANT_PREFIX+userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
+        mDatabase = FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_MERCHANT_PREFIX + userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -131,9 +133,9 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Merchants merchant = postSnapshot.getValue(Merchants.class);
 
-                    Log.d(TAG,"onDataChange merchat Id:"+ merchant.getUserId()+" userId:"+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF) );
+                    Log.d(TAG, "onDataChange merchat Id:" + merchant.getUserId() + " userId:" + userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF));
                     //Getting the data from snapshot
-                    if(userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF).equals(merchant.getUserId())) {
+                    if (userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF).equals(merchant.getUserId())) {
                         navigateToMainScreen();
                     }
                 }
@@ -152,23 +154,23 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         recyclerShopView = (GridRecycleView) findViewById(R.id.categoryShopView);
 
 
-        mLayoutManager = new GridLayoutManager(this,GRID_COUNT);
+        mLayoutManager = new GridLayoutManager(this, GRID_COUNT);
         recyclerShopView.setLayoutManager(mLayoutManager);
         //mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                Log.i(TAG,"getSpanSize :" + categoryForRequests + ",GRID_COUNT :" + GRID_COUNT);
-                if(!categoryForRequests)
-                return (position == 0 && mShopCategoriesAdapter.getCategoryLevel() == 0) ? GRID_COUNT : 1;
+                Log.i(TAG, "getSpanSize :" + categoryForRequests + ",GRID_COUNT :" + GRID_COUNT);
+                if (!categoryForRequests)
+                    return (position == 0 && mShopCategoriesAdapter.getCategoryLevel() == 0) ? GRID_COUNT : 1;
                 else
                     return 1;
             }
         });
         recyclerShopView.setLayoutManager(mLayoutManager);
         loadCategoryList();
-        Log.i(TAG,"onCreate | categoryForRequests :" + categoryForRequests);
-        mShopCategoriesAdapter = new ShopCategoriesQuiltAdapter(this,categoryList,categoryForRequests);
+        Log.i(TAG, "onCreate | categoryForRequests :" + categoryForRequests);
+        mShopCategoriesAdapter = new ShopCategoriesQuiltAdapter(this, categoryList, categoryForRequests);
         mShopCategoriesAdapter.enableSubLevel(subLevel);
         recyclerShopView.scheduleLayoutAnimation();
     }
@@ -176,83 +178,79 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d (TAG, "onPause");
+        Log.d(TAG, "onPause");
     }
 
-    public boolean isTagSubscribed (String key) {
+    public boolean isTagSubscribed(String key) {
 
-        if(mSubscribedTags != null)
+        if (mSubscribedTags != null)
             return mSubscribedTags.contains(key);
         else
             return false;
     }
 
-    public void switchLayoutManager(){
-        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
+    public void switchLayoutManager() {
+        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerShopView.setLayoutManager(mLayoutManager);
         //mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
 
     }
 
 
-    public void loadCategoryList(){
-        Log.i(TAG,"loadCategoryList :" + CATEGORY_LIST);
+    public void loadCategoryList() {
+        Log.i(TAG, "loadCategoryList :" + CATEGORY_LIST);
         Gson gson = new Gson();
         String jsonString = "";
         InputStream inputStream = null;
         try {
             inputStream = getAssets().open(CATEGORY_LIST);
 
-            Log.d(TAG,"inputStream:"+inputStream.available());
+            Log.d(TAG, "inputStream:" + inputStream.available());
 
             byte[] buffer = new byte[inputStream.available()];
-            String contents="";
+            String contents = "";
             int bytesRead = 0;
 
-            while((bytesRead = inputStream.read(buffer)) != -1){
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
                 jsonString = new String(buffer, 0, bytesRead);
             }
-            //System.out.println("json string:"+jsonString+" bytes read:"+bytesRead);
             categoryList = gson.fromJson(jsonString, CategoryList.class);
             inputStream.close();
-            Log.d(TAG," retrieveCategoryJson:"+categoryList);
-            /*System.out.print("json string:"+jsonString+" string length:"+jsonString.length());*/
+            Log.d(TAG, " retrieveCategoryJson:" + categoryList);
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d(TAG," retrieveCategoryJson failed:"+e.getMessage());
-            //log the exception
+            Log.d(TAG, " retrieveCategoryJson failed:" + e.getMessage());
         }
 
     }
 
-    private void toolBarOptionsCheck () {
+    private void toolBarOptionsCheck() {
 
 
     }
 
-    public void onDone (View v) {
+    public void onDone(View v) {
 
         onActionDone();
     }
 
-    private void onActionDone () {
+    private void onActionDone() {
 
-        Log.d (TAG, "Clicked on action doShopCategoriesQuiltAdapterne: " + mShopCategoriesAdapter.getCategoryLevel());
-        if(mShopCategoriesAdapter.getCategoryLevel() == 1) {
+        Log.d(TAG, "Clicked on action doShopCategoriesQuiltAdapterne: " + mShopCategoriesAdapter.getCategoryLevel());
+        if (mShopCategoriesAdapter.getCategoryLevel() == 1) {
             mShopCategoriesAdapter.setCategoryLevel(0);
             mShopCategoriesAdapter.notifyDataSetChanged();
             invalidateOptionsMenu();
 
         } else {
             //setSelectedTag();
-            if(shouldUpdateMerchant) {
-                if(!Utils.isReachable()){
-                    Utils.displayConnectToInternet(this,this);
+            if (shouldUpdateMerchant) {
+                if (!Utils.isReachable()) {
+                    Utils.displayConnectToInternet(this, this);
                     return;
                 }
                 setSelectedTagFromAdapter();
-            }
-            else{
+            } else {
                 Intent intent = new Intent();
                 intent.putParcelableArrayListExtra(SELECTED_TAGS, (ArrayList) mShopCategoriesAdapter.getSelectedTags());
                 setResult(Activity.RESULT_OK, intent);
@@ -262,7 +260,7 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         }
     }
 
-    public void doSelectAll (View view) {
+    public void doSelectAll(View view) {
 
         mShopCategoriesAdapter.addToSelectedTagsList(mShopCategoriesAdapter.getRenderedSubCategories());
         mShopCategoriesAdapter.notifyDataSetChanged();
@@ -270,7 +268,7 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
 
     }
 
-    public void doUnSelectAll (View view) {
+    public void doUnSelectAll(View view) {
 
         mShopCategoriesAdapter.removeFromSelectedTagsList(mShopCategoriesAdapter.getRenderedSubCategories());
         mShopCategoriesAdapter.notifyDataSetChanged();
@@ -279,17 +277,16 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
 
     private void setSelectedTagFromAdapter() {
         Cursor cursor = updateMerchantInterest();
-        if(cursor == null){
+        if (cursor == null) {
             return;
         }
         cursor.moveToFirst();
         updateRTDataBase(cursor);
-        //navigateToMainScreen();
     }
 
     private ArrayList<String> getUinqueElementsInList(List<String> inputList) {
         //pass unique subscribed tags to intent - remove duplicates
-        HashSet set  = new HashSet();
+        HashSet set = new HashSet();
         set.addAll(inputList);
         ArrayList list = new ArrayList();
         list.addAll(set);
@@ -300,16 +297,15 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         Iterator it = this.selectedTags.entrySet().iterator();
         List<String> selectedTags = new ArrayList<>();
         while (it.hasNext()) {
-            Map.Entry<String,List<String>> pair = (Map.Entry)it.next();
+            Map.Entry<String, List<String>> pair = (Map.Entry) it.next();
             selectedTags.add(pair.getKey());
             selectedTags.addAll(pair.getValue());
-             // avoids a ConcurrentModificationException
+            // avoids a ConcurrentModificationException
         }
 
         Intent intent = new Intent();
         intent.putParcelableArrayListExtra(SELECTED_TAGS, (ArrayList) selectedTags);
         setResult(Activity.RESULT_OK, intent);
-        //icon_widget.toggle();
         finish();
     }
 
@@ -317,29 +313,27 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
 
     }
 
-    public void removeTags(String key){
+    public void removeTags(String key) {
         selectedTags.remove(key);
     }
-
-
 
 
     @Override
     public void onEnterAnimationComplete() {
         super.onEnterAnimationComplete();
-        Log.d(TAG,"onEnterAnimationComplete");
-        if(!animationComplete) {
+        Log.d(TAG, "onEnterAnimationComplete");
+        if (!animationComplete) {
             recyclerShopView.setAdapter(mShopCategoriesAdapter);
             recyclerShopView.scheduleLayoutAnimation();
         }
         animationComplete = true;
     }
 
-    public  boolean equalLists (List<String> a, List<String> b){
+    public boolean equalLists(List<String> a, List<String> b) {
         // Check for sizes and nulls
         if (a == null && b == null) return true;
 
-        if ((a == null && b != null) || (a != null && b == null) || (a.size() != b.size())){
+        if ((a == null && b != null) || (a != null && b == null) || (a.size() != b.size())) {
             return false;
         }
 
@@ -354,11 +348,7 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == Constants.REQUEST_SUB_CATEGORY && resultCode == RESULT_OK){
-            //remove previously selected sub tags from selected tags
-            //ArrayList<String> all_sub_category_tags = data.getExtras().getStringArrayList(Constants.SUB_CATEGORY_LIST);
-            //mShopCategoriesAdapter.removeFromSelectedTagsList(all_sub_category_tags);
-            //update with latest selected sub tags
+        if (requestCode == Constants.REQUEST_SUB_CATEGORY && resultCode == RESULT_OK) {
             ArrayList selected_sub_tags = data.getExtras().getStringArrayList(Constants.SELECTED_CATEGORY_LIST);
             mShopCategoriesAdapter.addToSelectedTagsList(selected_sub_tags);
             mShopCategoriesAdapter.notifyDataSetChanged();
@@ -368,8 +358,8 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
 
     private void navigateToMainScreen() {
         UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
-        userSharedPreferences.savePref(Constants.CURRENT_LOGIN_STATE,Constants.LOGIN_COMPLETE);
-        Intent intent = new Intent(this,ShopOnActivity.class);
+        userSharedPreferences.savePref(Constants.CURRENT_LOGIN_STATE, Constants.LOGIN_COMPLETE);
+        Intent intent = new Intent(this, ShopOnActivity.class);
         startActivity(intent);
         finish();
     }
@@ -377,24 +367,23 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     private Cursor updateMerchantInterest() {
 
         UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
-        Log.d(TAG,"merchant id:"+(Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)+" selected_tags:"+mShopCategoriesAdapter.getSelectedTags().toString());
-        if(mShopCategoriesAdapter.getSelectedTags()==null || mShopCategoriesAdapter.getSelectedTags().size() == 0)
-        {
+        Log.d(TAG, "merchant id:" + (Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF) + " selected_tags:" + mShopCategoriesAdapter.getSelectedTags().toString());
+        if (mShopCategoriesAdapter.getSelectedTags() == null || mShopCategoriesAdapter.getSelectedTags().size() == 0) {
             return null;
         }
 
-        Cursor cursor = getContentResolver().query(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI,null, ShopOnContractRealm.Entry.COLUMN_USER_ID+"=?",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))},null);
+        Cursor cursor = getContentResolver().query(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI, null, ShopOnContractRealm.Entry.COLUMN_USER_ID + "=?", new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))}, null);
         cursor.moveToFirst();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ShopOnContractRealm.Entry.COLUMN_NAME,cursor.getString(1));
-        contentValues.put(ShopOnContractRealm.Entry.COLUMN_EMAIL,cursor.getString(2));
-        contentValues.put(ShopOnContractRealm.Entry.COLUMN_MOBILE,cursor.getString(3));
-        contentValues.put(ShopOnContractRealm.Entry.COLUMN_MERCHANT_CATEGORY,mShopCategoriesAdapter.getSelectedTags().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_CREATED_AT,Utils.getCurrentDate());
-        getContentResolver().update(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI,contentValues, ShopOnContractRealm.Entry.COLUMN_USER_ID+"=?",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))});
+        contentValues.put(ShopOnContractRealm.Entry.COLUMN_NAME, cursor.getString(1));
+        contentValues.put(ShopOnContractRealm.Entry.COLUMN_EMAIL, cursor.getString(2));
+        contentValues.put(ShopOnContractRealm.Entry.COLUMN_MOBILE, cursor.getString(3));
+        contentValues.put(ShopOnContractRealm.Entry.COLUMN_MERCHANT_CATEGORY, mShopCategoriesAdapter.getSelectedTags().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CREATED_AT, Utils.getCurrentDate());
+        getContentResolver().update(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI, contentValues, ShopOnContractRealm.Entry.COLUMN_USER_ID + "=?", new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))});
 
-        Cursor cursor1 = getContentResolver().query(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI,null, ShopOnContractRealm.Entry.COLUMN_USER_ID+"=?",new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))},null);
+        Cursor cursor1 = getContentResolver().query(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI, null, ShopOnContractRealm.Entry.COLUMN_USER_ID + "=?", new String[]{String.valueOf((Integer) userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF))}, null);
         return cursor1;
     }
 
@@ -402,14 +391,14 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         MerchantData merchant_data = new MerchantData();
         merchant_data.setRealmMerchant(merchant_realm);
         UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
-        mDatabase.child(Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).setValue(merchant_data);//+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)
+        mDatabase.child(Constants.FIREBASE_MERCHANT_PREFIX + (String) userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).setValue(merchant_data);//+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)
     }
 
     private void updateRTDataBase(Cursor cursor) {
         Merchants merchant_data = Utils.createMerchantFromCursor(cursor);
-        Log.d(TAG,"updateRTDataBase interestedIn:"+merchant_data.getMerchentCategory()+" createdAt:"+merchant_data.getCreatedAt());
+        Log.d(TAG, "updateRTDataBase interestedIn:" + merchant_data.getMerchentCategory() + " createdAt:" + merchant_data.getCreatedAt());
         UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
-        mDatabase.child(Constants.FIREBASE_MERCHANT_PREFIX+(String)userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).setValue(merchant_data);//+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)
+        mDatabase.child(Constants.FIREBASE_MERCHANT_PREFIX + (String) userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF)).setValue(merchant_data);//+userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)
     }
 
 
@@ -418,25 +407,22 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
         this.menu = menu;
         getMenuInflater().inflate(R.menu.pick_category_menu, menu);
         return true;
-        //return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(mShopCategoriesAdapter!=null){
-            if(mShopCategoriesAdapter.getCategoryLevel() == 1) {
+        if (mShopCategoriesAdapter != null) {
+            if (mShopCategoriesAdapter.getCategoryLevel() == 1) {
                 if (!isSelected) {
-                    showOption(menu,R.id.select_all);
-                    hideOption(menu,R.id.deselect_all);
+                    showOption(menu, R.id.select_all);
+                    hideOption(menu, R.id.deselect_all);
                 } else {
-                    showOption(menu,R.id.deselect_all);
-                    hideOption(menu,R.id.select_all);
+                    showOption(menu, R.id.deselect_all);
+                    hideOption(menu, R.id.select_all);
                 }
-            }
-            else
-            {
-                hideOption(menu,R.id.select_all);
-                hideOption(menu,R.id.deselect_all);
+            } else {
+                hideOption(menu, R.id.select_all);
+                hideOption(menu, R.id.deselect_all);
             }
         }
 
@@ -445,19 +431,11 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     }
 
 
-
-
-
-   @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.action_done:
-                onActionDone();
-                // send list of tags to edit/add product/shop
-                return true;*/
             case R.id.select_all:
                 mShopCategoriesAdapter.addToSelectedTagsList(mShopCategoriesAdapter.getRenderedSubCategories());
-               // Log.d (TAG, "Select All: " + StringUtils.join(mShopCategoriesAdapter.getRenderedSubCategories(),","));
                 mShopCategoriesAdapter.notifyDataSetChanged();
                 isSelected = true;
                 invalidateOptionsMenu();
@@ -479,15 +457,6 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
 
     }
 
-    public void updateProfile(){
-        /*Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        userSharedPreferences = new UserSharedPreferences(this);
-        MerchantsRealm merchants = realm.where(MerchantsRealm.class).equalTo(Constants.MERCHANT_ID_PREF,(String)userSharedPreferences.getPref(Constants.MERCHANT_ID_PREF)).findFirst();
-        merchants.setMerchentCategory(mShopCategoriesAdapter.getSelectedTags().toString());
-        realm.commitTransaction();*/
-
-    }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {

@@ -44,14 +44,14 @@ public class BaseDialogUtils {
         }
     }
 
-    public static Dialog createDialog (Context context, int titleId, int messageId,
+    public static Dialog createDialog(Context context, int titleId, int messageId,
                                       DialogInterface.OnClickListener positiveButtonListener,
                                       DialogInterface.OnClickListener negativeButtonListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(titleId);
         builder.setMessage(messageId);
-        builder.setPositiveButton (R.string.dlg_ok, positiveButtonListener);
-        builder.setNegativeButton (R.string.dlg_cancel, negativeButtonListener);
+        builder.setPositiveButton(R.string.dlg_ok, positiveButtonListener);
+        builder.setNegativeButton(R.string.dlg_cancel, negativeButtonListener);
 
         return builder.create();
     }
@@ -60,16 +60,16 @@ public class BaseDialogUtils {
                                       DialogInterface.OnClickListener negativeClickListener) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle (titleId);
+        builder.setTitle(titleId);
         builder.setView(view);
-        builder.setPositiveButton (R.string.dlg_ok, positiveClickListener);
-        builder.setNegativeButton (R.string.dlg_cancel, negativeClickListener);
+        builder.setPositiveButton(R.string.dlg_ok, positiveClickListener);
+        builder.setNegativeButton(R.string.dlg_cancel, negativeClickListener);
 
         return builder.create();
     }
 
     public static Dialog createDialog(Context context, String title, String message, DialogInterface.OnClickListener positiveButtonListener,
-            DialogInterface.OnClickListener negativeButtonListener) {
+                                      DialogInterface.OnClickListener negativeButtonListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         if (!TextUtils.isEmpty(title))
             builder.setTitle(title);
@@ -78,42 +78,42 @@ public class BaseDialogUtils {
 
         builder.setPositiveButton(R.string.dlg_ok, positiveButtonListener);
 
-        if(negativeButtonListener != null) {
+        if (negativeButtonListener != null) {
             builder.setNegativeButton(R.string.dlg_cancel, negativeButtonListener);
         }
 
         return builder.create();
     }
-    
-    public static Dialog createDialog (Context context, int title, int message, int positiveTextId,
-    		DialogInterface.OnClickListener positiveButtonListener, int negativeTextId, DialogInterface.OnClickListener negativeButtonListener) {
+
+    public static Dialog createDialog(Context context, int title, int message, int positiveTextId,
+                                      DialogInterface.OnClickListener positiveButtonListener, int negativeTextId, DialogInterface.OnClickListener negativeButtonListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
 
-        builder.setPositiveButton (positiveTextId, positiveButtonListener);
-        
-        if(negativeButtonListener != null) {
-            builder.setNegativeButton (negativeTextId, negativeButtonListener);
+        builder.setPositiveButton(positiveTextId, positiveButtonListener);
+
+        if (negativeButtonListener != null) {
+            builder.setNegativeButton(negativeTextId, negativeButtonListener);
         }
         return builder.create();
     }
 
 
-    public static Dialog createDialog (Context context, int title, String message, int positiveTextId,
-    		DialogInterface.OnClickListener positiveButtonListener, int negativeTextId, DialogInterface.OnClickListener negativeButtonListener) {
+    public static Dialog createDialog(Context context, int title, String message, int positiveTextId,
+                                      DialogInterface.OnClickListener positiveButtonListener, int negativeTextId, DialogInterface.OnClickListener negativeButtonListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
 
-        builder.setPositiveButton (positiveTextId, positiveButtonListener);
-        
-        if(negativeButtonListener != null) {
-            builder.setNegativeButton (negativeTextId, negativeButtonListener);
+        builder.setPositiveButton(positiveTextId, positiveButtonListener);
+
+        if (negativeButtonListener != null) {
+            builder.setNegativeButton(negativeTextId, negativeButtonListener);
         }
         return builder.create();
     }
-    
+
     public static Dialog createSingleChoiceItemsDialog(Context context, String title, CharSequence[] itemsArray, DialogInterface.OnClickListener singleChoiceOnClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);

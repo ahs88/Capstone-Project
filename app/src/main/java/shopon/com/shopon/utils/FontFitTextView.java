@@ -39,13 +39,13 @@ public class FontFitTextView extends TextView {
         int targetWidth = textWidth - this.getPaddingLeft() - this.getPaddingRight();
 
         // this is most likely a non-relevant call
-        if( targetWidth<=2 )
+        if (targetWidth <= 2)
             return;
 
         // text already fits with the xml-defined font size?
         mTestPaint.set(this.getPaint());
         mTestPaint.setTextSize(defaultTextSize);
-        if(mTestPaint.measureText(text) <= targetWidth) {
+        if (mTestPaint.measureText(text) <= targetWidth) {
             this.setTextSize(TypedValue.COMPLEX_UNIT_PX, defaultTextSize);
             return;
         }
@@ -57,7 +57,7 @@ public class FontFitTextView extends TextView {
         while (hi - lo > threshold) {
             float size = (hi + lo) / 2;
             mTestPaint.setTextSize(size);
-            if(mTestPaint.measureText(text) >= targetWidth )
+            if (mTestPaint.measureText(text) >= targetWidth)
                 hi = size; // too big
             else
                 lo = size; // too small

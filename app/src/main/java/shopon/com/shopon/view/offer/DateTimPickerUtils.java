@@ -80,7 +80,7 @@ public class DateTimPickerUtils {
                 alertDialog.dismiss();
 
                 GregorianCalendar c = new GregorianCalendar(mYear, mMonth, mDay, mhour, mMin);
-                mInterface.scheduledDate(scheduleDate(),c);
+                mInterface.scheduledDate(scheduleDate(), c);
             }
         });
 
@@ -90,23 +90,15 @@ public class DateTimPickerUtils {
                 if (datePicker.getVisibility() == View.VISIBLE) {
                     timePicker.setVisibility(View.VISIBLE);
                     datePicker.setVisibility(View.GONE);
-                    ((Button)view).setText(mContext.getString(R.string.set_date));
+                    ((Button) view).setText(mContext.getString(R.string.set_date));
 
                 } else {
                     timePicker.setVisibility(View.GONE);
                     datePicker.setVisibility(View.VISIBLE);
-                    ((Button)view).setText(mContext.getString(R.string.set_time));
+                    ((Button) view).setText(mContext.getString(R.string.set_time));
                 }
             }
         });
-
-        /*timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                //super.onTimeChanged(view, hourOfDay, minute);
-
-            }
-        });*/
 
 
         alertDialog.setView(dialogView);
@@ -149,7 +141,7 @@ public class DateTimPickerUtils {
 
 
     public interface ScheduledDateInterface {
-        public void scheduledDate(String scheduledDate,Calendar calendar);
+        public void scheduledDate(String scheduledDate, Calendar calendar);
 
     }
 }

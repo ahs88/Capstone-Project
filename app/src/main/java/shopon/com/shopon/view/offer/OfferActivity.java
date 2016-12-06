@@ -84,14 +84,22 @@ import static java.lang.Thread.sleep;
 public class OfferActivity extends BaseActivity implements DateTimPickerUtils.ScheduledDateInterface {
 
     private static final String TAG = OfferActivity.class.getName();
-    @Bind(R.id.tool_bar)Toolbar toolbar;
-    @Bind(R.id.toolbar_title)TextView toolbarTitle;
-    @Bind(R.id.date) TextView date;
-    @Bind(R.id.tags)TagView tagGroup;
-    @Bind(R.id.offer_text)EditText offerTextView;
-    @Bind(R.id.offer_err)TextView offerError;
-    @Bind(R.id.date_err)TextView dateError;
-    @Bind(R.id.tags_err)TextView customerError;
+    @Bind(R.id.tool_bar)
+    Toolbar toolbar;
+    @Bind(R.id.toolbar_title)
+    TextView toolbarTitle;
+    @Bind(R.id.date)
+    TextView date;
+    @Bind(R.id.tags)
+    TagView tagGroup;
+    @Bind(R.id.offer_text)
+    EditText offerTextView;
+    @Bind(R.id.offer_err)
+    TextView offerError;
+    @Bind(R.id.date_err)
+    TextView dateError;
+    @Bind(R.id.tags_err)
+    TextView customerError;
 
     Context mContext;
     private ArrayList<String> customerList = new ArrayList<>();
@@ -112,7 +120,7 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
 
         userSharedPreferences = new UserSharedPreferences(this);
 
-        setTags(customerList,tagGroup);
+        setTags(customerList, tagGroup);
         setTagDeleteListener();
         setTagClickListener();
         registerRTUpdateListener();
@@ -123,15 +131,15 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
     }
 
     private void loadSavedInstanceState(Bundle savedState) {
-        if(savedState!=null) {
+        if (savedState != null) {
             String dateTime = savedState.getString(Constants.EXTRAS_SCHEDULED_DATE);
-            Log.d(TAG,"loadSavedInstanceState date:"+dateTime);
+            Log.d(TAG, "loadSavedInstanceState date:" + dateTime);
             date.setText(dateTime);
             offerTextView.setText(savedState.getString(Constants.EXTRAS_OFFER_TEXT, date.getText().toString()));
             customerList = savedState.getStringArrayList(Constants.EXTRAS_CUSTOMER_LIST);
-            Log.d(TAG,"customerList:"+customerList);
-            if(customerList!=null) {
-                Log.d(TAG,"customerList size: "+customerList.size());
+            Log.d(TAG, "customerList:" + customerList);
+            if (customerList != null) {
+                Log.d(TAG, "customerList size: " + customerList.size());
                 setTags(customerList, tagGroup);
             }
         }
@@ -141,10 +149,10 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG,"onSaveInstanceState date:"+date.getText().toString());
-        outState.putString(Constants.EXTRAS_SCHEDULED_DATE,date.getText().toString());
-        outState.putString(Constants.EXTRAS_OFFER_TEXT,offerTextView.getText().toString());
-        if(customerList!=null) {
+        Log.d(TAG, "onSaveInstanceState date:" + date.getText().toString());
+        outState.putString(Constants.EXTRAS_SCHEDULED_DATE, date.getText().toString());
+        outState.putString(Constants.EXTRAS_OFFER_TEXT, offerTextView.getText().toString());
+        if (customerList != null) {
             outState.putStringArrayList(Constants.EXTRAS_CUSTOMER_LIST, customerList);
         }
     }
@@ -155,10 +163,10 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.d(TAG,"onDataChange snapshot:"+snapshot.getValue());
+                Log.d(TAG, "onDataChange snapshot:" + snapshot.getValue());
 
-                Offer offer = FireBaseUtils.getOfferById(mContext,offerId,snapshot);
-                if(offer !=null && offer.getOfferText().equals(offerTextView.getText().toString())){
+                Offer offer = FireBaseUtils.getOfferById(mContext, offerId, snapshot);
+                if (offer != null && offer.getOfferText().equals(offerTextView.getText().toString())) {
 
                     try {
                         Thread.currentThread().sleep(500);
@@ -184,7 +192,7 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
         Tag tag;
 
         for (int i = 0; i < stringList.size(); i++) {
-            Log.d(TAG,"category string:"+stringList.get(i));
+            Log.d(TAG, "category string:" + stringList.get(i));
             tag = new Tag(stringList.get(i));
             tag.radius = 10f;
             tag.layoutColor = Color.parseColor("#003366");//getResources().getColor(R.color.bazaar_darker_gray)
@@ -199,12 +207,12 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
     }
 
     private void addMoreAsFirstTag(ArrayList<Tag> tags) {
-        if(tags.size()==0 || (tags.size()>0 && !tags.get(0).text.equalsIgnoreCase("More"))) {
+        if (tags.size() == 0 || (tags.size() > 0 && !tags.get(0).text.equalsIgnoreCase("More"))) {
             Tag tag = new Tag(getString(R.string.select_customer));
             tag.radius = 10f;
             tag.layoutColor = Color.parseColor("#003366");//getResources().getColor(R.color.bazaar_darker_gray);
             tag.tagTextColor = Color.parseColor("#ffffff");
-            tags.add(0,tag);
+            tags.add(0, tag);
         }
     }
 
@@ -215,10 +223,9 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
                 if (position == 0) {
                     Intent intent = new Intent(mContext, SelectableCustomers.class);
                     ArrayList<String> tags = new ArrayList<String>();
-                    Log.d (TAG, "Starting ShopCategoryActivity:: " + tagGroup.getTags().size());
-                    for(int i=0;i<tagGroup.getTags().size();i++)
-                    {
-                        if(i>1) {
+                    Log.d(TAG, "Starting ShopCategoryActivity:: " + tagGroup.getTags().size());
+                    for (int i = 0; i < tagGroup.getTags().size(); i++) {
+                        if (i > 1) {
                             System.out.println("SHOP CATEGORY TAG Value :" + tagGroup.getTags().get(i).text);
                             tags.add(tagGroup.getTags().get(i).text);
                         }
@@ -236,13 +243,13 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
             public void onTagDeleted(final TagView view, final Tag tag, final int position) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("POSITION", position);
-                removeTag(view,position);
+                removeTag(view, position);
             }
         });
         //validate launch/product
     }
 
-    public void removeTag(TagView view, int position){
+    public void removeTag(TagView view, int position) {
         view.remove(position);
         // list doesnt not contain more option
         customerList.remove((position == 0) ? position : position - 1);
@@ -250,10 +257,9 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             hideProgress();
             finish();
         }
@@ -270,39 +276,36 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
         offerId = (int) Math.abs(Math.random() * 1000000);
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_ID,offerId);
-        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_TEXT,offerTextView.getText().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE,date.getText().toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS,customerList.toString());
-        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_STATUS,false);
-        Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_OFFER_URI,contentValues);
-        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI,null,ShopOnContract.Entry.COLUMN_OFFER_ID+"=?",new String[]{String.valueOf(offerId)},null);
-        if(cursor!=null) {
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_ID, offerId);
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_TEXT, offerTextView.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE, date.getText().toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, customerList.toString());
+        contentValues.put(ShopOnContract.Entry.COLUMN_OFFER_STATUS, false);
+        Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_OFFER_URI, contentValues);
+        Cursor cursor = getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI, null, ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", new String[]{String.valueOf(offerId)}, null);
+        if (cursor != null) {
             cursor.moveToFirst();
             Offer fOffer = Utils.createOfferFromCursor(cursor);
-            //MerchantData merchantData = retrieveMerchantData(realm,fOffer);
+
             FireBaseUtils.updateOfferDataBase(mContext, fOffer);
-            //Log.d(TAG, "local update offer_id:" + offer.getOfferId());
+
             createSMSPendingIntent(offerId);
-        }
-        else {
-            Toast.makeText(mContext,getString(R.string.offer_create_failed),Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(mContext, getString(R.string.offer_create_failed), Toast.LENGTH_LONG).show();
         }
 
-
-        //OfferContent.ITEMS.add(fOffer);
     }
 
     private void createSMSPendingIntent(int offerId) {
         Intent intent = new Intent(this, SMSService.class);
 
-        intent.putExtra(Constants.EXTRAS_OFFER_ID,offerId);
+        intent.putExtra(Constants.EXTRAS_OFFER_ID, offerId);
         PendingIntent pintent = PendingIntent.getService(this, offerId, intent, Intent.FILL_IN_DATA);
-        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarm.set(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), pintent);
     }
 
-    private MerchantData retrieveMerchantData(Realm realm,Offer offer) {
+    private MerchantData retrieveMerchantData(Realm realm, Offer offer) {
         RealmResults<MerchantsRealm> result = realm.where(MerchantsRealm.class).findAll();
         MerchantsRealm merchantRealm = result.get(0);
         MerchantData merchantData = new MerchantData();
@@ -322,21 +325,21 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
                 dateTimePickerUtis.schedule();
             }
         };
-        releaseKeypad(handler,runnable);
+        releaseKeypad(handler, runnable);
     }
 
-    public void releaseKeypad(Handler handler, Runnable runnable){
+    public void releaseKeypad(Handler handler, Runnable runnable) {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             handler.postDelayed(runnable, 100);
         }
     }
 
     @Override
-    public void scheduledDate(String scheduledDate,Calendar calendar) {
-        Log.d(TAG,"scheduled date:"+scheduledDate);
+    public void scheduledDate(String scheduledDate, Calendar calendar) {
+        Log.d(TAG, "scheduled date:" + scheduledDate);
         date.setText(scheduledDate);
         this.mCalendar = calendar;
     }
@@ -344,36 +347,32 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == Constants.RETRIEVE_MSISDN){
+        if (resultCode == RESULT_OK && requestCode == Constants.RETRIEVE_MSISDN) {
             customerList.clear();
             customerList.addAll(data.getExtras().getStringArrayList(Constants.SELECTED_NUMBERS));
-            setTags(customerList,tagGroup);
+            setTags(customerList, tagGroup);
         }
     }
 
-    public boolean validateOffer(){
-        if(TextUtils.isEmpty(date.getText().toString())) {
+    public boolean validateOffer() {
+        if (TextUtils.isEmpty(date.getText().toString())) {
             dateError.setText(getString(R.string.delivery_date_err));
             return false;
-        }
-        else {
+        } else {
             dateError.setText("");
         }
 
-        if(TextUtils.isEmpty(offerTextView.getText().toString())) {
+        if (TextUtils.isEmpty(offerTextView.getText().toString())) {
             offerError.setText(getString(R.string.offer_text_err));
             return false;
-        }
-        else
-        {
+        } else {
             offerError.setText("");
         }
 
-        if(customerList.size() <= 1){
+        if (customerList.size() <= 1) {
             customerError.setText(getString(R.string.customer_err));
             return false;
-        }else
-        {
+        } else {
             customerError.setText("");
         }
 

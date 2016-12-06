@@ -30,54 +30,42 @@ public class OfferRealm extends RealmObject {
     private boolean offerStatus;
 
     /**
-     * 
-     * @return
-     *     The offerId
+     * @return The offerId
      */
     public int getOfferId() {
         return offerId;
     }
 
     /**
-     * 
-     * @param offerId
-     *     The offer_id
+     * @param offerId The offer_id
      */
     public void setOfferId(int offerId) {
         this.offerId = offerId;
     }
 
     /**
-     * 
-     * @return
-     *     The deliverMessageOn
+     * @return The deliverMessageOn
      */
     public String getDeliverMessageOn() {
         return deliverMessageOn;
     }
 
     /**
-     * 
-     * @param deliverMessageOn
-     *     The deliverMessageOn
+     * @param deliverMessageOn The deliverMessageOn
      */
     public void setDeliverMessageOn(String deliverMessageOn) {
         this.deliverMessageOn = deliverMessageOn;
     }
 
     /**
-     * 
-     * @return
-     *     The offerText
+     * @return The offerText
      */
     public String getOfferText() {
         return offerText;
     }
 
     /**
-     * 
-     * @param offerText
-     *     The offerText
+     * @param offerText The offerText
      */
     public void setOfferText(String offerText) {
         this.offerText = offerText;

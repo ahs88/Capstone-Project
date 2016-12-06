@@ -37,7 +37,6 @@ public class OfferContent {
 
     private static void addItem(Offer item) {
         ITEMS.add(item);
-        //ITEM_MAP.put(item.getOfferId(), item);
     }
 
     private static Offer createOfferItem(int position) {
@@ -56,7 +55,6 @@ public class OfferContent {
     /**
      * A dummy item representing a piece of content.
      */
-
 
 
 }

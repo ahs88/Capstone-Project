@@ -70,77 +70,71 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
         ButterKnife.bind(this);
         setupActionBar(toolbar);
         toolbarTitle.setText(getString(R.string.verify_phone_number));
-        
+
         mContext = this;
-        
-        ActivityCompat.requestPermissions(this,new String[]{
-                Manifest.permission.SEND_SMS,Manifest.permission.READ_PHONE_STATE
-        },1);
+
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE
+        }, 1);
 
     }
 
     @OnClick(R.id.acc_continue)
     public void navigateToCategory() {
         if (msisdn.getText().toString().length() == 10) { //check if mobile number valid
-            if(Utils.getConnectivityStatus(this) == Constants.INTERNET_NOT_CONNECTED){
-                Utils.displayConnectToInternet(this,this);
+            if (Utils.getConnectivityStatus(this) == Constants.INTERNET_NOT_CONNECTED) {
+                Utils.displayConnectToInternet(this, this);
                 return;
             }
             currentDialogAction = Constants.DialogAction.SMS_CHECK;
-            boolean isGranted = checkIfPermissionGranted(this,Manifest.permission.SEND_SMS);
-            if(!isGranted){
-                Log.d(TAG,"send sms not granted");
+            boolean isGranted = checkIfPermissionGranted(this, Manifest.permission.SEND_SMS);
+            if (!isGranted) {
+                Log.d(TAG, "send sms not granted");
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.SEND_SMS},
                         Constants.MY_PERMISSIONS_REQUEST_SEND_SMS);
-            }
-            else{
-                isGranted = checkIfPermissionGranted(this,Manifest.permission.READ_PHONE_STATE);
-                if(!isGranted){
-                    Log.d(TAG,"phone state not granted");
+            } else {
+                isGranted = checkIfPermissionGranted(this, Manifest.permission.READ_PHONE_STATE);
+                if (!isGranted) {
+                    Log.d(TAG, "phone state not granted");
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.READ_PHONE_STATE},
                             Constants.MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-                }else{
-                    Utils.displaySMSWarning(this,this);
+                } else {
+                    Utils.displaySMSWarning(this, this);
                 }
             }
 
-        }
-        else
-        {
-            Toast.makeText(this,"Please Enter a valid number",Toast.LENGTH_SHORT);
+        } else {
+            Toast.makeText(this, "Please Enter a valid number", Toast.LENGTH_SHORT);
         }
 
     }
 
-    
 
     private void proceedToOTP() {
         String otp = Utils.generateRandomOTP(4);
         boolean status = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            status = Utils.sendSmsToMobileAPI22(this,otp,msisdn.getText().toString());
+            status = Utils.sendSmsToMobileAPI22(this, otp, msisdn.getText().toString());
         } else {
-            status = Utils.sendSmsToMobile(this,otp,msisdn.getText().toString());
+            status = Utils.sendSmsToMobile(this, otp, msisdn.getText().toString());
         }
 
-        if(status) {
+        if (status) {
             savePref(otp);
             Intent intent = new Intent(this, SmsOtpVerify.class);
             startActivity(intent);
             finish();
-        }
-        else
-        {
+        } else {
             displaySIMWarning();
         }
     }
 
     private void displaySIMWarning() {
-        AlertDialog alertDialog = AlertDialog.newInstance(getString(R.string.sim_warning),getString(R.string.sim_required_err));
+        AlertDialog alertDialog = AlertDialog.newInstance(getString(R.string.sim_warning), getString(R.string.sim_required_err));
         alertDialog.setPositiveButton(this);
-        alertDialog.show(getFragmentManager(),TAG);
+        alertDialog.show(getFragmentManager(), TAG);
     }
 
 
@@ -149,27 +143,24 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
         Log.d(TAG, "onTextChanged:" + editable.toString());
         if (msisdn.getText().toString().length() == 10) {
             accContinue.setBackgroundColor(Color.RED);
-        }
-        else
-        {
+        } else {
             accContinue.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         }
     }
 
 
-
     private void savePref(String otp) {
-        Log.d(TAG, "saving preferences otp:"+otp);
+        Log.d(TAG, "saving preferences otp:" + otp);
         UserSharedPreferences userSharedPreferences = new UserSharedPreferences(this);
         userSharedPreferences.savePref(Constants.MERCHANT_OTP, otp);
         userSharedPreferences.savePref(Constants.MERCHANT_MSISDN_PREF, msisdn.getText().toString());
-        userSharedPreferences.savePref(Constants.CURRENT_LOGIN_STATE,Constants.OTP_STATE);
+        userSharedPreferences.savePref(Constants.CURRENT_LOGIN_STATE, Constants.OTP_STATE);
     }
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        Log.d(TAG,"onclick of dialog i:"+i);
-        if(currentDialogAction == Constants.DialogAction.SMS_CHECK) {
+        Log.d(TAG, "onclick of dialog i:" + i);
+        if (currentDialogAction == Constants.DialogAction.SMS_CHECK) {
             if (i == DialogInterface.BUTTON_POSITIVE) {
                 proceedToOTP();
             } else {
@@ -184,15 +175,13 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
 
     }
 
-    public static boolean checkIfPermissionGranted(Activity activity, String permission){
+    public static boolean checkIfPermissionGranted(Activity activity, String permission) {
         int permissionCheck = ContextCompat.checkSelfPermission(activity,
                 permission);
-        Log.d(TAG,"permissionCheck:"+permissionCheck+" permission :"+permission);
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED){
+        Log.d(TAG, "permissionCheck:" + permissionCheck + " permission :" + permission);
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -203,39 +192,36 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case Constants.MY_PERMISSIONS_REQUEST_SEND_SMS: {
-                if(checkIfPermissionGranted(this,Manifest.permission.SEND_SMS)){
-                    Log.d(TAG,"permission request send sms granted");
-                    boolean isGranted = checkIfPermissionGranted(this,Manifest.permission.READ_PHONE_STATE);
+                if (checkIfPermissionGranted(this, Manifest.permission.SEND_SMS)) {
+                    Log.d(TAG, "permission request send sms granted");
+                    boolean isGranted = checkIfPermissionGranted(this, Manifest.permission.READ_PHONE_STATE);
 
-                    if(!isGranted) {
+                    if (!isGranted) {
                         ActivityCompat.requestPermissions(this,
                                 new String[]{Manifest.permission.READ_PHONE_STATE},
                                 Constants.MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-                    }
-                    else{
-                        Utils.displaySMSWarning(mContext,mContext);
+                    } else {
+                        Utils.displaySMSWarning(mContext, mContext);
                     }
 
                 }
             }
-            case Constants.MY_PERMISSIONS_REQUEST_READ_PHONE_STATE:{
-                if (checkIfPermissionGranted(this,Manifest.permission.READ_PHONE_STATE)) {
-                    Log.d(TAG,"permission request read phone state granted");
-                    boolean isGranted = checkIfPermissionGranted(this,Manifest.permission.SEND_SMS);
+            case Constants.MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+                if (checkIfPermissionGranted(this, Manifest.permission.READ_PHONE_STATE)) {
+                    Log.d(TAG, "permission request read phone state granted");
+                    boolean isGranted = checkIfPermissionGranted(this, Manifest.permission.SEND_SMS);
                     // permission was granted, yay! Do the
-                    if(!isGranted) {
+                    if (!isGranted) {
                         ActivityCompat.requestPermissions(this,
                                 new String[]{Manifest.permission.SEND_SMS},
                                 Constants.MY_PERMISSIONS_REQUEST_SEND_SMS);
-                    }
-                    else
-                    {
-                        Utils.displaySMSWarning(mContext,mContext);
+                    } else {
+                        Utils.displaySMSWarning(mContext, mContext);
                     }
                 }
             }
         }
     }
 
-    
+
 }

@@ -9,7 +9,7 @@ import io.realm.RealmObject;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
 
 
-public class MerchantsRealm extends RealmObject{
+public class MerchantsRealm extends RealmObject {
 
     @SerializedName("email")
     @Expose
@@ -34,126 +34,86 @@ public class MerchantsRealm extends RealmObject{
     public String shopName;
 
     /**
-     * 
-     * @return
-     *     The email
+     * @return The email
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     * 
-     * @param email
-     *     The email
+     * @param email The email
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * 
-     * @return
-     *     The userId
+     * @return The userId
      */
     public Integer getUserId() {
         return userId;
     }
 
     /**
-     * 
-     * @param userId
-     *     The user_id
+     * @param userId The user_id
      */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
     /**
-     * 
-     * @return
-     *     The merchentCategory
+     * @return The merchentCategory
      */
     public String getMerchentCategory() {
         return merchentCategory;
     }
 
     /**
-     * 
-     * @param merchentCategory
-     *     The merchentCategory
+     * @param merchentCategory The merchentCategory
      */
     public void setMerchentCategory(String merchentCategory) {
         this.merchentCategory = merchentCategory;
     }
 
     /**
-     * 
-     * @return
-     *     The mobile
+     * @return The mobile
      */
     public String getMobile() {
         return mobile;
     }
 
     /**
-     * 
-     * @param mobile
-     *     The mobile
+     * @param mobile The mobile
      */
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
-   /* *//**
-     * 
-     * @return
-     *     The offers
-     *//*
-    public OfferRealm getOffers() {
-        return offers;
-    }
 
-    *//**
-     * 
-     * @param offers
-     *     The offers
-     *//*
-    public void setOffers(OfferRealm offers) {
-        this.offers = offers;
-    }
-*/
+
     /**
-     * 
-     * @return
-     *     The shopName
+     * @return The shopName
      */
     public String getShopName() {
         return shopName;
     }
 
     /**
-     * 
-     * @param shopName
-     *     The shopName
+     * @param shopName The shopName
      */
     public void setShopName(String shopName) {
         this.shopName = shopName;

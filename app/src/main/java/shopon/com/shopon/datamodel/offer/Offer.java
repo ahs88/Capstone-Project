@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-
 public class Offer {
 
     @SerializedName("deliverMessageOn")
@@ -33,72 +32,56 @@ public class Offer {
     public String createdAt;
 
     /**
-     *
-     * @return
-     * The deliverMessageOn
+     * @return The deliverMessageOn
      */
     public String getDeliverMessageOn() {
         return deliverMessageOn;
     }
 
     /**
-     *
-     * @param deliverMessageOn
-     * The deliverMessageOn
+     * @param deliverMessageOn The deliverMessageOn
      */
     public void setDeliverMessageOn(String deliverMessageOn) {
         this.deliverMessageOn = deliverMessageOn;
     }
 
     /**
-     *
-     * @return
-     * The offerText
+     * @return The offerText
      */
     public String getOfferText() {
         return offerText;
     }
 
     /**
-     *
-     * @param offerText
-     * The offerText
+     * @param offerText The offerText
      */
     public void setOfferText(String offerText) {
         this.offerText = offerText;
     }
 
     /**
-     *
-     * @return
-     * The id
+     * @return The id
      */
     public int getOfferId() {
         return offer_id;
     }
 
     /**
-     *
-     * @param id
-     * The id
+     * @param id The id
      */
     public void setOfferId(int id) {
         this.offer_id = id;
     }
 
     /**
-     *
-     * @return
-     * The customerId
+     * @return The customerId
      */
     public String getNumbers() {
         return numbers;
     }
 
     /**
-     *
-     * @param customerIds
-     * The customer_id
+     * @param customerIds The customer_id
      */
     public void setNumbers(String customerIds) {
         this.numbers = customerIds;

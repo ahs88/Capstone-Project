@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Customers} and makes a call to the
- *
+ * <p>
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyCustomerRecyclerViewAdapter extends RecyclerView.Adapter<MyCustomerRecyclerViewAdapter.ViewHolder> {
@@ -39,7 +39,7 @@ public class MyCustomerRecyclerViewAdapter extends RecyclerView.Adapter<MyCustom
     private final boolean isTwoPane;
 
 
-    public MyCustomerRecyclerViewAdapter(List<Customers> items, CustomerFragment.OnListFragmentInteractionListener listener,boolean selectable,boolean isTwoPane) {
+    public MyCustomerRecyclerViewAdapter(List<Customers> items, CustomerFragment.OnListFragmentInteractionListener listener, boolean selectable, boolean isTwoPane) {
         mValues = items;
         mListener = listener;
         isSelectable = selectable;
@@ -56,21 +56,21 @@ public class MyCustomerRecyclerViewAdapter extends RecyclerView.Adapter<MyCustom
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.d(TAG,"onBindViewHolder");
+        Log.d(TAG, "onBindViewHolder");
         holder.mItem = mValues.get(position);
         holder.mName.setText(mValues.get(position).getName());
         holder.mPhoneNumber.setText(mValues.get(position).getMobile());
         holder.mEmail.setText(mValues.get(position).getEmail());
         try {
             holder.nameFontView.setText(mValues.get(position).getName().substring(0, 1).toUpperCase());
-        }catch (IndexOutOfBoundsException ie){
+        } catch (IndexOutOfBoundsException ie) {
             ie.printStackTrace();
         }
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG,"getItemCount:"+mValues.size());
+        Log.d(TAG, "getItemCount:" + mValues.size());
         return mValues.size();
     }
 
@@ -87,16 +87,14 @@ public class MyCustomerRecyclerViewAdapter extends RecyclerView.Adapter<MyCustom
             super(view);
             mView = view;
             mView.setOnClickListener(this);
-            nameFontView = (FontFitTextView)view.findViewById(R.id.name_font);
+            nameFontView = (FontFitTextView) view.findViewById(R.id.name_font);
             mName = (TextView) view.findViewById(R.id.name);
             mEmail = (TextView) view.findViewById(R.id.email);
-            mPhoneNumber = (TextView)view.findViewById(R.id.phone_number);
-            selectDeselect = (ImageView)view.findViewById(R.id.select_deselect);
-            if(isSelectable){
+            mPhoneNumber = (TextView) view.findViewById(R.id.phone_number);
+            selectDeselect = (ImageView) view.findViewById(R.id.select_deselect);
+            if (isSelectable) {
                 selectDeselect.setVisibility(View.VISIBLE);
-            }
-            else
-            {
+            } else {
                 selectDeselect.setVisibility(View.GONE);
             }
 
@@ -110,27 +108,24 @@ public class MyCustomerRecyclerViewAdapter extends RecyclerView.Adapter<MyCustom
 
         @Override
         public void onClick(View view) {
-            if(!isSelectable) {
+            if (!isSelectable) {
                 //display detail activivty.
-                if(isTwoPane){
-                    CustomerDetailFragment customerDetailFragment = (CustomerDetailFragment) ((BaseActivity)mListener).getSupportFragmentManager().findFragmentByTag(CustomerDetailFragment.TAG);
+                if (isTwoPane) {
+                    CustomerDetailFragment customerDetailFragment = (CustomerDetailFragment) ((BaseActivity) mListener).getSupportFragmentManager().findFragmentByTag(CustomerDetailFragment.TAG);
                     customerDetailFragment.setCustomerId(mItem.getId());
-                }
-                else {
+                } else {
                     Intent intent = new Intent((Activity) mListener, CustomerDetailActivity.class);
                     intent.putExtra(Constants.EXTRAS_CUSTOMER_ID, mItem.getId());
-                    intent.putExtra(Constants.EXTRAS_IS_TWO_PANE,isTwoPane);
+                    intent.putExtra(Constants.EXTRAS_IS_TWO_PANE, isTwoPane);
                     ((Activity) mListener).startActivityForResult(intent, Constants.ADD_CUSTOMER);
                 }
                 return;
             }
-            if(!selectedCustomers.contains(mItem)) {
+            if (!selectedCustomers.contains(mItem)) {
                 selectedCustomers.add(mItem);
                 selectedNumbers.add(mItem.getMobile());
                 selectDeselect.setImageResource(R.drawable.ok_filled);
-            }
-            else
-            {
+            } else {
                 selectedCustomers.remove(mItem);
                 selectedNumbers.remove(mItem.getMobile());
                 selectDeselect.setImageResource(R.drawable.b_circlethin_2x);
@@ -141,7 +136,7 @@ public class MyCustomerRecyclerViewAdapter extends RecyclerView.Adapter<MyCustom
     }
 
 
-    public List<String> getSelectedNumbers(){
+    public List<String> getSelectedNumbers() {
         return selectedNumbers;
     }
 

@@ -146,7 +146,7 @@ public class OfferFragment extends Fragment implements LoaderManager.LoaderCallb
             Offer offer = new Offer();
             offer.setOfferId(cursor.getInt(0));
             offer.setOfferText(cursor.getString(1));
-            offer.setOfferStatus((cursor.getInt(2)==0)?false:true);
+            offer.setOfferStatus((cursor.getInt(2) == 0) ? false : true);
             offer.setNumbers(cursor.getString(3));
             offer.setDeliverMessageOn(cursor.getString(4));
             OfferContent.ITEMS.add(offer);
@@ -172,9 +172,6 @@ public class OfferFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            //throw new RuntimeException(context.toString()
-            //        + " must implement OnListFragmentInteractionListener");
         }
     }
 

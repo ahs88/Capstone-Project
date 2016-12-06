@@ -22,13 +22,13 @@ import static shopon.com.shopon.view.base.BaseFragment.TAG;
  * Created by shetty on 29/11/16.
  */
 
-public class NetworkChangeReceiver extends BroadcastReceiver{
+public class NetworkChangeReceiver extends BroadcastReceiver {
 
     public static final String TAG = shopon.com.shopon.receiver.NetworkChangeReceiver.class.getName();
     public static final int TIMEOUT = 4000;
     private static final String TEST_HOST = "www.google.com";
     private static final java.lang.String NETWORK_CHECK = "network_check";
-    Context mContext ;
+    Context mContext;
 
 
     @Override
@@ -65,19 +65,18 @@ public class NetworkChangeReceiver extends BroadcastReceiver{
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 
 
-                if (Utils.isReachable()) {
-                    Log.d(TAG,"host reachable");
-                    return true;
-                } else {
-                    Log.d(TAG,"host not reachable");
+            if (Utils.isReachable()) {
+                Log.d(TAG, "host reachable");
+                return true;
+            } else {
+                Log.d(TAG, "host not reachable");
 
-                    return false;
+                return false;
 
-                }
+            }
 
 
-        }
-        else
+        } else
             return false;
     }
 

@@ -36,7 +36,7 @@ public class DetailEntry {
 
     @Override
     public String toString() {
-        return this.key+":"+value;
+        return this.key + ":" + value;
     }
 
     public String getErrorMsg() {

@@ -57,8 +57,7 @@ public class OfferDetailActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         offerId = getIntent().getExtras().getInt(Constants.EXTRAS_OFFER_ID);
-        Log.d(TAG,"offerId:"+offerId);
-
+        Log.d(TAG, "offerId:" + offerId);
 
 
         setTitle(R.string.offer_details);
@@ -66,7 +65,7 @@ public class OfferDetailActivity extends BaseActivity {
 
         titleView.setText(getString(R.string.offer_details));
         OfferDetailFragment offerDetailFragment = (OfferDetailFragment) getSupportFragmentManager().findFragmentByTag(OfferDetailFragment.TAG);
-        if(offerDetailFragment == null) {
+        if (offerDetailFragment == null) {
             offerDetailFragment = new OfferDetailFragment().newInstance(offerId, false);
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, offerDetailFragment, OfferDetailFragment.TAG).commit();

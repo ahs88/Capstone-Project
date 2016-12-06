@@ -44,10 +44,10 @@ import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.contact.AlphabetListAdapter;
 
 
-
 public class Utils {
 
     public static String TAG = Utils.class.getName();
+
     public static ArrayList<String> getUinqueElementsInList(List<String> inputList) {
         //pass unique subscribed tags to intent - remove duplicates
         LinkedHashSet set = new LinkedHashSet();
@@ -176,8 +176,7 @@ public class Utils {
         List<Integer> subId = new ArrayList<>();
         SubscriptionManager subscriptionManager = SubscriptionManager.from(context);
         List<SubscriptionInfo> subscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList();
-        if(subscriptionInfoList == null)
-        {
+        if (subscriptionInfoList == null) {
             return subId;
         }
 
@@ -197,18 +196,15 @@ public class Utils {
         }
     }
 
-    public static boolean isValidMobile(String phone)
-    {
+    public static boolean isValidMobile(String phone) {
         return (phone.length() == 10) && (phone.matches("[-+]?\\d*\\.?\\d+")) && android.util.Patterns.PHONE.matcher(phone).matches();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
-    public static boolean sendSmsToMobileAPI22(Context context,String otp,String recipient) {
-        //SmsManager smsManager = SmsManager.getDefault();
-        //int)Math.floor(Math.random()*10000);
+    public static boolean sendSmsToMobileAPI22(Context context, String otp, String recipient) {
 
         List<Integer> subId = Utils.getActiveSubscriptionInfoList(context);
-        if (subId.size() == 0){
+        if (subId.size() == 0) {
             return false;
         }
         for (int id : subId) {
@@ -217,14 +213,14 @@ public class Utils {
         return true;
     }
 
-    public static boolean sendSmsToMobile(Context context,String otp,String recipient){
-        Log.d(TAG,"recipient:"+recipient);
+    public static boolean sendSmsToMobile(Context context, String otp, String recipient) {
+        Log.d(TAG, "recipient:" + recipient);
         String textSms = otp;
         ArrayList<String> messageList = SmsManager.getDefault().divideMessage(textSms);
         if (messageList.size() > 1) {
             return Utils.sendMultipartTextSMS(context, 0, recipient, null, messageList, null, null);
         } else {
-            return Utils.sendSMS(context, 0,recipient, null, textSms, null, null);
+            return Utils.sendSMS(context, 0, recipient, null, textSms, null, null);
         }
     }
 
@@ -234,10 +230,10 @@ public class Utils {
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null != activeNetwork) {
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
-                return  Constants.WIFI_ENABLED;
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
+                return Constants.WIFI_ENABLED;
 
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
                 return Constants.MOBILE_DATA_ENABLED;
         }
         return Constants.INTERNET_NOT_CONNECTED;
@@ -252,7 +248,7 @@ public class Utils {
                 parsed = df.parse(dateCardDate);
             } catch (ParseException e) {
                 e.printStackTrace();
-                Log.d(TAG,"date parse error:"+e.getMessage());
+                Log.d(TAG, "date parse error:" + e.getMessage());
                 return "";
             }
             String dayString = (String) DateFormat.format("dd", parsed);
@@ -267,9 +263,9 @@ public class Utils {
         return imageText;
     }
 
-    public static String getCurrentDate(){
+    public static String getCurrentDate() {
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time => "+c.getTime());
+        System.out.println("Current time => " + c.getTime());
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm a dd-MMM, yyyy");
         String formattedDate = df.format(c.getTime());
@@ -278,42 +274,37 @@ public class Utils {
     }
 
     public static void displayConnectToInternet(Activity context, DialogInterface.OnClickListener listener) {
-        AlertDialog alertDialog = AlertDialog.newInstance(context.getString(R.string.internet_warning),context.getString(R.string.connect_to_internet));
+        AlertDialog alertDialog = AlertDialog.newInstance(context.getString(R.string.internet_warning), context.getString(R.string.connect_to_internet));
         alertDialog.setPositiveButton(listener);
-        alertDialog.show(context.getFragmentManager(),TAG);
+        alertDialog.show(context.getFragmentManager(), TAG);
     }
 
     public static void displaySMSWarning(Activity context, DialogInterface.OnClickListener listener) {
-        AlertDialog alertDialog = AlertDialog.newInstance(context.getString(R.string.sms_warning),context.getString(R.string.carrier_charge_warning));
+        AlertDialog alertDialog = AlertDialog.newInstance(context.getString(R.string.sms_warning), context.getString(R.string.carrier_charge_warning));
         alertDialog.setNegativeButton(listener);
         alertDialog.setPositiveButton(listener);
-        alertDialog.show(context.getFragmentManager(),TAG);
+        alertDialog.show(context.getFragmentManager(), TAG);
     }
 
-    public static boolean isReachable(){
+    public static boolean isReachable() {
 
         System.out.println("executeCommand");
         Runtime runtime = Runtime.getRuntime();
-        try
-        {
-            Process  mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+        try {
+            Process mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int mExitValue = mIpAddrProcess.waitFor();
-            System.out.println(" mExitValue "+mExitValue);
-            if(mExitValue==0){
+            System.out.println(" mExitValue " + mExitValue);
+            if (mExitValue == 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }
-        catch (InterruptedException ignore)
-        {
+        } catch (InterruptedException ignore) {
             ignore.printStackTrace();
-            System.out.println(" Exception:"+ignore);
-        }
-        catch (IOException e)
-        {
+            System.out.println(" Exception:" + ignore);
+        } catch (IOException e) {
             e.printStackTrace();
-            System.out.println(" Exception:"+e);
+            System.out.println(" Exception:" + e);
         }
         return false;
     }
@@ -331,11 +322,11 @@ public class Utils {
     }
 
     public static Offer createOfferFromCursor(Cursor cursor) {
-        Log.d(TAG,"offer status:"+cursor.getInt(2)+" offer text:"+cursor.getString(1));
+        Log.d(TAG, "offer status:" + cursor.getInt(2) + " offer text:" + cursor.getString(1));
         Offer offer = new Offer();
         offer.setOfferId(cursor.getInt(0));
         offer.setOfferText(cursor.getString(1));
-        offer.setOfferStatus((cursor.getInt(2)==0)?false:true);
+        offer.setOfferStatus((cursor.getInt(2) == 0) ? false : true);
         offer.setNumbers(cursor.getString(3));
         offer.setDeliverMessageOn(cursor.getString(4));
         return offer;

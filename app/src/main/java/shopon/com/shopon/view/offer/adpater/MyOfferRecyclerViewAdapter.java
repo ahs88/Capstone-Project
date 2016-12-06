@@ -43,7 +43,7 @@ public class MyOfferRecyclerViewAdapter extends RecyclerView.Adapter<MyOfferRecy
     private Context mContext;
     private final static String TAG = MyOfferRecyclerViewAdapter.class.getName();
 
-    public MyOfferRecyclerViewAdapter(List<Offer> items, OfferFragment.OnListFragmentInteractionListener listener,Context context,boolean isTwoPane) {
+    public MyOfferRecyclerViewAdapter(List<Offer> items, OfferFragment.OnListFragmentInteractionListener listener, Context context, boolean isTwoPane) {
         mValues = items;
         mListener = listener;
         mContext = context;
@@ -61,12 +61,12 @@ public class MyOfferRecyclerViewAdapter extends RecyclerView.Adapter<MyOfferRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.offerDateView.setText(holder.mItem.getDeliverMessageOn());
-        holder.offerTextView.setText(((Context)mListener).getString(R.string.offer_tag)+holder.mItem.getOfferText());
+        holder.offerTextView.setText(((Context) mListener).getString(R.string.offer_tag) + holder.mItem.getOfferText());
         holder.daySummaryView.setText(Utils.getDateDisplayText(holder.mItem.getDeliverMessageOn()));
 
 
-        List<String> numberList = new ArrayList<String>(Arrays.asList(holder.mItem.getNumbers().replace("[","").replace("]","").split(",")));
-        holder.customerCountView.setText(String.valueOf(numberList.size())+"C");
+        List<String> numberList = new ArrayList<String>(Arrays.asList(holder.mItem.getNumbers().replace("[", "").replace("]", "").split(",")));
+        holder.customerCountView.setText(String.valueOf(numberList.size()) + "C");
 
     }
 
@@ -75,7 +75,7 @@ public class MyOfferRecyclerViewAdapter extends RecyclerView.Adapter<MyOfferRecy
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final View mView;
         public TextView offerDateView;
         public final TextView offerTextView;
@@ -89,8 +89,8 @@ public class MyOfferRecyclerViewAdapter extends RecyclerView.Adapter<MyOfferRecy
             mView.setOnClickListener(this);
             offerDateView = (TextView) view.findViewById(R.id.offer_date);
             offerTextView = (TextView) view.findViewById(R.id.offer_text);
-            customerCountView = (TextView)view.findViewById(R.id.customer_count);
-            daySummaryView = (TextView)view.findViewById(R.id.date_summary);
+            customerCountView = (TextView) view.findViewById(R.id.customer_count);
+            daySummaryView = (TextView) view.findViewById(R.id.date_summary);
         }
 
 
@@ -101,11 +101,10 @@ public class MyOfferRecyclerViewAdapter extends RecyclerView.Adapter<MyOfferRecy
 
         @Override
         public void onClick(View view) {
-            if(isTwoPane){
-                OfferDetailFragment offerDetailFragment = (OfferDetailFragment) ((BaseActivity)mListener).getSupportFragmentManager().findFragmentByTag(OfferDetailFragment.TAG);
+            if (isTwoPane) {
+                OfferDetailFragment offerDetailFragment = (OfferDetailFragment) ((BaseActivity) mListener).getSupportFragmentManager().findFragmentByTag(OfferDetailFragment.TAG);
                 offerDetailFragment.setOfferId(mItem.getOfferId());
-            }
-            else {
+            } else {
                 Intent intent = new Intent(mContext, OfferDetailActivity.class);
                 intent.putExtra(Constants.EXTRAS_OFFER_ID, mItem.getOfferId());
                 mContext.startActivity(intent);
