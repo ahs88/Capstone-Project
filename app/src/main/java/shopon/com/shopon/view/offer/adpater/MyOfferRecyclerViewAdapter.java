@@ -61,13 +61,12 @@ public class MyOfferRecyclerViewAdapter extends RecyclerView.Adapter<MyOfferRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.offerDateView.setText(holder.mItem.getDeliverMessageOn());
-        holder.offerTextView.setText(((Context) mListener).getString(R.string.offer_tag) + holder.mItem.getOfferText());
+        holder.offerTextView.setText(((Context) mListener).getString(R.string.offer_tag,holder.mItem.getOfferText()));
         holder.daySummaryView.setText(Utils.getDateDisplayText(holder.mItem.getDeliverMessageOn()));
 
 
         List<String> numberList = new ArrayList<String>(Arrays.asList(holder.mItem.getNumbers().replace("[", "").replace("]", "").split(",")));
-        holder.customerCountView.setText(String.valueOf(numberList.size()) + "C");
-
+        holder.customerCountView.setText(((Context) mListener).getString(R.string.customer_count_placeholder,String.valueOf(numberList.size())));
     }
 
     @Override

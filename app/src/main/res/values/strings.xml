@@ -64,7 +64,7 @@
     <string name="select_customer">Select Customers</string>
     <string name="validate_num">Validating Number</string>
     <string name="invalid_otp">Invalid OTP entered. Please enter the 4 igit number received through sms</string>
-    <string name="offer_tag">OFFER - </string>
+    <string name="offer_tag">OFFER - %1$s</string>
     <string name="action_done">Done</string>
     <string name="select_from_phone_book">Add from Contacts</string>
     <string name="no_customer">No Customers Added Yet</string>
@@ -82,7 +82,7 @@
     <string name="edit">EDIT</string>
     <string name="save">SAVE</string>
     <string name="title_activity_customer_detail">Customer Detail</string>
-    <string name="dlg_ok">Ok</string>
+    <string name="dlg_ok">OK</string>
     <string name="dlg_cancel">Cancel</string>
     <string name="sms_sent">Offer has been sent</string>
     <string name="sms_scheduled">Offer has been scheduled</string>
@@ -108,4 +108,26 @@
     <string name="creating_offer">Creating Offer</string>
     <string name="offer_create_failed">Failed to create offer, please try again after a while.</string>
     <string name="failed_to_send_sms">Failed to send SMS</string>
+    <string name="default_category">Sports</string>
+    <string name="customer_selected">%1$s selected</string>
+    <string name="customer_deselected">%1$s deselected</string>
+    <string name="introductory_screen">Introductory Screen</string>
+    <string name="offers">Offers</string>
+    <string name="communicate">Communicate</string>
+    <string name="name">Name</string>
+    <string name="default_alphabet">A</string>
+    <string name="share">Share</string>
+    <string name="select_all">Select All</string>
+    <string name="deselect_all">Deselect All</string>
+    <string name="default_offer">Offer Text : Buy 1 Get 1 Free, Never Before asdasdasd asds asddasds</string>
+    <string name="default_title">Title</string>
+    <string name="default_country_code">+91</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="send">Send</string>
+    <string name="enter_date">Enter Date</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_offer_text">Enter Offer text</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="add_customer">Add Customer</string>
+    <string name="customer_count_placeholder">%1$sC</string>
 </resources>

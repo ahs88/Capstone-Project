@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.7"
         android:paddingLeft="10dp"
+        android:paddingStart="10dp"
         android:layout_gravity="center_vertical"
         >
     <TextView
@@ -27,18 +28,20 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.7"
         android:paddingLeft="10dp"
+        android:paddingStart="10dp"
         android:textSize="16sp"
         android:textColor="@color/black"
-        android:text="TextView" />
+        />
         <TextView
             android:id="@+id/ccnumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:textSize="13sp"
             android:layout_below="@+id/ccname"
-            android:text="91" />
+            android:text="@string/default_country_code" />
     </RelativeLayout>
     <ImageView
         android:id="@+id/select_deselect"
@@ -47,6 +50,7 @@
         android:layout_gravity="right|center_vertical|end"
         android:layout_margin="5dp"
         android:clickable="false"
+        android:contentDescription="@string/customer_deselected"
         android:src="@drawable/b_circlethin_2x"
         android:visibility="visible" />
 

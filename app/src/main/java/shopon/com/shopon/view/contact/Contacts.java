@@ -164,9 +164,11 @@ public class Contacts extends BaseActivity {
                 ImageView selectDeselect = (ImageView) paramView.findViewById(R.id.select_deselect);
                 if (!adapter.getSelectedContacts().contains(contact)) {
                     selectDeselect.setImageResource(R.drawable.ok_filled);
+                    selectDeselect.setContentDescription(getString(R.string.customer_selected,contact.text));
                     adapter.addSelectedItem(contact);
                 } else {
                     selectDeselect.setImageResource(R.drawable.b_circlethin_2x);
+                    selectDeselect.setContentDescription(getString(R.string.customer_deselected,contact.text));
                     adapter.removeSelectedItem(contact);
                 }
 

@@ -5,20 +5,20 @@
         <item
             android:id="@+id/customer"
             android:icon="@drawable/customer_icon"
-            android:title="Customers" />
+            android:title="@string/customers" />
         <item
             android:id="@+id/offer"
             android:icon="@drawable/offer_icon"
-            android:title="Offers" />
+            android:title="@string/offers" />
 
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="@string/share" />
             <!--<item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"

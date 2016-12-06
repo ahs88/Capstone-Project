@@ -18,7 +18,7 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:textAllCaps="true"
         android:textSize="50sp"
-        android:text="A"
+        android:text="@string/default_alphabet"
         android:gravity="center"
         android:src="@android:drawable/sym_def_app_icon" />
 
@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Android Studio"
         android:id="@+id/user_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
@@ -34,7 +33,6 @@
         android:id="@+id/email_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:text="android.studio@android.com" />
+        />
 
 </LinearLayout>

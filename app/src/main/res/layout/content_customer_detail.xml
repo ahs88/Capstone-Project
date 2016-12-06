@@ -26,6 +26,7 @@
         android:dividerHeight="8dp"
         android:listSelector="@android:color/transparent"
         android:paddingLeft="10dp"
+        android:paddingStart="10dp"
         />
 
      <TextView

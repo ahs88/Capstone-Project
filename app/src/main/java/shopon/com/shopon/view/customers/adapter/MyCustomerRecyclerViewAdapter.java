@@ -2,6 +2,7 @@ package shopon.com.shopon.view.customers.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -125,10 +126,12 @@ public class MyCustomerRecyclerViewAdapter extends RecyclerView.Adapter<MyCustom
                 selectedCustomers.add(mItem);
                 selectedNumbers.add(mItem.getMobile());
                 selectDeselect.setImageResource(R.drawable.ok_filled);
+                selectDeselect.setContentDescription(((Activity)mListener).getString(R.string.customer_deselected,mItem.getName()));
             } else {
                 selectedCustomers.remove(mItem);
                 selectedNumbers.remove(mItem.getMobile());
                 selectDeselect.setImageResource(R.drawable.b_circlethin_2x);
+                selectDeselect.setContentDescription(((Activity)mListener).getString(R.string.customer_deselected,mItem.getName()));
             }
         }
 

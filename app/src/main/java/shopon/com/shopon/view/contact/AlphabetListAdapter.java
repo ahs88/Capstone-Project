@@ -137,14 +137,16 @@ public class AlphabetListAdapter extends BaseAdapter {
 
         if (getItemViewType(position) == 0) { // Item
             Item item = (Item) getItem(position);
-            //TextView textView = (TextView) view.findViewById(R.id.ccname);
+
             itemHolder.textView.setText(item.text);
-            //TextView contact_number = (TextView) view.findViewById(R.id.ccnumber);
+
             itemHolder.contact_number.setText(item.fpath);
             if (selectedItems.contains(item)) {
                 itemHolder.select_deselect.setImageResource(R.drawable.ok_filled);
+                itemHolder.select_deselect.setContentDescription(mContext.getString(R.string.customer_selected,item.text));
             } else {
                 itemHolder.select_deselect.setImageResource(R.drawable.b_circlethin_2x);
+                itemHolder.select_deselect.setContentDescription(mContext.getString(R.string.customer_deselected,item.text));
             }
 
         } else { // Section

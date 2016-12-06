@@ -189,9 +189,11 @@ public class ShopCategoriesQuiltAdapter extends RecyclerView.Adapter<ShopCategor
                 Log.d(TAG, " selected main tags:" + categoryName);
                 selectDeselect.setImageResource(R.drawable.ok_filled);
                 categoryContainer.setBackgroundResource(R.drawable.category_bg_selected);
+                selectDeselect.setContentDescription(mContext.getString(R.string.customer_selected,categoryName));
             } else {
                 selectDeselect.setImageResource(R.drawable.b_circlethin_2x);
                 categoryContainer.setBackgroundResource(R.drawable.category_bg);
+                selectDeselect.setContentDescription(mContext.getString(R.string.customer_deselected,categoryName));
             }
             int resourceId = mContext.getResources().getIdentifier(category_drawable, "drawable", mContext.getPackageName());//initialize res and context in adapter's contructor
             categoryImage.setImageResource(resourceId);
@@ -204,9 +206,11 @@ public class ShopCategoriesQuiltAdapter extends RecyclerView.Adapter<ShopCategor
             if (selectedTags.contains(categoryName)) {
                 selectDeselect.setImageResource(R.drawable.ok_filled);
                 categoryContainer.setBackgroundResource(R.drawable.category_bg_selected);
+                selectDeselect.setContentDescription(mContext.getString(R.string.customer_selected,categoryName));
             } else {
                 selectDeselect.setImageResource(R.drawable.b_circlethin_2x);
                 categoryContainer.setBackgroundResource(R.drawable.category_bg);
+                selectDeselect.setContentDescription(mContext.getString(R.string.customer_deselected,categoryName));
             }
             Drawable transparentDrawable = new ColorDrawable(Color.TRANSPARENT);
             categoryImage.setImageDrawable(transparentDrawable);
@@ -231,10 +235,9 @@ public class ShopCategoriesQuiltAdapter extends RecyclerView.Adapter<ShopCategor
                     selectedTags.add(categoryName);
                     selectDeselect.setImageResource(R.drawable.ok_filled);
                     categoryContainer.setBackgroundResource(R.drawable.category_bg_selected);
-                    //category_widget.setBackgroundColor(mContext.getResources().getColor(R.color.green_shade));
+                    selectDeselect.setContentDescription(mContext.getString(R.string.customer_selected,categoryName));
                 } else {
                     // should find a way to check if subcategories are selected
-                    //if subcategories of the main category are selected then go to level 1
                     if (subCategoriesSelected(subCategories)) {
                         mainPositionEntered = position;
                         startSubCateoryActivity();
@@ -242,6 +245,7 @@ public class ShopCategoriesQuiltAdapter extends RecyclerView.Adapter<ShopCategor
                         selectedTags.remove(categoryName);
                         selectDeselect.setImageResource(R.drawable.b_circlethin_2x);
                         categoryContainer.setBackgroundResource(R.drawable.category_bg);
+                        selectDeselect.setContentDescription(mContext.getString(R.string.customer_deselected,categoryName));
                     }
                 }
             } else //sub category  click handler

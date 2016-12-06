@@ -42,7 +42,7 @@
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:hint="Enter Date "
+            android:hint="@string/enter_date"
             android:inputType="date"
             android:padding="5dp"
             android:selectAllOnFocus="true"
@@ -67,7 +67,7 @@
             android:background="@drawable/bazaar_edit_name"
             android:ems="10"
             android:gravity="top"
-            android:hint="Enter Offer text"
+            android:hint="@string/enter_offer_text"
             android:inputType="textMultiLine"
             android:padding="5dp"
             android:layout_below="@+id/offer_err"
@@ -105,5 +105,5 @@
         android:layout_marginTop="10dp"
         android:padding="5dp"
         android:layout_alignParentBottom="true"
-        android:text="Create Offer" />
+        android:text="@string/create_offer" />
 </RelativeLayout>

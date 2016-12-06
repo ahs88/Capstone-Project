@@ -16,7 +16,7 @@
         android:layout_weight="0.4"
         android:layout_gravity="bottom"
         android:gravity="bottom"
-        android:text="Name"
+        android:text="@string/name"
         android:singleLine="true"
         android:textSize="15sp" />
 

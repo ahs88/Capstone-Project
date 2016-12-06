@@ -36,15 +36,16 @@
         android:id="@+id/date_time_set"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="Set Time"
+        android:text="@string/set_time"
         android:layout_alignParentBottom="true"
         android:gravity="center"/>
 
     <Button
         android:id="@+id/done"
         android:layout_toRightOf="@+id/date_time_set"
+        android:layout_toEndOf="@+id/date_time_set"
         android:layout_width="100dp"
-        android:text="Done"
+        android:text="@string/done"
         android:layout_height="50dp" />
     </RelativeLayout>
 </RelativeLayout>
