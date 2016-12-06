@@ -38,7 +38,8 @@ public class ShopOnSplashActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_shop_on_splash);
 
-        delayHandler();
+
+        nextScreen();
     }
 
     private void nextScreen() {
