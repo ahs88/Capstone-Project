@@ -38,7 +38,7 @@ import shopon.com.shopon.view.constants.Constants;
 
 
 @SuppressLint("NewApi")
-public class WidgetDataProvider implements RemoteViewsFactory{
+public class WidgetDataProvider implements RemoteViewsFactory {
 
     public static final String TAG = "WidgetDataProvider";
 
