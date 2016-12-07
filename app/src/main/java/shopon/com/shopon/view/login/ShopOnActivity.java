@@ -31,6 +31,7 @@ import shopon.com.shopon.db.provider.ShopOnContractRealm;
 import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.remote.SyncInterface;
 import shopon.com.shopon.remote.SyncLocalDB;
+import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.customers.CustomerActivity;
@@ -249,7 +250,7 @@ public class ShopOnActivity extends BaseActivity
         if (currentFragment instanceof OfferFragment) {
             offerFragment.notifyDataChange();
         }
-
+        Utils.refreshAppWidget(this);
     }
 
     @Override

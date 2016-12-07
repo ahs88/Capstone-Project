@@ -9,10 +9,13 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.Preference;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
@@ -28,27 +31,33 @@ import io.realm.RealmResults;
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.offer.Offer;
 import shopon.com.shopon.datamodel.offer.OfferRealm;
+import shopon.com.shopon.db.provider.ShopOnContract;
+import shopon.com.shopon.preferences.UserSharedPreferences;
 import shopon.com.shopon.utils.Utils;
+import shopon.com.shopon.view.constants.Constants;
 
 
 @SuppressLint("NewApi")
-public class WidgetDataProvider implements RemoteViewsFactory {
+public class WidgetDataProvider implements RemoteViewsFactory{
 
-    public static final String TAG="WidgetDataProvider";
+    public static final String TAG = "WidgetDataProvider";
 
     List mCollections = new ArrayList();
     Context mContext = null;
     private RealmResults<OfferRealm> result;
     private int count = 0;
+    private Cursor mCursor;
+    UserSharedPreferences userSharedPreference;
 
     public WidgetDataProvider(Context context, Intent intent) {
         mContext = context;
+        userSharedPreference = new UserSharedPreferences(mContext);
     }
 
     @Override
     public int getCount() {
-        Log.d(TAG,"getCount:"+count);
-        return count;
+        Log.d(TAG, "getCount:" + mCursor.getCount());
+        return (mCursor.getCount() == 0) ? 1 : mCursor.getCount();
     }
 
     @Override
@@ -63,42 +72,41 @@ public class WidgetDataProvider implements RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int position) {
-        Log.d(TAG,"getViewAt:"+position);
+        Log.d(TAG, "getViewAt:" + position);
+        if (mCursor != null && mCursor.getCount() > 0)
+            mCursor.moveToPosition(position);
 
 
-        RealmResults<OfferRealm> result = getCurrentDaysOffer();
-        if(result == null || result.size() == 0 ){
-            Log.d(TAG,"result :"+result);
-            return null;
+        RemoteViews mView = null;
+        if (mCursor.getCount() > 0) {
+            mView = new RemoteViews(mContext.getPackageName(),
+                    R.layout.offer_item_new);
+
+
+            mView.setTextViewText(R.id.date_summary, Utils.getDateDisplayText(mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE))));
+            mView.setTextViewText(R.id.offer_text, mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_OFFER_TEXT)));
+            mView.setTextColor(R.id.offer_text, mContext.getColor(R.color.black));
+            mView.setTextViewText(R.id.customer_count, mContext.getString(R.string.customer_count_placeholder, String.valueOf(mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS)).split(",").length)));
+            mView.setTextViewText(R.id.offer_date, mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE)));
+            mView.setTextColor(R.id.offer_date, mContext.getColor(R.color.black));
+        } else {
+            mView = new RemoteViews(mContext.getPackageName(),
+                    R.layout.offer_item_no_data);
+            if ((Integer) userSharedPreference.getPref(Constants.CURRENT_LOGIN_STATE) != null && (int) userSharedPreference.getPref(Constants.CURRENT_LOGIN_STATE) == Constants.LOGIN_COMPLETE) {
+                mView.setTextViewText(R.id.no_data, mCursor.getString(R.string.no_offers_today));
+                mView.setTextColor(R.id.no_data, mContext.getColor(R.color.black));
+            } else {
+                mView.setTextViewText(R.id.no_data, mContext.getString(R.string.pls_login));
+                mView.setTextColor(R.id.no_data, mContext.getColor(R.color.black));
+            }
         }
-        Log.d(TAG,"result size:"+result.size());
-        OfferRealm offer = result.get(position);
-
-        RemoteViews mView = new RemoteViews(mContext.getPackageName(),
-                R.layout.offer_item_new);
-
-
-        //ViewHolder mHolder = new ViewHolder(mView);
-
-            //mCollections.add("ListView item " + i);
-            //final ViewHolder mHolder = (ViewHolder) mView.getTag();
-        mView.setTextViewText(R.id.date_summary, Utils.getDateDisplayText(offer.getDeliverMessageOn()));
-        //home_name.setText(cursor.getString(COL_HOME));
-        mView.setTextViewText(R.id.offer_text, offer.getOfferText());
-        mView.setTextColor(R.id.offer_text,mContext.getColor(R.color.black));
-        //mHolder.away_name.setText(cursor.getString(COL_AWAY));
-        mView.setTextViewText(R.id.customer_count, String.valueOf(offer.getNumbers().split(",").length)+"C");
-        //mHolder.date.setText(cursor.getString(COL_MATCHTIME));
-        mView.setTextViewText(R.id.offer_date,offer.getDeliverMessageOn());
-        mView.setTextColor(R.id.offer_date,mContext.getColor(R.color.black));
-
         return mView;
     }
 
     @Override
     public int getViewTypeCount() {
 
-        return 1;
+        return 2;
     }
 
     @Override
@@ -113,6 +121,7 @@ public class WidgetDataProvider implements RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
+        final long identityToken = Binder.clearCallingIdentity();
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
             @Override
@@ -121,16 +130,14 @@ public class WidgetDataProvider implements RemoteViewsFactory {
             }
         };
         handler.post(runnable);
+        Binder.restoreCallingIdentity(identityToken);
     }
 
     private void initData() {
-        //mCollections.clear();
+
         Log.d(TAG, "initData");
 
-        RealmResults<OfferRealm> result = getCurrentDaysOffer();
-        count = result.size();
-        Log.d(TAG, "initdata result size:" + result.size());
-
+        getCurrentDaysOffer();
     }
 
     @Override
@@ -139,15 +146,16 @@ public class WidgetDataProvider implements RemoteViewsFactory {
     }
 
 
-    public RealmResults<OfferRealm> getCurrentDaysOffer(){
+    public void getCurrentDaysOffer() {
         Date date = new Date(System.currentTimeMillis());//+((i-2)*86400000));
         SimpleDateFormat mformat = new SimpleDateFormat("dd-MMM, yyyy");
         String[] dates = new String[1];
         dates[0] = mformat.format(date);
 
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<OfferRealm> result = realm.where(OfferRealm.class).contains("deliverMessageOn",dates[0]).findAll();
-        return result;
+
+        mCursor = mContext.getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI, null, ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " LIKE ? OR " + ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " LIKE ? OR " + ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " LIKE ?", new String[]{"% " + dates[0] + " %", dates[0] + " %", "% " + dates[0]}, null);
+        Log.d(TAG, "current date:" + dates[0] + " mCursor size:" + mCursor.getCount());
     }
+
 
 }

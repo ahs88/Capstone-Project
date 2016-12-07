@@ -2,8 +2,10 @@ package shopon.com.shopon.utils;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -42,6 +44,7 @@ import shopon.com.shopon.datamodel.offer.OfferRealm;
 import shopon.com.shopon.view.base.AlertDialog;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.contact.AlphabetListAdapter;
+import shopon.com.shopon.widget.WidgetProvider;
 
 
 public class Utils {
@@ -340,5 +343,15 @@ public class Utils {
         customer.setMobile(cursor.getString(3));
         customer.setIntrestedIn(cursor.getString(4));
         return customer;
+    }
+
+    public static void refreshAppWidget(Context context) {
+        Intent intent = new Intent(context,WidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+// Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
+// since it seems the onUpdate() is only fired on that:
+        int[] ids = {R.xml.widget_provider};
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        context.sendBroadcast(intent);
     }
 }

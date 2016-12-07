@@ -36,6 +36,7 @@ import shopon.com.shopon.datamodel.offer.Offer;
 
 import shopon.com.shopon.db.provider.ShopOnContract;
 
+import shopon.com.shopon.utils.Utils;
 import shopon.com.shopon.view.base.BaseActivity;
 import shopon.com.shopon.view.constants.Constants;
 import shopon.com.shopon.view.offer.OfferActivity;
@@ -264,11 +265,13 @@ public class OfferFragment extends Fragment implements LoaderManager.LoaderCallb
         if (requestCode == Constants.ADD_OFFER && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "onActivityResult loading all offers");
             retrieveOfferList();
+            Utils.refreshAppWidget(getActivity());
         }
     }
 
     public void notifyDataChange() {
         retrieveOfferList();
+        Utils.refreshAppWidget(getActivity());
     }
 
     public void refreshView() {

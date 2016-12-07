@@ -130,4 +130,6 @@
     <string name="enter_mobile_number">Enter Mobile Number</string>
     <string name="add_customer">Add Customer</string>
     <string name="customer_count_placeholder">%1$sC</string>
+    <string name="pls_login">Please Login to view your offers</string>
+    <string name="no_offers_today">No offers scheduled for today</string>
 </resources>
