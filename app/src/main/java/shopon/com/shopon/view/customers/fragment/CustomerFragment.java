@@ -104,7 +104,7 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onResume() {
         super.onResume();
-        if(isAdded()) {
+        if (isAdded()) {
             getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
         }
     }
@@ -180,7 +180,7 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void notifyDataChange() {
         Log.d(TAG, "notifyDataChange");
-        if(isAdded()) {
+        if (isAdded()) {
             getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
         }
     }

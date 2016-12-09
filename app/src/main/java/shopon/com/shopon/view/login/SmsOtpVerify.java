@@ -188,7 +188,7 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
 
     public void writeToDb() {
         int userId = 0;
-        userId = (int) Math.abs(Math.random() * 1000);
+        userId = (int) Math.abs(Math.random() * 100000);
         ContentValues contentValues = new ContentValues();
         contentValues.put(ShopOnContract.Entry.COLUMN_USER_ID, userId);
         contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE, (String) userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));

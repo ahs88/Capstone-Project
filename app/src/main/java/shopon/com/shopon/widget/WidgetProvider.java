@@ -38,10 +38,6 @@ public class WidgetProvider extends AppWidgetProvider {
             appWidgetManager.updateAppWidget(widgetId, mView);
             Log.d(TAG, "onUpdating app widget id:"+widgetId);
         }
-
-        //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds,  R.id.widgetCollectionList);
-
-
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
