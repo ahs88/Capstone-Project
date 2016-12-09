@@ -86,14 +86,15 @@ public class WidgetDataProvider implements RemoteViewsFactory {
             mView.setTextViewText(R.id.date_summary, Utils.getDateDisplayText(mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE))));
             mView.setTextViewText(R.id.offer_text, mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_OFFER_TEXT)));
             mView.setTextColor(R.id.offer_text, mContext.getColor(R.color.black));
-            mView.setTextViewText(R.id.customer_count, mContext.getString(R.string.customer_count_placeholder, String.valueOf(mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS)).split(",").length)));
+            int number_of_customers = mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS)).split(",").length;
+            mView.setTextViewText(R.id.customer_count, mContext.getString(R.string.customer_count_placeholder, String.valueOf(number_of_customers)));
             mView.setTextViewText(R.id.offer_date, mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE)));
             mView.setTextColor(R.id.offer_date, mContext.getColor(R.color.black));
         } else {
             mView = new RemoteViews(mContext.getPackageName(),
                     R.layout.offer_item_no_data);
             if ((Integer) userSharedPreference.getPref(Constants.CURRENT_LOGIN_STATE) != null && (int) userSharedPreference.getPref(Constants.CURRENT_LOGIN_STATE) == Constants.LOGIN_COMPLETE) {
-                mView.setTextViewText(R.id.no_data, mCursor.getString(R.string.no_offers_today));
+                mView.setTextViewText(R.id.no_data, mContext.getString(R.string.no_offers_today));
                 mView.setTextColor(R.id.no_data, mContext.getColor(R.color.black));
             } else {
                 mView.setTextViewText(R.id.no_data, mContext.getString(R.string.pls_login));
@@ -121,15 +122,9 @@ public class WidgetDataProvider implements RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
+        Log.d(TAG,"onDataSetChanged");
         final long identityToken = Binder.clearCallingIdentity();
-        Handler handler = new Handler(Looper.getMainLooper());
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                initData();
-            }
-        };
-        handler.post(runnable);
+        initData();
         Binder.restoreCallingIdentity(identityToken);
     }
 
@@ -155,6 +150,7 @@ public class WidgetDataProvider implements RemoteViewsFactory {
 
         mCursor = mContext.getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI, null, ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " LIKE ? OR " + ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " LIKE ? OR " + ShopOnContract.Entry.COLUMN_SCHEDULED_DATE + " LIKE ?", new String[]{"% " + dates[0] + " %", dates[0] + " %", "% " + dates[0]}, null);
         Log.d(TAG, "current date:" + dates[0] + " mCursor size:" + mCursor.getCount());
+        mCursor.moveToFirst();
     }
 
 

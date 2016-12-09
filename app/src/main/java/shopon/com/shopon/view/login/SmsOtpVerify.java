@@ -255,7 +255,9 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        queryRef.removeEventListener(eventListener);
+        if (queryRef != null) {
+            queryRef.removeEventListener(eventListener);
+        }
 
     }
 
@@ -301,6 +303,19 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
                 }
             }
         }
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Constants.SMS_CODE, verificationNumberView.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        verificationNumberView.setText(savedInstanceState.getString(Constants.SMS_CODE));
     }
 }
 

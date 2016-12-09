@@ -104,7 +104,9 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
+        if(isAdded()) {
+            getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
+        }
     }
 
     @Override
@@ -178,7 +180,9 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void notifyDataChange() {
         Log.d(TAG, "notifyDataChange");
-        getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
+        if(isAdded()) {
+            getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
+        }
     }
 
     public void refreshView() {
@@ -261,6 +265,6 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult");
-        getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, customerFragment);
+        getLoaderManager().initLoader(Constants.ALL_CUSTOMERS, null, this);
     }
 }

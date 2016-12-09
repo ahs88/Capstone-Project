@@ -56,6 +56,7 @@ public class Constants {
 
 
     public static final int ALL_CUSTOMERS = 600;
+    public static final String SMS_CODE = "SMS_OTP";
 
 
     public static int SPLASH_TIME_OUT = 1000;

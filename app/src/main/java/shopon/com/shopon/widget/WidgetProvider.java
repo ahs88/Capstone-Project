@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import shopon.com.shopon.R;
+import shopon.com.shopon.utils.Utils;
 
 
 public class WidgetProvider extends AppWidgetProvider {
@@ -20,11 +21,12 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.d(TAG,"onreceive");
+        Log.d(TAG," onreceive update widget");
         ComponentName thisWidget = new ComponentName(context, WidgetProvider.class);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         appWidgetManager.updateAppWidget(appWidgetIds, mView);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds,  R.id.widgetCollectionList);
     }
 
     @Override
@@ -34,7 +36,11 @@ public class WidgetProvider extends AppWidgetProvider {
         for (int widgetId : appWidgetIds) {
             RemoteViews mView = initViews(context, appWidgetManager, widgetId);
             appWidgetManager.updateAppWidget(widgetId, mView);
+            Log.d(TAG, "onUpdating app widget id:"+widgetId);
         }
+
+        //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds,  R.id.widgetCollectionList);
+
 
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -52,6 +58,7 @@ public class WidgetProvider extends AppWidgetProvider {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        intent.setData(Uri.fromParts("content", String.valueOf(widgetId+ Utils.generateRandomOTP(4)), null));
         mView.setRemoteAdapter(widgetId, R.id.widgetCollectionList, intent);
 
         return mView;

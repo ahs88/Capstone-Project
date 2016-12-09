@@ -325,7 +325,7 @@ public class CustomerActivity extends BaseActivity {
             emailError.setText("");
         }
 
-        if (categoryList.size() <= 1) {
+        if (categoryList.size() < 1) {
             interestError.setText(getString(R.string.interests_err));
             return false;
         } else {

@@ -122,7 +122,7 @@ public class OfferFragment extends Fragment implements LoaderManager.LoaderCallb
 
         displayEmptyList();
         recyclerView.setAdapter(myOfferAdapter);
-
+        Utils.refreshAppWidget(getActivity());
         return view;
     }
 
@@ -134,9 +134,9 @@ public class OfferFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private void retrieveOfferList() {
         Log.d(TAG, "retrieveCustomerList");
-
-        getLoaderManager().initLoader(Constants.ALL_OFFERS, null, offerFragment);
-
+        if(isAdded()) {
+            getLoaderManager().initLoader(Constants.ALL_OFFERS, null, this);
+        }
     }
 
     private void populateOfferListFromCursor(Cursor cursor) {
@@ -271,7 +271,6 @@ public class OfferFragment extends Fragment implements LoaderManager.LoaderCallb
 
     public void notifyDataChange() {
         retrieveOfferList();
-        Utils.refreshAppWidget(getActivity());
     }
 
     public void refreshView() {

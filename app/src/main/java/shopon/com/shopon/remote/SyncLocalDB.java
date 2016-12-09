@@ -235,7 +235,10 @@ public class SyncLocalDB extends AsyncTask<Void, Void, Void> {
             mobile = c.getString(c.getColumnIndex(ShopOnContract.Entry.COLUMN_MOBILE));
             category = c.getString(c.getColumnIndex(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY));
 
-            Customers customer = customerList.get(String.valueOf(id));
+            Customers customer = null;
+            if (customerList != null) {
+                customer = customerList.get(String.valueOf(id));
+            }
 
             if (customer != null) {
                 Log.d(TAG, " found local customer with id :" + id + " in remote list");
@@ -270,17 +273,19 @@ public class SyncLocalDB extends AsyncTask<Void, Void, Void> {
         c.close();
 
         // Add new items
-        for (Customers customer : customerList.values()) {
-            Log.i(TAG, "Scheduling insert: entry_id=" + customer.getId());
-            batch.add(ContentProviderOperation.newInsert(ShopOnContract.Entry.CONTENT_CUSTOMER_URI)
-                    .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_ID, customer.getId())
-                    .withValue(ShopOnContract.Entry.COLUMN_NAME, customer.getName())
-                    .withValue(ShopOnContract.Entry.COLUMN_EMAIL, customer.getEmail())
-                    .withValue(ShopOnContract.Entry.COLUMN_MOBILE, customer.getMobile())
-                    .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY, customer.getIntrestedIn())
+        if (customerList != null && customerList.size() > 0) {
+            for (Customers customer : customerList.values()) {
+                Log.i(TAG, "Scheduling insert: entry_id=" + customer.getId());
+                batch.add(ContentProviderOperation.newInsert(ShopOnContract.Entry.CONTENT_CUSTOMER_URI)
+                        .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_ID, customer.getId())
+                        .withValue(ShopOnContract.Entry.COLUMN_NAME, customer.getName())
+                        .withValue(ShopOnContract.Entry.COLUMN_EMAIL, customer.getEmail())
+                        .withValue(ShopOnContract.Entry.COLUMN_MOBILE, customer.getMobile())
+                        .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_CATEGORY, customer.getIntrestedIn())
                     /*.withValue(MovieContract.Entry.COLUMN_IS_FAVOURITE, e.isFavourite())*/
-                    .build());
+                        .build());
 
+            }
         }
         Log.i(TAG, "Merge solution ready. Applying batch update");
         try {
@@ -303,6 +308,7 @@ public class SyncLocalDB extends AsyncTask<Void, Void, Void> {
     public void syncSQLOfferDB(DataSnapshot snapshot) {
         ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
         HashMap<String, Offer> offerList = FireBaseUtils.getAllOffer(mContext, snapshot);
+
         final ContentResolver contentResolver = mContext.getContentResolver();
         // Get list of all items
         Log.i(TAG, "Fetching local entries for merge");
@@ -328,7 +334,11 @@ public class SyncLocalDB extends AsyncTask<Void, Void, Void> {
             offer_status = (c.getInt(c.getColumnIndex(ShopOnContract.Entry.COLUMN_OFFER_STATUS)) == 0) ? false : true;
             numbers = c.getString(c.getColumnIndex(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS));
 
-            Offer offer = offerList.get(String.valueOf(id));
+            Offer offer = null;
+            if (offerList != null) {
+                offer = offerList.get(String.valueOf(id));
+            }
+
 
             if (offer != null) {
                 Log.d(TAG, " found local customer with id :" + id + " in remote list");
@@ -360,18 +370,21 @@ public class SyncLocalDB extends AsyncTask<Void, Void, Void> {
         }
         c.close();
 
-        // Add new items
-        for (Offer offer : offerList.values()) {
-            Log.i(TAG, "Scheduling insert: entry_id=" + offer.getOfferId());
-            batch.add(ContentProviderOperation.newInsert(ShopOnContract.Entry.CONTENT_OFFER_URI)
-                    .withValue(ShopOnContract.Entry.COLUMN_OFFER_ID, offer.getOfferId())
-                    .withValue(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE, offer.getDeliverMessageOn())
-                    .withValue(ShopOnContract.Entry.COLUMN_OFFER_TEXT, offer.getOfferText())
-                    .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, offer.getNumbers())
-                    .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS, offer.getOfferStatus() ? 1 : 0)
-                    .build());
+        if (offerList != null && offerList.size() > 0) {
+            // Add new items
+            for (Offer offer : offerList.values()) {
+                Log.i(TAG, "Scheduling insert: entry_id=" + offer.getOfferId());
+                batch.add(ContentProviderOperation.newInsert(ShopOnContract.Entry.CONTENT_OFFER_URI)
+                        .withValue(ShopOnContract.Entry.COLUMN_OFFER_ID, offer.getOfferId())
+                        .withValue(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE, offer.getDeliverMessageOn())
+                        .withValue(ShopOnContract.Entry.COLUMN_OFFER_TEXT, offer.getOfferText())
+                        .withValue(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS, offer.getNumbers())
+                        .withValue(ShopOnContract.Entry.COLUMN_OFFER_STATUS, offer.getOfferStatus() ? 1 : 0)
+                        .build());
 
+            }
         }
+
         Log.i(TAG, "Merge solution ready. Applying batch update");
         try {
             mContext.getContentResolver().applyBatch(ShopOnContract.CONTENT_AUTHORITY, batch);

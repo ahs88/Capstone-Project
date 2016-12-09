@@ -369,7 +369,7 @@ public class OfferActivity extends BaseActivity implements DateTimPickerUtils.Sc
             offerError.setText("");
         }
 
-        if (customerList.size() <= 1) {
+        if (customerList.size() < 1) {
             customerError.setText(getString(R.string.customer_err));
             return false;
         } else {

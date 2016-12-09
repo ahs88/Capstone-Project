@@ -2,6 +2,7 @@ package shopon.com.shopon.view.contact;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -134,31 +137,50 @@ public class AlphabetListAdapter extends BaseAdapter {
 
         }
 
+        final ItemHolder itemHolder1 = itemHolder;
 
         if (getItemViewType(position) == 0) { // Item
-            Item item = (Item) getItem(position);
+            final Item item = (Item) getItem(position);
 
-            itemHolder.textView.setText(item.text);
+            itemHolder1.textView.setText(item.text);
 
-            itemHolder.contact_number.setText(item.fpath);
+            itemHolder1.contact_number.setText(item.fpath);
             if (selectedItems.contains(item)) {
-                itemHolder.select_deselect.setImageResource(R.drawable.ok_filled);
-                itemHolder.select_deselect.setContentDescription(mContext.getString(R.string.customer_selected,item.text));
+                itemHolder1.select_deselect.setImageResource(R.drawable.ok_filled);
+                itemHolder1.select_deselect.setContentDescription(mContext.getString(R.string.customer_selected, item.text));
             } else {
-                itemHolder.select_deselect.setImageResource(R.drawable.b_circlethin_2x);
-                itemHolder.select_deselect.setContentDescription(mContext.getString(R.string.customer_deselected,item.text));
+                itemHolder1.select_deselect.setImageResource(R.drawable.b_circlethin_2x);
+                itemHolder1.select_deselect.setContentDescription(mContext.getString(R.string.customer_deselected, item.text));
             }
+
+            itemHolder1.itemContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "onClick");
+
+                    if (!getSelectedContacts().contains(item)) {
+                        itemHolder1.select_deselect.setImageResource(R.drawable.ok_filled);
+                        itemHolder1.select_deselect.setContentDescription(mContext.getString(R.string.customer_selected, item.text));
+                        addSelectedItem(item);
+                    } else {
+                        itemHolder1.select_deselect.setImageResource(R.drawable.b_circlethin_2x);
+                        itemHolder1.select_deselect.setContentDescription(mContext.getString(R.string.customer_deselected, item.text));
+                        removeSelectedItem(item);
+                    }
+                }
+            });
+
 
         } else { // Section
             Section section = (Section) getItem(position);
 
-            itemHolder.textView.setText(section.text);
+            itemHolder1.textView.setText(section.text);
 
-            itemHolder.contact_number.setVisibility(View.GONE);
+            itemHolder1.contact_number.setVisibility(View.GONE);
 
-            itemHolder.select_deselect.setVisibility(View.GONE);
+            itemHolder1.select_deselect.setVisibility(View.GONE);
         }
-        view.setTag(itemHolder);
+        view.setTag(itemHolder1);
         return view;
     }
 
@@ -166,8 +188,11 @@ public class AlphabetListAdapter extends BaseAdapter {
         TextView textView;
         TextView contact_number;
         ImageView select_deselect;
+        View itemContainer;
 
         public ItemHolder(View view) {
+
+            itemContainer = view;
             textView = (TextView) view.findViewById(R.id.ccname);
 
             contact_number = (TextView) view.findViewById(R.id.ccnumber);

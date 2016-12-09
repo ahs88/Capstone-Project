@@ -244,11 +244,13 @@ public class ShopOnActivity extends BaseActivity
 
     @Override
     public void update(String action, Object... object) {
-        if (currentFragment instanceof CustomerFragment) {
-            customerFragment.notifyDataChange();
-        }
-        if (currentFragment instanceof OfferFragment) {
-            offerFragment.notifyDataChange();
+        if (currentFragment != null) {
+            if (currentFragment instanceof CustomerFragment) {
+                ((CustomerFragment) currentFragment).notifyDataChange();
+            }
+            if (currentFragment instanceof OfferFragment) {
+                ((OfferFragment) currentFragment).notifyDataChange();
+            }
         }
         Utils.refreshAppWidget(this);
     }
