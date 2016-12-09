@@ -5,7 +5,7 @@
     android:minResizeHeight="100dip"
     android:minResizeWidth="300dip"
     android:minWidth="300dip"
-    android:previewImage="@mipmap/ic_launcher"
+    android:previewImage="@drawable/app_widget"
     android:resizeMode="vertical|horizontal"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="keyguard|home_screen" >
