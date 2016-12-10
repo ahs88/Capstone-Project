@@ -16,6 +16,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.Preference;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
@@ -85,20 +86,20 @@ public class WidgetDataProvider implements RemoteViewsFactory {
 
             mView.setTextViewText(R.id.date_summary, Utils.getDateDisplayText(mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE))));
             mView.setTextViewText(R.id.offer_text, mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_OFFER_TEXT)));
-            mView.setTextColor(R.id.offer_text, mContext.getColor(R.color.black));
+            mView.setTextColor(R.id.offer_text, ContextCompat.getColor(mContext,R.color.black));
             int number_of_customers = mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_CUSTOMER_NUMBERS)).split(",").length;
             mView.setTextViewText(R.id.customer_count, mContext.getString(R.string.customer_count_placeholder, String.valueOf(number_of_customers)));
             mView.setTextViewText(R.id.offer_date, mCursor.getString(mCursor.getColumnIndex(ShopOnContract.Entry.COLUMN_SCHEDULED_DATE)));
-            mView.setTextColor(R.id.offer_date, mContext.getColor(R.color.black));
+            mView.setTextColor(R.id.offer_date, ContextCompat.getColor(mContext,R.color.black));
         } else {
             mView = new RemoteViews(mContext.getPackageName(),
                     R.layout.offer_item_no_data);
             if ((Integer) userSharedPreference.getPref(Constants.CURRENT_LOGIN_STATE) != null && (int) userSharedPreference.getPref(Constants.CURRENT_LOGIN_STATE) == Constants.LOGIN_COMPLETE) {
                 mView.setTextViewText(R.id.no_data, mContext.getString(R.string.no_offers_today));
-                mView.setTextColor(R.id.no_data, mContext.getColor(R.color.black));
+                mView.setTextColor(R.id.no_data, ContextCompat.getColor(mContext,R.color.black));
             } else {
                 mView.setTextViewText(R.id.no_data, mContext.getString(R.string.pls_login));
-                mView.setTextColor(R.id.no_data, mContext.getColor(R.color.black));
+                mView.setTextColor(R.id.no_data, ContextCompat.getColor(mContext,R.color.black));
             }
         }
         return mView;

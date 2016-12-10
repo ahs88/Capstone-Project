@@ -84,12 +84,13 @@ public class ShopOnActivity extends BaseActivity
         //handle orientation change
         if (savedInstanceState != null) {
             String tag = (String) savedInstanceState.get(Constants.CURRENT_FRAGMENT);
-            if (tag.equals(CustomerFragment.TAG)) {
-                addCustomerFragment();
-            } else if (tag.equals(OfferFragment.TAG)) {
-                addOfferFragment();
+            if (tag!=null) {
+                if (tag.equals(CustomerFragment.TAG)) {
+                    addCustomerFragment();
+                } else if (tag.equals(OfferFragment.TAG)) {
+                    addOfferFragment();
+                }
             }
-
         } else {
             addCustomerFragment();
         }
@@ -97,6 +98,8 @@ public class ShopOnActivity extends BaseActivity
         bindNavHeader();
         sync();
     }
+
+
 
     private void sync() {
         syncLocalDB = new SyncLocalDB(this);

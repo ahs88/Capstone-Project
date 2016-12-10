@@ -180,7 +180,7 @@ public class OfferDetailFragment extends BaseFragment {
     private void populateOfferDetails(int offerId) {
         convertView.findViewById(R.id.no_offer_label).setVisibility(View.GONE);
         Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_OFFER_URI, null, ShopOnContract.Entry.COLUMN_OFFER_ID + "=?", new String[]{String.valueOf(offerId)}, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount()>0) {
             cursor.moveToFirst();
             offer = Utils.createOfferFromCursor(cursor);
 
@@ -188,6 +188,9 @@ public class OfferDetailFragment extends BaseFragment {
                 convertView.findViewById(R.id.no_offer_label).setVisibility(View.VISIBLE);
                 return;
             }
+        }
+        else{
+            return;
         }
         customerList.addAll(Arrays.asList(offer.getNumbers().replace("[", "").replace("]", "").split(",")));
         String label[] = new String[]{"Offer Text", "Delivery Date", "Recipients", "Status"};

@@ -150,14 +150,18 @@ public class CustomerDetailFragment extends BaseFragment {
     private void populateCustomerDetails(int customerId) {
         convertView.findViewById(R.id.no_customer_label).setVisibility(View.GONE);
         Cursor cursor = getActivity().getContentResolver().query(ShopOnContract.Entry.CONTENT_CUSTOMER_URI, null, ShopOnContract.Entry.COLUMN_CUSTOMER_ID + "=?", new String[]{String.valueOf(customerId)}, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
+        if (cursor != null && cursor.moveToFirst()) {
+
             customer = Utils.createCustomerFromCursor(cursor);
 
             if (customer == null) {
                 convertView.findViewById(R.id.no_customer_label).setVisibility(View.VISIBLE);
                 return;
             }
+        }
+        else
+        {
+            return;
         }
         String label[] = new String[]{"Name", "Number", "Email", "Interests"};
         String value[] = new String[]{customer.getName(), customer.getMobile(), customer.getEmail(), String.valueOf(customer.getIntrestedIn())};
