@@ -84,6 +84,7 @@ public class ShopOnActivity extends BaseActivity
         //handle orientation change
         if (savedInstanceState != null) {
             String tag = (String) savedInstanceState.get(Constants.CURRENT_FRAGMENT);
+            Log.d(TAG,"restored tag:"+tag);
             if (tag!=null) {
                 if (tag.equals(CustomerFragment.TAG)) {
                     addCustomerFragment();
@@ -130,6 +131,9 @@ public class ShopOnActivity extends BaseActivity
 
     @OnClick(R.id.fab)
     public void setupFloatActionListener() {
+        if(currentFragment == null){
+            return;
+        }
         Log.d(TAG, "setupFloatActionListener currentFragment:" + currentFragment.getClass().getName());
         if (getCurrentFragment() instanceof CustomerFragment || getCurrentFragment() instanceof CustomerDetailFragment) {
             fab.setContentDescription(getString(R.string.create_customer));
@@ -192,7 +196,7 @@ public class ShopOnActivity extends BaseActivity
     }
 
     private void addCustomerFragment() {
-        setTitle(getString(R.string.customers));
+        //setTitle(getString(R.string.customers));
         customerFragment = (CustomerFragment) getSupportFragmentManager().findFragmentByTag(CustomerFragment.TAG);
         if (customerFragment == null) {
             customerFragment = CustomerFragment.newInstance(1, (findViewById(R.id.detail_container) != null) ? true : false);
@@ -213,7 +217,7 @@ public class ShopOnActivity extends BaseActivity
     }
 
     private void addOfferFragment() {
-        setTitle(getString(R.string.created_offers));
+
         offerFragment = (OfferFragment) getSupportFragmentManager().findFragmentByTag(OfferFragment.TAG);
         if (offerFragment == null) {
             offerFragment = OfferFragment.newInstance(1, (findViewById(R.id.detail_container) != null) ? true : false);
@@ -224,7 +228,7 @@ public class ShopOnActivity extends BaseActivity
 
     public void addOfferDetailsFragment() {
         if (findViewById(R.id.detail_container) != null) {
-            setTitle(getString(R.string.customers));
+            setTitle(getString(R.string.created_offers));
             OfferDetailFragment offerDetailFragment = (OfferDetailFragment) getSupportFragmentManager().findFragmentByTag(OfferDetailFragment.TAG);
             if (offerDetailFragment == null) {
                 offerDetailFragment = OfferDetailFragment.newInstance(1, (findViewById(R.id.detail_container) != null) ? true : false);
@@ -266,8 +270,14 @@ public class ShopOnActivity extends BaseActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSavedInstance: currentFragment:"+currentFragment);
         if (currentFragment != null) {
-            outState.putString(Constants.CURRENT_FRAGMENT, currentFragment.getTag());
+            String tag = null;
+            if(currentFragment instanceof CustomerFragment)
+                tag = CustomerFragment.TAG;
+            else
+                tag = OfferFragment.TAG;
+            outState.putString(Constants.CURRENT_FRAGMENT, tag);
         }
     }
 

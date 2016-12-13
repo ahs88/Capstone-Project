@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -140,6 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void setCurrentFragment(android.support.v4.app.Fragment fragment, int container_id, String TAG) {
+        Log.d(TAG,"setCurrentFragment:" + fragment+" tag:"+TAG);
         currentFragment = fragment;
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction transaction = buildTransaction();
