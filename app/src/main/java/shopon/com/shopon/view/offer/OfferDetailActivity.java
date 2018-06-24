@@ -19,7 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import shopon.com.shopon.R;
@@ -46,7 +47,7 @@ public class OfferDetailActivity extends BaseActivity {
     private int offerId;
     private DatabaseReference mDatabase;
 
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView titleView;
 
     @Override

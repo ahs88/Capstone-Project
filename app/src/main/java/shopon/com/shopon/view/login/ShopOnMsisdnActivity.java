@@ -27,7 +27,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
@@ -48,15 +49,15 @@ import shopon.com.shopon.view.dialogs.ProgressDialog;
 public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterface.OnClickListener {
 
     private static final String TAG = ShopOnMsisdnActivity.class.getCanonicalName();
-    @Bind(R.id.tool_bar)
+    @BindView(R.id.tool_bar)
     Toolbar toolbar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
-    @Bind(R.id.country_code)
+    @BindView(R.id.country_code)
     EditText countryCodeView;
-    @Bind(R.id.phone_number)
+    @BindView(R.id.phone_number)
     EditText msisdn;
-    @Bind(R.id.acc_continue)
+    @BindView(R.id.acc_continue)
     TextView accContinue;
     private ShopOnMsisdnActivity mContext;
 
@@ -77,6 +78,14 @@ public class ShopOnMsisdnActivity extends BaseActivity implements DialogInterfac
                 Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE
         }, 1);
 
+        setDefaultCountryCode();
+
+    }
+
+    private void setDefaultCountryCode() {
+        String cc = Utils.getCountryDialCode(this);
+        countryCodeView.setText("+"+cc);
+        msisdn.requestFocus();
     }
 
     @OnClick(R.id.acc_continue)

@@ -11,7 +11,8 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import shopon.com.shopon.R;
@@ -25,19 +26,19 @@ import shopon.com.shopon.view.constants.Constants;
 public class ShopOnProfileCreation extends AppCompatActivity {
 
     private static final String TAG = ShopOnProfileCreation.class.getName();
-    @Bind(R.id.user_name)
+    @BindView(R.id.user_name)
     EditText userNameView;
 
-    @Bind(R.id.user_name_err)
+    @BindView(R.id.user_name_err)
     TextView userNameErrView;
 
-    @Bind(R.id.email_err)
+    @BindView(R.id.email_err)
     TextView emailError;
 
-    @Bind(R.id.email_id)
+    @BindView(R.id.email_id)
     EditText emailIdView;
 
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitleView;
     private UserSharedPreferences userSharedPreferences;
 

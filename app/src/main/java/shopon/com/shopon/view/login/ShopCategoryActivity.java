@@ -35,7 +35,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import shopon.com.shopon.R;
@@ -79,9 +80,9 @@ public class ShopCategoryActivity extends BaseActivity implements ShopCategories
     private boolean isSelected;
     private GridRecycleView recyclerShopView;
 
-    @Bind(R.id.tool_bar)
+    @BindView(R.id.tool_bar)
     Toolbar toolbar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     private LinearLayoutManager mLinearLayoutManager;
 

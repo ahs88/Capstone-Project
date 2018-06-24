@@ -15,6 +15,7 @@ import android.support.annotation.RequiresApi;
 import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -354,4 +355,23 @@ public class Utils {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
         context.sendBroadcast(intent);
     }
+
+    public static String getCountryDialCode(Context context){
+        String contryId = null;
+        String contryDialCode = null;
+
+        TelephonyManager telephonyMngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+        contryId = telephonyMngr.getSimCountryIso().toUpperCase();
+        String[] arrContryCode=context.getResources().getStringArray(R.array.DialingCountryCode);
+        for(int i=0; i<arrContryCode.length; i++){
+            String[] arrDial = arrContryCode[i].split(",");
+            if(arrDial[1].trim().equals(contryId.trim())){
+                contryDialCode = arrDial[0];
+                break;
+            }
+        }
+        return contryDialCode;
+    }
+
 }

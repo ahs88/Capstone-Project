@@ -37,8 +37,7 @@
         android:layout_marginBottom="74dp"
         android:layout_above="@+id/acc_continue"
         android:layout_alignParentLeft="true"
-        android:editable="false"
-        android:focusable="false"
+        android:focusable="true"
         android:background="@drawable/bazaar_edit_name"
         android:layout_alignParentStart="true" />
 

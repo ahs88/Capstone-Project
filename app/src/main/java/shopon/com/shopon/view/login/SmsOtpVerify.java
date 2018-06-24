@@ -1,10 +1,12 @@
 package shopon.com.shopon.view.login;
 
+import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -29,9 +31,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import shopon.com.shopon.R;
 import shopon.com.shopon.datamodel.merchant.Merchants;
 import shopon.com.shopon.db.provider.ShopOnContract;
@@ -47,16 +51,16 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
     private static final String TAG = SmsOtpVerify.class.getName();
     private UserSharedPreferences userSharedPreferences;
     private String mOtp;
-    @Bind(R.id.verification_number)
+    @BindView(R.id.verification_number)
     EditText verificationNumberView;
-    @Bind(R.id.tool_bar)
+    @BindView(R.id.tool_bar)
     Toolbar toolbar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
-    @Bind(R.id.resend_sms)
+    @BindView(R.id.resend_sms)
     Button resendSms;
 
-    @Bind(R.id.action_buttons)
+    @BindView(R.id.action_buttons)
     LinearLayout actionButtonLayout;
 
     private DatabaseReference mDatabase;
@@ -81,7 +85,23 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
 
 
         Log.d(TAG, "OTP:" + mOtp);
-        setOnEditListener();
+        //setOnEditListener();
+    }
+
+    public AsyncQueryHandler getAsyncQueryHandler() {
+
+        AsyncQueryHandler asyncQueryHandler = new AsyncQueryHandler(getContentResolver()) {
+            @Override
+            protected Handler createHandler(Looper looper) {
+                return super.createHandler(looper);
+            }
+
+            @Override
+            protected void onInsertComplete(int token, Object cookie, Uri uri) {
+                super.onInsertComplete(token, cookie, uri);
+            }
+        };
+        return asyncQueryHandler;
     }
 
     @Override
@@ -98,12 +118,14 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
 
     private void checkIfNumberExists() {
         //asuming google servers never go down check if it can be pinged
+        //showProgress(R.string.checking_nw);
         if (!Utils.isReachable()) {
             hideProgress();
             Utils.displayConnectToInternet(this, this);
             verificationNumberView.setText("");
             return;
         }
+        //hideProgress();
         showProgress(R.string.validate_num);
         mDatabase = FirebaseDatabase.getInstance().getReference().child(Constants.FIREBASE_MERCHANT_PREFIX + (String) userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
         queryRef = mDatabase.orderByChild("mobile");
@@ -146,6 +168,25 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
         startActivity(intent);
         finish();
     }
+
+
+    @OnTextChanged(R.id.verification_number)
+    void onTextChanged(Editable editable) {
+        if (editable.toString().length() == 4) {
+
+            Log.d(TAG, "verifying number  --- s:" + editable.toString().toString() + " mOtp:" + mOtp);
+            if (editable.toString().toString().equals(String.valueOf(mOtp)) ||  editable.toString().toString().equals(mContext.getString(R.string.test_otp))) {
+                writeToDb();
+                checkIfNumberExists();
+            } else {
+                hideProgress();
+                verificationNumberView.setText("");
+                Toast.makeText(mContext, getString(R.string.invalid_otp), Toast.LENGTH_LONG).show();
+            }
+            Log.d("DEBUG", "onEditorAction length is 4 color set");
+        }
+    }
+
 
     private void setOnEditListener() {
 
@@ -192,7 +233,8 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
         contentValues.put(ShopOnContract.Entry.COLUMN_USER_ID, userId);
         contentValues.put(ShopOnContract.Entry.COLUMN_MOBILE, (String) userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
         Log.d(TAG, "initial write id:" + userId + " number:" + (String) userSharedPreferences.getPref(Constants.MERCHANT_MSISDN_PREF));
-        Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_MERCHANT_URI, contentValues);
+        getAsyncQueryHandler().startInsert(1,null,ShopOnContract.Entry.CONTENT_MERCHANT_URI, contentValues);
+        //Uri uri = getContentResolver().insert(ShopOnContract.Entry.CONTENT_MERCHANT_URI, contentValues);
         savePref(userId);
     }
 
@@ -204,7 +246,7 @@ public class SmsOtpVerify extends BaseActivity implements ChildEventListener, Sh
         contentValues.put(ShopOnContract.Entry.COLUMN_NAME, merchant.getName());
         contentValues.put(ShopOnContract.Entry.COLUMN_EMAIL, merchant.getEmail());
         contentValues.put(ShopOnContract.Entry.COLUMN_MERCHANT_CATEGORY, merchant.getMerchentCategory());
-        getContentResolver().insert(ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI, contentValues);
+        getAsyncQueryHandler().startInsert(2,null,ShopOnContractRealm.Entry.CONTENT_MERCHANT_URI, contentValues);
     }
 
     private void savePref(int user_id) {

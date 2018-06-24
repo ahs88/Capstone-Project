@@ -19,7 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
@@ -46,7 +47,7 @@ public class ShopOnActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OfferFragment.OnListFragmentInteractionListener, SyncInterface, CustomerFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = ShopOnActivity.class.getName();
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fab;
     TextView userNameView;
     TextView emailView;

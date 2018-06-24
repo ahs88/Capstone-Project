@@ -39,7 +39,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import shopon.com.shopon.R;
 import shopon.com.shopon.utils.Utils;
@@ -60,11 +61,11 @@ public class Contacts extends BaseActivity {
     private List<AlphabetListAdapter.Item> selectedContacts = new ArrayList<>();
     AssetManager asm;
     private String LOGTAG = "Contacts";
-    @Bind(R.id.tool_bar)
+    @BindView(R.id.tool_bar)
     Toolbar toolbar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
-    @Bind(R.id.listView)
+    @BindView(R.id.listView)
     ListView contactList;
 
     class SideIndexGestureListener extends GestureDetector.SimpleOnGestureListener {

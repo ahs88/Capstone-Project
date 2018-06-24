@@ -19,7 +19,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import shopon.com.shopon.R;
@@ -38,20 +39,20 @@ import shopon.com.shopon.view.customers.fragment.CustomerFragment;
 public class SelectableCustomers extends BaseActivity implements CustomerFragment.OnListFragmentInteractionListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = SelectableCustomers.class.getName();
-    @Bind(R.id.tool_bar)
+    @BindView(R.id.tool_bar)
     Toolbar toolbar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
 
-    @Bind(R.id.list)
+    @BindView(R.id.list)
     RecyclerView customerListView;
     private LinearLayoutManager mLinearLayoutManager;
     public int mColumnCount = 1;
     private MyCustomerRecyclerViewAdapter customerAapter;
     private ArrayList<Customers> customerList;
-    @Bind(R.id.phone_book)
+    @BindView(R.id.phone_book)
     Button addPhoneBookNumber;
-    @Bind(R.id.no_customer_label)
+    @BindView(R.id.no_customer_label)
     TextView customerLabel;
     private Cursor mCursor;
 

@@ -17,7 +17,8 @@ import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.List;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
@@ -85,11 +86,11 @@ public class DetailOptionsAdapter extends RecyclerView.Adapter<DetailOptionsAdap
 
     public class DetailOptionHolder extends RecyclerView.ViewHolder implements View.OnClickListener, DateTimPickerUtils.ScheduledDateInterface {
 
-        @Bind(R.id.label_name)
+        @BindView(R.id.label_name)
         TextView label;
-        @Bind(R.id.label_value)
+        @BindView(R.id.label_value)
         EditText value;
-        @Bind(R.id.error)
+        @BindView(R.id.error)
         TextView errorView;
         int position;
         DetailEntry offerDetailEntry;

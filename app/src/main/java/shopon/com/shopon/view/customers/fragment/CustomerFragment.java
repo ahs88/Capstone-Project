@@ -23,7 +23,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
@@ -57,11 +58,11 @@ public class CustomerFragment extends Fragment implements LoaderManager.LoaderCa
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    @Bind(R.id.create_customer)
+    @BindView(R.id.create_customer)
     Button createCustomer;
-    @Bind(R.id.no_customer_label)
+    @BindView(R.id.no_customer_label)
     TextView customerLabel;
-    @Bind(R.id.list)
+    @BindView(R.id.list)
     RecyclerView customerListView;
 
     public LinearLayoutManager mLinearLayoutManager;

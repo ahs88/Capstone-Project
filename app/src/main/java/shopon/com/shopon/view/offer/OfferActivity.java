@@ -44,7 +44,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.RunnableFuture;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
@@ -84,21 +85,21 @@ import static java.lang.Thread.sleep;
 public class OfferActivity extends BaseActivity implements DateTimPickerUtils.ScheduledDateInterface {
 
     private static final String TAG = OfferActivity.class.getName();
-    @Bind(R.id.tool_bar)
+    @BindView(R.id.tool_bar)
     Toolbar toolbar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
-    @Bind(R.id.date)
+    @BindView(R.id.date)
     TextView date;
-    @Bind(R.id.tags)
+    @BindView(R.id.tags)
     TagView tagGroup;
-    @Bind(R.id.offer_text)
+    @BindView(R.id.offer_text)
     EditText offerTextView;
-    @Bind(R.id.offer_err)
+    @BindView(R.id.offer_err)
     TextView offerError;
-    @Bind(R.id.date_err)
+    @BindView(R.id.date_err)
     TextView dateError;
-    @Bind(R.id.tags_err)
+    @BindView(R.id.tags_err)
     TextView customerError;
 
     Context mContext;

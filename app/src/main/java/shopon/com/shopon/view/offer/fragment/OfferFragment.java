@@ -27,7 +27,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -60,9 +61,9 @@ public class OfferFragment extends Fragment implements LoaderManager.LoaderCallb
     private OnListFragmentInteractionListener mListener;
 
     @Nullable
-    @Bind(R.id.create_offer_btn)
+    @BindView(R.id.create_offer_btn)
     public Button createOffer;
-    @Bind(R.id.no_offers_label)
+    @BindView(R.id.no_offers_label)
     public TextView offersLabel;
     private ArrayList<Offer> offerList;
     private MyOfferRecyclerViewAdapter myOfferAdapter;

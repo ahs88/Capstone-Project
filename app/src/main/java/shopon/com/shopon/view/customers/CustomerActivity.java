@@ -34,7 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -65,34 +66,34 @@ public class CustomerActivity extends BaseActivity {
 
 
     private static final String TAG = ShopOn.class.getCanonicalName();
-    @Bind(R.id.name)
+    @BindView(R.id.name)
     public EditText name;
 
-    @Bind(R.id.mobile_number)
+    @BindView(R.id.mobile_number)
     public EditText mobile;
 
-    @Bind(R.id.name_err)
+    @BindView(R.id.name_err)
     TextView nameError;
-    @Bind(R.id.mobile_err)
+    @BindView(R.id.mobile_err)
     public TextView mobileError;
-    @Bind(R.id.email_err)
+    @BindView(R.id.email_err)
     public TextView emailError;
-    @Bind(R.id.interest_err)
+    @BindView(R.id.interest_err)
     public TextView interestError;
 
 
-    @Bind(R.id.add_cutomer)
+    @BindView(R.id.add_cutomer)
     public Button addCustomer;
 
-    @Bind(R.id.tags)
+    @BindView(R.id.tags)
     public TagView tagGroup;
-    @Bind(R.id.tool_bar)
+    @BindView(R.id.tool_bar)
     Toolbar toolbar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     protected ArrayList<String> categoryList = new ArrayList<>();
 
-    @Bind(R.id.email)
+    @BindView(R.id.email)
     public EditText email;
     private EditText phone;
     private CustomerActivity mContext;
